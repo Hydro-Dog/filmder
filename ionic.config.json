@@ -1,0 +1,8 @@
+{
+  "name": "Filmder",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "4421d661"
+}
