@@ -12,23 +12,55 @@
 <ion-content>
   <form [formGroup]="registrationForm">
     <ion-item lines="full">
-      <ion-label position="floating">User name</ion-label>
-      <ion-input formControlName="userName" type="text" required></ion-input>
+      <ion-label
+        [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
+        position="floating"
+        >User name
+        {{
+          isControlInvalid("userName") ? getErrorMessage("userName") : ""
+        }}</ion-label
+      >
+      <ion-input formControlName="userName" type="text"></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-label position="floating">Email</ion-label>
+      <ion-label
+        [color]="isControlInvalid('email') ? 'danger' : 'dark'"
+        position="floating"
+        >Email
+        {{
+          isControlInvalid("email") ? getErrorMessage("email") : ""
+        }}</ion-label
+      >
       <ion-input formControlName="email" type="text" required></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-label position="floating">First name</ion-label>
+      <ion-label
+        [color]="isControlInvalid('firstName') ? 'danger' : 'dark'"
+        position="floating"
+        >First name
+        {{
+          isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
+        }}</ion-label
+      >
       <ion-input formControlName="firstName" type="text" required></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-label position="floating">Last name</ion-label>
+      <ion-label
+        [color]="isControlInvalid('lastName') ? 'danger' : 'dark'"
+        position="floating"
+        >Last name
+        {{
+          isControlInvalid("lastName") ? getErrorMessage("lastName") : ""
+        }}</ion-label
+      >
       <ion-input formControlName="lastName" type="text" required></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-label position="floating">Password</ion-label>
+      <ion-label
+        [color]="isControlInvalid('password') ? 'danger' : 'dark'"
+        position="floating"
+        >Password</ion-label
+      >
       <ion-input
         type="password"
         formControlName="password"
@@ -36,15 +68,20 @@
       ></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-label type="password" position="floating"
-        >Confirm password</ion-label
+      <ion-label
+        [color]="isControlInvalid('passwordConfirm') ? 'danger' : 'dark'"
+        type="password"
+        position="floating"
+        >Confirm password{{ passwordsMissMatch ? "mismatch" : "" }}</ion-label
       >
       <ion-input
         formControlName="passwordConfirm"
         type="text"
-        required
+        (input)="onPasswordInput(passwordConfirmVal)"
+        #passwordConfirmVal
       ></ion-input>
     </ion-item>
+
     <!-- 
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>

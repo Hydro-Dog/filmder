@@ -4,6 +4,8 @@ import { RegistrationComponent } from './registration.component';
 import { RegistrationRoutingModule } from './registration-routimg.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+// import { AuthService } from '../auth/auth.service';
+// import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [RegistrationComponent],
@@ -12,6 +14,8 @@ import { IonicModule } from '@ionic/angular';
     IonicModule,
     ReactiveFormsModule,
     RegistrationRoutingModule,
+    // HttpClientModule,
   ],
+  // providers: [AuthService],
 })
 export class RegistrationModule {}
