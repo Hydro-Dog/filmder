@@ -28,4 +28,10 @@ export class AuthService {
       params,
     });
   }
+
+  registerUser(user) {
+    return this.http.post(`${environment.apiUrl}/register`, {
+      user,
+    });
+  }
 }

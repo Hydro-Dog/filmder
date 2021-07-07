@@ -1,14 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DoCheck,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
@@ -22,28 +17,33 @@ import { of } from 'rxjs';
   styleUrls: ['./registration.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class RegistrationComponent implements DoCheck {
+export class RegistrationComponent {
   passwordsMissMatch: boolean;
 
   registrationForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [this.checkUserNameIsTaken.bind(this)],
-      updateOn: 'change',
+      asyncValidators: [this.checkUserNameIsTakenValidator.bind(this)],
+      updateOn: 'blur',
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
-      asyncValidators: [this.checkEmailIsTaken.bind(this)],
-      updateOn: 'change',
+      asyncValidators: [this.checkEmailIsTakenValidator.bind(this)],
+      updateOn: 'blur',
     }),
     firstName: new FormControl('', {
       validators: Validators.required,
     }),
     lastName: new FormControl('', {
-      validators: Validators.required,
+      validators: [Validators.required],
     }),
     password: new FormControl('', {
-      validators: Validators.required,
+      validators: [
+        Validators.required,
+        Validators.pattern(
+          /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{8,30}$/
+        ),
+      ],
     }),
     passwordConfirm: new FormControl('', {
       validators: Validators.required,
@@ -61,11 +61,14 @@ export class RegistrationComponent implements DoCheck {
     private navController: NavController,
     private authService: AuthService
   ) {}
-  ngDoCheck(): void {
-    console.log('email: ', this.emailControl);
+
+  ngOnInit() {
+    this.registrationForm.controls['passwordConfirm'].setValidators(
+      this.matchPasswordsValidator.bind(this)
+    );
   }
 
-  checkUserNameIsTaken(control: AbstractControl) {
+  checkUserNameIsTakenValidator(control: AbstractControl) {
     return this.authService.checkUserNameIsTaken(control.value).pipe(
       map(() => {
         return null;
@@ -74,7 +77,7 @@ export class RegistrationComponent implements DoCheck {
     );
   }
 
-  checkEmailIsTaken(control: AbstractControl) {
+  checkEmailIsTakenValidator(control: AbstractControl) {
     return this.authService.checkEmailIsTaken(control.value).pipe(
       map(() => {
         return null;
@@ -83,29 +86,17 @@ export class RegistrationComponent implements DoCheck {
     );
   }
 
-  checkConfirmPassword(group: FormGroup) {
-    const password = group.controls.password.value;
-    const passwordConfirm = group.controls.passwordConfirm.value;
-
-    return password === passwordConfirm ? null : { notSame: true };
+  matchPasswordsValidator(control: AbstractControl): ValidationErrors {
+    console.log('this.passwordControl: ', this.passwordControl.dirty);
+    return control.value !== this.passwordControl.value
+      ? {
+          passwordMismatch: true,
+        }
+      : null;
   }
 
   navigateBack() {
     this.navController.navigateBack('/auth');
-  }
-
-  onPasswordInput({ value }): void {
-    this.passwordsMissMatch = this.passwordControl.value !== value;
-    if (this.passwordControl.value !== value) {
-      console.log(1000);
-      this.passwordsMissMatch = true;
-      this.passwordConfirmControl.setErrors({
-        passwordMismatch: true,
-      });
-    } else {
-      console.log(2000);
-      this.registrationForm.controls.passwordConfirm.setErrors(null);
-    }
   }
 
   isControlInvalid(controlName: string): boolean {
@@ -114,18 +105,6 @@ export class RegistrationComponent implements DoCheck {
     const result = control.dirty && control.invalid;
 
     return Boolean(result);
-  }
-
-  getPasswordConfirmErrorMessage() {
-    if (
-      this.registrationForm.controls['passwordConfirm'].hasError(
-        'passwordMismatch'
-      )
-    ) {
-      return '(Passwords does not match)';
-    } else {
-      return '(no err)';
-    }
   }
 
   getErrorMessage(controlName: string): string {
@@ -158,14 +137,17 @@ export class RegistrationComponent implements DoCheck {
       controlName === 'password' &&
       this.registrationForm.controls[controlName].hasError('pattern')
     ) {
-      return '(Password is too short or easy)';
+      return '(Password is too easy or invalid)';
     }
 
-    if (
-      controlName === 'passwordConfirm' &&
-      this.registrationForm.controls[controlName].hasError('passwordMismatch')
-    ) {
-      return '(Passwords does not match)';
+    if (controlName === 'passwordConfirm') {
+      console.log(
+        'controlName: ',
+        controlName,
+        this.registrationForm.controls[controlName]
+      );
+
+      return '(Different Passwords)';
     }
   }
 }
