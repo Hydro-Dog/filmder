@@ -83,6 +83,7 @@
   <ion-button
     class="d-flex"
     [disabled]="registrationForm.invalid && passwordConfirmControl.value"
+    (click)="registerClicked()"
     >Register</ion-button
   >
 </ion-content>

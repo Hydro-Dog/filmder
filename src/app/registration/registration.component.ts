@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -8,8 +13,9 @@ import {
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../auth/auth.service';
-import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { User } from '../auth/auth.models';
 
 @Component({
   selector: 'app-registration',
@@ -17,7 +23,7 @@ import { of } from 'rxjs';
   styleUrls: ['./registration.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit, OnDestroy {
   passwordsMissMatch: boolean;
 
   registrationForm = new FormGroup({
@@ -57,6 +63,8 @@ export class RegistrationComponent {
   passwordControl = this.registrationForm.get('password');
   passwordConfirmControl = this.registrationForm.get('passwordConfirm');
 
+  destroy$ = new Subject();
+
   constructor(
     private navController: NavController,
     private authService: AuthService
@@ -66,6 +74,26 @@ export class RegistrationComponent {
     this.registrationForm.controls['passwordConfirm'].setValidators(
       this.matchPasswordsValidator.bind(this)
     );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
+  registerClicked() {
+    const user: User = {
+      userName: this.userNameControl.value,
+      email: this.emailControl.value,
+      firstName: this.firstNameControl.value,
+      lastName: this.lastNameControl.value,
+      password: this.passwordControl.value,
+    };
+    this.authService
+      .registerUser(user)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log('res: ', res);
+      });
   }
 
   checkUserNameIsTakenValidator(control: AbstractControl) {
