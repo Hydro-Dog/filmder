@@ -1,14 +1,39 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        (click)="navigateBack()"
-        [defaultHref]="''"
-      ></ion-back-button>
+      <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <h1>Main Content</h1>
+  <form [formGroup]="loginForm" class="m-b-40">
+    <ion-item lines="full">
+      <ion-label
+        [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
+        position="floating"
+        >User name
+        {{
+          isControlInvalid("userName") ? getErrorMessage("userName") : ""
+        }}</ion-label
+      >
+      <ion-input formControlName="userName" type="text"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label
+        [color]="isControlInvalid('password') ? 'danger' : 'dark'"
+        position="floating"
+        >Password
+        {{
+          isControlInvalid("password") ? getErrorMessage("password") : ""
+        }}</ion-label
+      >
+      <ion-input type="text" formControlName="password"></ion-input>
+    </ion-item>
+  </form>
+  <ion-button
+    class="d-flex"
+    [disabled]="loginForm.invalid"
+    (click)="loginClicked()"
+    >Login</ion-button
+  >
 </ion-content>

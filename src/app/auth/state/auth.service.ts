@@ -2,10 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
+import { AuthStore } from './auth.store';
+import { tap } from 'rxjs/internal/operators/tap';
+import { User } from './auth.models';
+import { ApiResponse } from '@src/app/shared/models';
+import { ID } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private authStore: AuthStore, private http: HttpClient) {}
+
+  login(userName: string, password: string): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}/login`, {
+      userName,
+      password,
+    });
+  }
 
   checkUserNameIsTaken(userName: string): Observable<any> {
     const params = new HttpParams({
@@ -29,7 +41,10 @@ export class AuthService {
     });
   }
 
-  registerUser(user) {
-    return this.http.post(`${environment.apiUrl}/register`, user);
+  registerUser(user): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(
+      `${environment.apiUrl}/register`,
+      user
+    );
   }
 }

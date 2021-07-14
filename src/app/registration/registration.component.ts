@@ -12,10 +12,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/state/auth.service';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
-import { User } from '../auth/auth.models';
+import { User } from '../auth/state/auth.models';
+import { AuthFacade } from '../auth/state/auth.facade';
+import { AuthQuery } from '../auth/state/auth.query';
 
 @Component({
   selector: 'app-registration',
@@ -25,6 +27,7 @@ import { User } from '../auth/auth.models';
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
   passwordsMissMatch: boolean;
+  showConfirmationScreen: boolean;
 
   registrationForm = new FormGroup({
     userName: new FormControl('', {
@@ -67,12 +70,19 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   constructor(
     private navController: NavController,
-    private authService: AuthService
+    private authService: AuthService,
+    private authFacade: AuthFacade,
+    private authQuery: AuthQuery
   ) {}
 
   ngOnInit() {
     this.registrationForm.controls['passwordConfirm'].setValidators(
       this.matchPasswordsValidator.bind(this)
+    );
+
+    this.authQuery.selectId$.subscribe((x) => console.log('selectId: ', x));
+    this.authQuery.selectError$.subscribe((x) =>
+      console.log('selectError: ', x)
     );
   }
 
@@ -88,16 +98,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       lastName: this.lastNameControl.value,
       password: this.passwordControl.value,
     };
-    this.authService
-      .registerUser(user)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        console.log('res: ', res);
-      });
+    this.authFacade.register(user);
   }
 
   checkUserNameIsTakenValidator(control: AbstractControl) {
-    return this.authService.checkUserNameIsTaken(control.value).pipe(
+    return this.authFacade.checkUserNameIsTaken(control.value).pipe(
       map(() => {
         return null;
       }),
@@ -106,7 +111,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   checkEmailIsTakenValidator(control: AbstractControl) {
-    return this.authService.checkEmailIsTaken(control.value).pipe(
+    return this.authFacade.checkEmailIsTaken(control.value).pipe(
       map(() => {
         return null;
       }),
