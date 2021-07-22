@@ -32,8 +32,11 @@
   </form>
   <ion-button
     class="d-flex"
-    [disabled]="loginForm.invalid"
+    [disabled]="loginForm.invalid || (userLoading$ | async)"
     (click)="loginClicked()"
     >Login</ion-button
   >
+  <div *ngIf="userLoading$ | async" class="m-t-20">
+    <ion-spinner class="d-flex m-auto" name="bubbles"></ion-spinner>
+  </div>
 </ion-content>

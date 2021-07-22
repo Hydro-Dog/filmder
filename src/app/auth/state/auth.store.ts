@@ -1,23 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { User, UserRO } from './auth.models';
 
 export interface AuthState {
-  userName: string | null;
+  // userName: string | null;
+  user: UserRO | null;
   token: string | null;
   id: number | null;
-  firstName: string | null;
-  lastName: string | null;
+  // firstName: string | null;
+  // lastName: string | null;
   error: any;
+  idLoading: boolean;
+  userLoading: boolean;
 }
 
 export function createInitialState(): AuthState {
   return {
-    userName: null,
+    // userName: null,
+    user: null,
     token: null,
     id: null,
-    firstName: null,
-    lastName: null,
+    // firstName: null,
+    // lastName: null,
     error: null,
+    idLoading: false,
+    userLoading: false,
   };
 }
 

@@ -12,7 +12,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-import { AuthService } from '../auth/state/auth.service';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { User } from '../auth/state/auth.models';
@@ -65,12 +64,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   lastNameControl = this.registrationForm.get('lastName');
   passwordControl = this.registrationForm.get('password');
   passwordConfirmControl = this.registrationForm.get('passwordConfirm');
-
+  selectId$ = this.authQuery.selectId$;
+  selectIdLoading$ = this.authQuery.selectIdLoading$;
   destroy$ = new Subject();
 
   constructor(
     private navController: NavController,
-    private authService: AuthService,
     private authFacade: AuthFacade,
     private authQuery: AuthQuery
   ) {}
@@ -80,9 +79,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       this.matchPasswordsValidator.bind(this)
     );
 
-    this.authQuery.selectId$.subscribe((x) => console.log('selectId: ', x));
-    this.authQuery.selectError$.subscribe((x) =>
-      console.log('selectError: ', x)
+    this.selectIdLoading$.subscribe((x) =>
+      console.log('selectIdLoading$: ', x)
     );
   }
 

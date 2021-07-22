@@ -8,12 +8,19 @@ import {
 import { ActionType } from '@datorama/akita-ng-entity-service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+  StorageService,
+  USER_ID,
+} from '../services/storage.service';
+import {
   login,
   loginSuccess,
   register,
   registerError,
   registerSuccess,
 } from './auth.actions';
+import { UserRO } from './auth.models';
 import { AuthService } from './auth.service';
 import { AuthStore } from './auth.store';
 
@@ -23,19 +30,42 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private storageService: StorageService
   ) {}
-  ActionType;
 
   register$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(register),
-        switchMap(({ user }) =>
-          this.authService
+        switchMap(({ user }) => {
+          this.authStore.update((state) => ({
+            ...state,
+            idLoading: true,
+          }));
+
+          return this.authService
             .registerUser(user)
-            .pipe(map((res) => registerSuccess({ res })))
-        )
+            .pipe(map((id) => registerSuccess(id)));
+        })
+      ),
+    { dispatch: true }
+  );
+
+  login$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(login),
+        switchMap(({ userName, password }) => {
+          this.authStore.update((state) => ({
+            ...state,
+            userLoading: true,
+          }));
+
+          return this.authService
+            .login(userName, password)
+            .pipe(map((user) => loginSuccess({ user })));
+        })
       ),
     { dispatch: true }
   );
@@ -43,10 +73,12 @@ export class AuthEffects {
   @Effect()
   registerSuccess$ = this.actions$.pipe(
     ofType(registerSuccess),
-    tap(({ res }) => {
+    map((x) => x.id),
+    tap((id) => {
       return this.authStore.update((state) => ({
         ...state,
-        id: res.id as unknown as number,
+        id,
+        idLoading: false,
       }));
     })
   );
@@ -57,25 +89,32 @@ export class AuthEffects {
     tap((error) => this.authStore.update((state) => ({ ...state, error })))
   );
 
-  loadMainNavigation$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(login),
-        switchMap(({ userName, password }) =>
-          this.authService
-            .login(userName, password)
-            .pipe(map((user) => loginSuccess({ user })))
-        )
-      ),
-    { dispatch: true }
-  );
-
   @Effect()
   loginSuccess$ = this.actions$.pipe(
     ofType(loginSuccess),
-    tap((user) => {
+    tap(({ user }) => {
+      console.log('res user: ', user);
+      this.storageService.setValue({ key: USER_ID, value: user.id });
+      this.storageService.setValue({
+        key: ACCESS_TOKEN_KEY,
+        value: user.accessToken,
+      });
+      this.storageService.setValue({
+        key: REFRESH_TOKEN_KEY,
+        value: user.refreshToken,
+      });
       //save data to localStorage
     }),
-    tap((user) => this.authStore.update((state) => ({ ...state, user })))
+    map((x) => x.user),
+    tap((user) =>
+      this.authStore.update((state) => {
+        console.log('user!!! ', user);
+        return {
+          ...state,
+          user,
+          userLoading: false,
+        };
+      })
+    )
   );
 }

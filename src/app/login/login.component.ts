@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { AuthFacade } from '../auth/state/auth.facade';
+import { AuthQuery } from '../auth/state/auth.query';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,8 @@ import { AuthFacade } from '../auth/state/auth.facade';
 })
 export class LoginComponent implements OnInit {
   passwordsMissMatch: boolean;
+  user$ = this.authQuery.selectUser$;
+  userLoading$ = this.authQuery.selectUserLoading$;
 
   loginForm = new FormGroup({
     userName: new FormControl('', {
@@ -29,13 +32,22 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private navController: NavController,
-    private authFacade: AuthFacade
+    private authFacade: AuthFacade,
+    private authQuery: AuthQuery
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user$.subscribe((user) => console.log('user: ', user));
+    this.userLoading$.subscribe((userLoading) =>
+      console.log('userLoading: ', userLoading)
+    );
+  }
 
   loginClicked() {
-    // this.authFacade.
+    this.authFacade.login(
+      this.userNameControl.value,
+      this.passwordControl.value
+    );
   }
 
   navigateBack() {

@@ -1,6 +1,6 @@
 import { ID } from '@datorama/akita';
 import { createAction, props } from '@datorama/akita-ng-effects';
-import { User } from './auth.models';
+import { User, UserRO } from './auth.models';
 
 export const login = createAction(
   '[Auth] Login',
@@ -10,7 +10,7 @@ export const login = createAction(
 export const loginSuccess = createAction(
   '[Auth] Login Success',
   props<{
-    user: User;
+    user: UserRO;
   }>()
 );
 
@@ -29,7 +29,7 @@ export const register = createAction(
 export const registerSuccess = createAction(
   '[Auth] Register Success',
   props<{
-    res: { id: number };
+    id: number;
   }>()
 );
 

@@ -6,6 +6,16 @@ export interface User {
   firstName: string;
   lastName: string;
   password?: string;
-  token?: string;
   id?: ID;
+}
+
+export interface UserRO {
+  id: ID;
+  created: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  accessToken: string;
+  refreshToken: string;
 }

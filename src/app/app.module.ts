@@ -12,6 +12,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,7 @@ import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
     AkitaNgEffectsModule.forFeature([AuthEffects]),
     AppRoutingModule,
     HttpClientModule,
-    // environment.production ? [] : AkitaNgDevtools.forRoot(),
+    FormsModule,
     AkitaNgRouterStoreModule,
   ],
   providers: [

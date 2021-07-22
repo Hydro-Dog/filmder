@@ -6,80 +6,95 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form [formGroup]="registrationForm" class="m-b-40">
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
-        position="floating"
-        >User name
-        {{
-          isControlInvalid("userName") ? getErrorMessage("userName") : ""
-        }}</ion-label
-      >
-      <ion-input formControlName="userName" type="text"></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('email') ? 'danger' : 'dark'"
-        position="floating"
-        >Email
-        {{
-          isControlInvalid("email") ? getErrorMessage("email") : ""
-        }}</ion-label
-      >
-      <ion-input formControlName="email" type="text" required></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('firstName') ? 'danger' : 'dark'"
-        position="floating"
-        >First name
-        {{
-          isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
-        }}</ion-label
-      >
-      <ion-input formControlName="firstName" type="text" required></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('lastName') ? 'danger' : 'dark'"
-        position="floating"
-        >Last name
-        {{
-          isControlInvalid("lastName") ? getErrorMessage("lastName") : ""
-        }}</ion-label
-      >
-      <ion-input formControlName="lastName" type="text" required></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('password') ? 'danger' : 'dark'"
-        position="floating"
-        >Password
-        {{
-          isControlInvalid("password") ? getErrorMessage("password") : ""
-        }}</ion-label
-      >
-      <ion-input type="text" formControlName="password" required></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('passwordConfirm') ? 'danger' : 'dark'"
-        position="floating"
-        >Confirm password
-        {{
-          isControlInvalid("passwordConfirm")
-            ? getErrorMessage("passwordConfirm")
-            : ""
-        }}</ion-label
-      >
-      <ion-input formControlName="passwordConfirm" type="text"></ion-input>
-    </ion-item>
-  </form>
-  <ion-button
-    class="d-flex"
-    [disabled]="registrationForm.invalid && passwordConfirmControl.value"
-    (click)="registerClicked()"
-    >Register</ion-button
-  >
+  <div *ngIf="selectId$ | async; else registration" class="container">
+    <div class="d-flex d-middle m-b-20">Please confirm your email</div>
+    <ion-button
+      [routerLink]="['/login']"
+      size="large"
+      expand="block"
+      fill="solid"
+      >Login</ion-button
+    >
+  </div>
+  <ng-template #registration>
+    <form [formGroup]="registrationForm" class="m-b-40">
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
+          position="floating"
+          >User name
+          {{
+            isControlInvalid("userName") ? getErrorMessage("userName") : ""
+          }}</ion-label
+        >
+        <ion-input formControlName="userName" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('email') ? 'danger' : 'dark'"
+          position="floating"
+          >Email
+          {{
+            isControlInvalid("email") ? getErrorMessage("email") : ""
+          }}</ion-label
+        >
+        <ion-input formControlName="email" type="text" required></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('firstName') ? 'danger' : 'dark'"
+          position="floating"
+          >First name
+          {{
+            isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
+          }}</ion-label
+        >
+        <ion-input formControlName="firstName" type="text" required></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('lastName') ? 'danger' : 'dark'"
+          position="floating"
+          >Last name
+          {{
+            isControlInvalid("lastName") ? getErrorMessage("lastName") : ""
+          }}</ion-label
+        >
+        <ion-input formControlName="lastName" type="text" required></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('password') ? 'danger' : 'dark'"
+          position="floating"
+          >Password
+          {{
+            isControlInvalid("password") ? getErrorMessage("password") : ""
+          }}</ion-label
+        >
+        <ion-input type="text" formControlName="password" required></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label
+          [color]="isControlInvalid('passwordConfirm') ? 'danger' : 'dark'"
+          position="floating"
+          >Confirm password
+          {{
+            isControlInvalid("passwordConfirm")
+              ? getErrorMessage("passwordConfirm")
+              : ""
+          }}</ion-label
+        >
+        <ion-input formControlName="passwordConfirm" type="text"></ion-input>
+      </ion-item>
+    </form>
+    <ion-button
+      class="d-flex"
+      [disabled]="registrationForm.invalid && passwordConfirmControl.value"
+      (click)="registerClicked()"
+      >Register</ion-button
+    >
+    <div *ngIf="selectIdLoading$ | async" class="m-t-20">
+      <ion-spinner class="d-flex m-auto" name="bubbles"></ion-spinner>
+    </div>
+  </ng-template>
 </ion-content>
