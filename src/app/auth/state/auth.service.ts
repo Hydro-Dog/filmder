@@ -43,4 +43,8 @@ export class AuthService {
       user
     );
   }
+
+  mockApiRequest() {
+    return this.http.get(`${environment.apiUrl}/api/users`);
+  }
 }

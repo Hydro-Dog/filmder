@@ -7,12 +7,18 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { combineLatest, from, Observable } from 'rxjs';
-import { ACCESS_TOKEN_KEY, StorageService } from '../services/storage.service';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import {
+  ACCESS_TOKEN_KEY,
+  StorageService,
+  USER_ID,
+} from '../services/storage.service';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class ParamInterceptor implements HttpInterceptor {
-  constructor(private storageService: StorageService) {}
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(private storageService: StorageService) {
+    console.log('AuthInterceptor');
+  }
 
   intercept(
     req: HttpRequest<any>,
@@ -20,22 +26,24 @@ export class ParamInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return combineLatest([
       from(this.storageService.getValue(ACCESS_TOKEN_KEY)),
-      from(this.storageService.getValue('userId')),
+      from(this.storageService.getValue(USER_ID)),
     ]).pipe(
       map(([accessToken, userId]) => {
+        console.log('accessToken, userId: ', accessToken, userId);
         if (accessToken && userId) {
           const headers = new HttpHeaders({
-            Authorization: accessToken,
-            Id: userId,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
           });
-
-          return req.clone({ headers });
+          console.log(
+            'headers: ',
+            req.clone({ headers }).headers.get('Authorization')
+          );
+          return req.url.includes('/api') ? req.clone({ headers }) : req;
         }
         console.warn('no headers were set');
         return req;
       }),
-      switchMap(() => next.handle(req))
+      switchMap((req) => next.handle(req))
     );
   }
 }
