@@ -14,6 +14,7 @@ import { AuthEffects } from './auth/state/auth.effects';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './auth/interceptors/token.interceptor';
+import { ErrorInterceptor } from './auth/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,12 @@ import { AuthInterceptor } from './auth/interceptors/token.interceptor';
       useClass: AuthInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
+
     {
       provide: NG_ENTITY_SERVICE_CONFIG,
       useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' },

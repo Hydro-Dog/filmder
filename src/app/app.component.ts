@@ -30,9 +30,8 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  onShowStorageValueClick() {
-    console.log('storageKey: ', this.storageKey);
-    this.showStorageValue$.next(this.storageKey);
+  onShowStorageValueClick(val: string) {
+    this.showStorageValue$.next(val);
   }
 
   onClearStorageClick() {

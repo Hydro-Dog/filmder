@@ -34,10 +34,6 @@ export class AuthInterceptor implements HttpInterceptor {
           const headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`,
           });
-          console.log(
-            'headers: ',
-            req.clone({ headers }).headers.get('Authorization')
-          );
           return req.url.includes('/api') ? req.clone({ headers }) : req;
         }
         console.warn('no headers were set');
