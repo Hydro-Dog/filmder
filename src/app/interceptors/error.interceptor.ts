@@ -3,8 +3,6 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpErrorResponse,
-  HttpResponse,
   HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -15,7 +13,7 @@ import {
   REFRESH_TOKEN_KEY,
   StorageService,
 } from '../services/storage.service';
-import { AuthService } from '../state/auth.service';
+import { AuthService } from '../auth/state/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
@@ -35,7 +33,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           this.request = request;
           console.log('ERROR CATCHED: ', request);
-          // return this.authService.refresh()
           return combineLatest([
             from(this.storageService.getValue(ACCESS_TOKEN_KEY)),
             from(this.storageService.getValue(REFRESH_TOKEN_KEY)),
@@ -59,31 +56,12 @@ export class ErrorInterceptor implements HttpInterceptor {
               );
             })
           );
-
-          // return getRefresh -> update locatStorage -> nex.handle(req.clone)
         }
 
         this.storageService.clearStorage();
         return throwError('aaa');
       })
     );
-    // return next.handle(request).pipe(
-    //   tap(
-    //     (event: HttpEvent<any>) => {
-    //       if (event instanceof HttpResponse) {
-    //         // do stuff with response if you want
-    //       }
-    //     },
-    //     (err: any) => {
-    //       if (err instanceof HttpErrorResponse) {
-    //         if (err.status === 401) {
-    //           // redirect to the login route
-    //           // or show a modal
-    //         }
-    //       }
-    //     }
-    //   )
-    // );
   }
 }
 
@@ -92,8 +70,3 @@ function getAuthHeaders(accessToken: string) {
     Authorization: `Bearer ${accessToken}`,
   });
 }
-// catchError((error) => {
-//     console.log('error: ', error);
-//     if (error.status === 403) {
-//     }
-//   })

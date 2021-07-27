@@ -7,11 +7,6 @@ const routes = [
     path: '',
     component: AuthComponent,
   },
-  // {
-  //   path: '',
-  //   redirectTo: '/tabs/tab1',
-  //   pathMatch: 'full',
-  // },
 ];
 
 @NgModule({

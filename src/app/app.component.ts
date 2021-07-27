@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { StorageService } from './auth/services/storage.service';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
