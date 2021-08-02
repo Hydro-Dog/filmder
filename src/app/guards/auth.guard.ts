@@ -13,14 +13,7 @@ import { ACCESS_TOKEN_KEY, StorageService } from '../services/storage.service';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(private router: Router, private storageService: StorageService) {}
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | boolean
-    | UrlTree
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree> {
+  canActivate(): Observable<boolean> {
     return from(this.storageService.getValue(ACCESS_TOKEN_KEY)).pipe(
       map((token) => !!token),
       tap((hasToken) => {

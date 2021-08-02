@@ -9,8 +9,4 @@ import { IonicModule } from '@ionic/angular';
   declarations: [LoginComponent],
   imports: [CommonModule, IonicModule, LoginRoutingModule, ReactiveFormsModule],
 })
-export class LoginModule {
-  constructor() {
-    console.log('LoginModule');
-  }
-}
+export class LoginModule {}

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { AuthFacade } from '../auth/state/auth.facade';
@@ -33,11 +34,17 @@ export class LoginComponent implements OnInit {
   constructor(
     private navController: NavController,
     private authFacade: AuthFacade,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.user$.subscribe((user) => console.log('user: ', user));
+    this.user$.subscribe((user) => {
+      console.log('user: ', user);
+      if (user) {
+        this.router.navigate(['/tabs/tab2']);
+      }
+    });
     this.userLoading$.subscribe((userLoading) =>
       console.log('userLoading: ', userLoading)
     );

@@ -14,6 +14,7 @@ import {
   StorageService,
 } from '../services/storage.service';
 import { AuthService } from '../auth/state/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
@@ -21,7 +22,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(
     private storageService: StorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   intercept(
@@ -59,6 +61,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         this.storageService.clearStorage();
+        this.router.navigate(['/auth']);
         return throwError('aaa');
       })
     );
