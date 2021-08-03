@@ -50,11 +50,15 @@
 }
 
 .fw-500 {
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 .fw-600 {
-  font-weight: 600;
+  font-weight: 600 !important;
+}
+
+.fc-grey {
+  color: rgb(153, 153, 153) !important;
 }
 
 $max: 50;

@@ -47,6 +47,17 @@ export class AuthService {
     });
   }
 
+  checkPhoneNumberIsTaken(phoneNumber: string): Observable<any> {
+    const params = new HttpParams({
+      fromObject: {
+        phoneNumber,
+      },
+    });
+    return this.http.get(`${environment.apiUrl}/api/users/phoneNumber`, {
+      params,
+    });
+  }
+
   registerUser(user): Observable<{ id: number }> {
     return this.http.post<{ id: number }>(
       `${environment.apiUrl}/register`,

@@ -8,6 +8,7 @@ import {
 import { of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
+import { AsyncValidatorsService } from '../helpers/async-validators.service';
 
 enum ViewMode {
   View,
@@ -26,7 +27,9 @@ export class Tab3Page implements OnInit {
   profileSettingsForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [this.checkUserNameIsTakenValidator.bind(this)],
+      asyncValidators: [
+        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(this),
+      ],
       updateOn: 'blur',
     }),
 
@@ -37,11 +40,23 @@ export class Tab3Page implements OnInit {
       validators: [Validators.required],
     }),
     phoneNumber: new FormControl('', {
-      validators: [Validators.required],
+      validators: Validators.required,
+      asyncValidators: [
+        this.asyncValidatorsService.checkPhoneNumberIsTakenValidator.bind(this),
+      ],
+      updateOn: 'blur',
     }),
   });
 
-  constructor(private authFacade: AuthFacade) {}
+  userNameControl = this.profileSettingsForm.get('userName');
+  firstNameControl = this.profileSettingsForm.get('firstName');
+  lastNameControl = this.profileSettingsForm.get('lastName');
+  phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
+
+  constructor(
+    private authFacade: AuthFacade,
+    private asyncValidatorsService: AsyncValidatorsService
+  ) {}
 
   ngOnInit(): void {
     throw new Error('Method not implemented.');
@@ -51,23 +66,51 @@ export class Tab3Page implements OnInit {
     this.viewMode = mode;
   }
 
-  checkUserNameIsTakenValidator(control: AbstractControl) {
-    return this.authFacade.checkUserNameIsTaken(control.value).pipe(
-      map(() => {
-        return null;
-      }),
-      catchError(() => of({ isTaken: true }))
-    );
+  isControlInvalid(controlName: string): boolean {
+    const control = this.profileSettingsForm.controls[controlName];
+
+    const result = control.dirty && control.invalid;
+
+    return Boolean(result);
   }
 
-  checkEmailIsTakenValidator(control: AbstractControl) {
-    return this.authFacade.checkEmailIsTaken(control.value).pipe(
-      map(() => {
-        return null;
-      }),
-      catchError(() => of({ isTaken: true }))
-    );
+  getErrorMessage(controlName: string): string {
+    if (this.profileSettingsForm.controls[controlName].hasError('required')) {
+      return '(Field required)';
+    }
+
+    if (
+      controlName === 'userName' &&
+      this.profileSettingsForm.controls[controlName].hasError('isTaken')
+    ) {
+      return '(Username is taken)';
+    }
+
+    if (
+      controlName === 'phoneNumber' &&
+      this.profileSettingsForm.controls[controlName].hasError('isTaken')
+    ) {
+      return '(Phone number is taken)';
+    }
   }
 
-  checkPhoneIsTakenValidator(control: AbstractControl) {}
+  // checkUserNameIsTakenValidator(control: AbstractControl) {
+  //   return this.authFacade.checkUserNameIsTaken(control.value).pipe(
+  //     map(() => {
+  //       return null;
+  //     }),
+  //     catchError(() => of({ isTaken: true }))
+  //   );
+  // }
+
+  // checkEmailIsTakenValidator(control: AbstractControl) {
+  //   return this.authFacade.checkEmailIsTaken(control.value).pipe(
+  //     map(() => {
+  //       return null;
+  //     }),
+  //     catchError(() => of({ isTaken: true }))
+  //   );
+  // }
+
+  // checkPhoneIsTakenValidator(control: AbstractControl) {}
 }

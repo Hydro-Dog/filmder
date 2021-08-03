@@ -17,6 +17,7 @@ import { of, Subject } from 'rxjs';
 import { User } from '../auth/state/auth.models';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
+import { AsyncValidatorsService } from '../helpers/async-validators.service';
 
 @Component({
   selector: 'app-registration',
@@ -31,12 +32,16 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [this.checkUserNameIsTakenValidator.bind(this)],
+      asyncValidators: [
+        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(this),
+      ],
       updateOn: 'blur',
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
-      asyncValidators: [this.checkEmailIsTakenValidator.bind(this)],
+      asyncValidators: [
+        this.asyncValidatorsService.checkEmailIsTakenValidator.bind(this),
+      ],
       updateOn: 'blur',
     }),
     firstName: new FormControl('', {
@@ -71,7 +76,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   constructor(
     private navController: NavController,
     private authFacade: AuthFacade,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private asyncValidatorsService: AsyncValidatorsService
   ) {}
 
   ngOnInit() {
@@ -97,24 +103,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       password: this.passwordControl.value,
     };
     this.authFacade.register(user);
-  }
-
-  checkUserNameIsTakenValidator(control: AbstractControl) {
-    return this.authFacade.checkUserNameIsTaken(control.value).pipe(
-      map(() => {
-        return null;
-      }),
-      catchError(() => of({ isTaken: true }))
-    );
-  }
-
-  checkEmailIsTakenValidator(control: AbstractControl) {
-    return this.authFacade.checkEmailIsTaken(control.value).pipe(
-      map(() => {
-        return null;
-      }),
-      catchError(() => of({ isTaken: true }))
-    );
   }
 
   matchPasswordsValidator(control: AbstractControl): ValidationErrors {

@@ -59,9 +59,6 @@ export class ErrorInterceptor implements HttpInterceptor {
             })
           );
         }
-
-        this.storageService.clearStorage();
-        this.router.navigate(['/auth']);
         return throwError('aaa');
       })
     );

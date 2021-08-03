@@ -38,4 +38,7 @@ export class AuthFacade {
   checkUserNameIsTaken(value: string) {
     return this.authService.checkUserNameIsTaken(value);
   }
+  checkPhoneNumberIsTaken(value: string) {
+    return this.authService.checkPhoneNumberIsTaken(value);
+  }
 }

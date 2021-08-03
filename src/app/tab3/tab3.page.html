@@ -10,19 +10,19 @@
 
   <div *ngIf="viewMode === viewModes.View; else editForm">
     <ion-item>
-      <ion-label style="width: 50%" class="fw-600"> User name </ion-label>
+      <ion-label class="fw-600"> User name </ion-label>
       <ion-label> vlados228 </ion-label>
     </ion-item>
     <ion-item>
-      <ion-label style="width: 50%" class="fw-600"> First name </ion-label>
+      <ion-label class="fw-600"> First name </ion-label>
       <ion-label> Vlad </ion-label>
     </ion-item>
     <ion-item>
-      <ion-label style="width: 50%" class="fw-600"> Last name </ion-label>
+      <ion-label class="fw-600"> Last name </ion-label>
       <ion-label> Babaev </ion-label>
     </ion-item>
     <ion-item>
-      <ion-label style="width: 50%" class="fw-600"> Phone </ion-label>
+      <ion-label class="fw-600"> Phone </ion-label>
       <ion-label> 89599999585 </ion-label>
     </ion-item>
   </div>
@@ -30,19 +30,75 @@
   <ng-template #editForm>
     <form [formGroup]="profileSettingsForm">
       <ion-item>
-        <ion-label style="width: 50%" class="fw-600"> User name </ion-label>
+        <div class="d-flex d-column form-label">
+          <ion-label
+            [color]="isControlInvalid('userName') ? 'danger' : 'medium'"
+            class="fw-600"
+          >
+            User name
+          </ion-label>
+          <div>
+            {{ isControlInvalid("userName") ? getErrorMessage("userName") : ""
+            }}
+          </div>
+        </div>
         <ion-input type="text" formControlName="userName"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label style="width: 50%" class="fw-600"> First name </ion-label>
-        <ion-input type="text" formControlName="firstName"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label style="width: 50%" class="fw-600"> Last name </ion-label>
+        <div class="d-flex d-column form-label">
+          <ion-label
+            [color]="isControlInvalid('firstName') ? 'danger' : 'medium'"
+            class="form-label fw-600"
+          >
+            First name
+          </ion-label>
+          <div>
+            {{ isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
+            }}
+          </div>
+        </div>
         <ion-input type="text" formControlName="lastName"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label style="width: 50%" class="fw-600"> Phone </ion-label>
+        <div class="d-flex d-column form-label">
+          <ion-label
+            [color]="isControlInvalid('lastName') ? 'danger' : 'medium'"
+            class="form-label fw-600"
+          >
+            Last name
+          </ion-label>
+          <div>
+            {{ isControlInvalid("lastName") ? getErrorMessage("lastName") : ""
+            }}
+          </div>
+        </div>
+
+        <ion-input type="text" formControlName="lastName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <div class="d-flex d-column form-label">
+          <ion-label
+            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
+            class="form-label fw-600"
+          >
+            Phone
+          </ion-label>
+          <div>
+            {{ isControlInvalid("phoneNumber") ? getErrorMessage("phoneNumber")
+            : "" }}
+          </div>
+        </div>
+        <!-- <div class="d-flex d-column form-label">
+          <ion-label
+            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
+            class="form-label fw-600"
+          >
+            <div>
+              Phone {{ isControlInvalid("phoneNumber") ?
+              getErrorMessage("phoneNumber") : "" }}
+            </div>
+          </ion-label>
+        </div> -->
         <ion-input type="text" formControlName="phoneNumber"></ion-input>
       </ion-item>
     </form>
