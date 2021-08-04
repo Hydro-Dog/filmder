@@ -1,6 +1,5 @@
-import { ID } from '@datorama/akita';
 import { createAction, props } from '@datorama/akita-ng-effects';
-import { User, UserRO } from './auth.models';
+import { User, UserRO } from '@src/app/data-layers/user/user.models';
 
 export const login = createAction(
   '[Auth] Login',

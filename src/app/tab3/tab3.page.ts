@@ -8,6 +8,7 @@ import {
 import { of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
+import { UserQuery } from '../data-layers/user/user.query';
 import { AsyncValidatorsService } from '../helpers/async-validators.service';
 
 enum ViewMode {
@@ -53,8 +54,10 @@ export class Tab3Page implements OnInit {
   lastNameControl = this.profileSettingsForm.get('lastName');
   phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
 
+  user$ = this.uerQuery.selectUser$;
+
   constructor(
-    private authFacade: AuthFacade,
+    private uerQuery: UserQuery,
     private asyncValidatorsService: AsyncValidatorsService
   ) {}
 
@@ -68,7 +71,6 @@ export class Tab3Page implements OnInit {
 
   isControlInvalid(controlName: string): boolean {
     const control = this.profileSettingsForm.controls[controlName];
-
     const result = control.dirty && control.invalid;
 
     return Boolean(result);

@@ -16,9 +16,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private storageService: StorageService) {
-    console.log('AuthInterceptor');
-  }
+  constructor(private storageService: StorageService) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -29,7 +27,6 @@ export class AuthInterceptor implements HttpInterceptor {
       from(this.storageService.getValue(USER_ID)),
     ]).pipe(
       map(([accessToken, userId]) => {
-        console.log('accessToken, userId: ', accessToken, userId);
         if (accessToken && userId) {
           const headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`,

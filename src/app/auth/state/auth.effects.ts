@@ -6,6 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
+import { UserStore } from '@src/app/data-layers/user/user.store';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   ACCESS_TOKEN_KEY,
@@ -20,7 +21,6 @@ import {
   registerError,
   registerSuccess,
 } from './auth.actions';
-import { UserRO } from './auth.models';
 import { AuthService } from './auth.service';
 import { AuthStore } from './auth.store';
 
@@ -31,6 +31,7 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private authStore: AuthStore,
+    private userStore: UserStore,
     private storageService: StorageService
   ) {}
 
@@ -103,12 +104,10 @@ export class AuthEffects {
         key: REFRESH_TOKEN_KEY,
         value: user.refreshToken,
       });
-      //save data to localStorage
     }),
     map((x) => x.user),
     tap((user) =>
-      this.authStore.update((state) => {
-        console.log('user!!! ', user);
+      this.userStore.update((state) => {
         return {
           ...state,
           user,

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { AuthStore, AuthState } from './auth.store';
+import { UserState, UserStore } from './user.store';
 
 @Injectable({ providedIn: 'root' })
-export class AuthQuery extends Query<AuthState> {
-  selectIsLogin$ = this.select('token');
+export class UserQuery extends Query<UserState> {
+  selectUser$ = this.select('user');
   selectError$ = this.select('error');
-  selectIdLoading$ = this.select('idLoading');
   selectUserLoading$ = this.select('userLoading');
 
-  constructor(protected store: AuthStore) {
+  constructor(protected store: UserStore) {
     super(store);
   }
 }

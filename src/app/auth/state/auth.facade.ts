@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
+import { User } from '@src/app/data-layers/user/user.models';
+import { UserQuery } from '@src/app/data-layers/user/user.query';
 import { Observable } from 'rxjs';
 import { login, register } from './auth.actions';
-import { User } from './auth.models';
 import { AuthQuery } from './auth.query';
 import { AuthService } from './auth.service';
 
@@ -16,12 +17,11 @@ export class AuthFacade {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
+    private userQuery: UserQuery,
     private actions: Actions
   ) {
     this.selectIsLogin$ = this.authQuery.selectIsLogin$;
-    this.selectUser$ = this.authQuery.selectUser$;
-    this.selectId$ = this.authQuery.selectId$;
-    this.selectError$ = this.authQuery.selectError$;
+    this.selectError$ = this.userQuery.selectError$;
   }
 
   login(userName: string, password: string) {

@@ -5,6 +5,7 @@ import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
+import { UserQuery } from '../data-layers/user/user.query';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import { AuthQuery } from '../auth/state/auth.query';
 })
 export class LoginComponent implements OnInit {
   passwordsMissMatch: boolean;
-  user$ = this.authQuery.selectUser$;
+  user$ = this.userQuery.selectUser$;
   userLoading$ = this.authQuery.selectUserLoading$;
 
   loginForm = new FormGroup({
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit {
     private navController: NavController,
     private authFacade: AuthFacade,
     private authQuery: AuthQuery,
+    private userQuery: UserQuery,
     private router: Router
   ) {}
 

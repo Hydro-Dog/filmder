@@ -8,6 +8,8 @@
     </ion-fab-button>
   </div>
 
+  user {{user$ | async}}
+
   <div *ngIf="viewMode === viewModes.View; else editForm">
     <ion-item>
       <ion-label class="fw-600"> User name </ion-label>

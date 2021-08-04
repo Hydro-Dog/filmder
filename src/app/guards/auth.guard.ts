@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate {
     return from(this.storageService.getValue(ACCESS_TOKEN_KEY)).pipe(
       map((token) => !!token),
       tap((hasToken) => {
-        console.log('hasToken: ', hasToken);
         if (!hasToken) {
           this.router.navigate(['/auth']);
         }

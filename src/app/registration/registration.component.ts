@@ -12,11 +12,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-import { catchError, map, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
-import { User } from '../auth/state/auth.models';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
+import { User } from '../data-layers/user/user.models';
 import { AsyncValidatorsService } from '../helpers/async-validators.service';
 
 @Component({
@@ -69,7 +68,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   lastNameControl = this.registrationForm.get('lastName');
   passwordControl = this.registrationForm.get('password');
   passwordConfirmControl = this.registrationForm.get('passwordConfirm');
-  selectId$ = this.authQuery.selectId$;
+
   selectIdLoading$ = this.authQuery.selectIdLoading$;
   destroy$ = new Subject();
 

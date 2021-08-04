@@ -13,6 +13,7 @@ import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/token.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { UserEffects } from './data-layers/user/user.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,7 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
       rippleEffect: false,
     }),
     IonicStorageModule.forRoot(),
-    AkitaNgEffectsModule.forFeature([AuthEffects]),
+    AkitaNgEffectsModule.forFeature([AuthEffects, UserEffects]),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
