@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, from, Subject } from 'rxjs';
+import { combineLatest, from, Subject, timer } from 'rxjs';
 import {
   combineAll,
   switchMap,
@@ -30,18 +30,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.storageService.createStorage();
-    this.user$.subscribe((x) => console.log('x: ', x));
-    from(this.storageService.getValue(USER_ID)).subscribe((x) =>
-      console.log('y: ', x)
-    );
-    combineLatest([this.user$, from(this.storageService.getValue(USER_ID))])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([user, userId]) => {
-        console.log('user, userId', user, userId);
+
+    //use timer to wait until storage created
+    timer(300)
+      .pipe(
+        withLatestFrom(this.user$, from(this.storageService.getValue(USER_ID)))
+      )
+      .subscribe(([_, user, userId]) => {
         if (!user) {
           this.userFacade.getUser(userId);
         }
       });
+    // combineLatest([this.user$, from(this.storageService.getValue(USER_ID))])
+    //   .pipe(takeUntil(this.destroy$))
+    // .subscribe(([user, userId]) => {
+    //   if (!user) {
+    //     this.userFacade.getUser(userId);
+    //   }
+    // });
 
     this.showStorageValue$
       .pipe(
@@ -50,9 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
           return this.storageService.getValue(key);
         })
       )
-      .subscribe((val) => {
-        console.log('val: ', val);
-      });
+      .subscribe();
   }
 
   onShowStorageValueClick(val: string) {

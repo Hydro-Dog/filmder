@@ -18,4 +18,5 @@ export interface UserRO {
   userName: string;
   accessToken: string;
   refreshToken: string;
+  phoneNumber: string;
 }

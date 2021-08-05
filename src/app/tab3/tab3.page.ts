@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { AuthFacade } from '../auth/state/auth.facade';
+import { Subject } from 'rxjs';
+import { takeUntil, skip } from 'rxjs/operators';
 import { UserQuery } from '../data-layers/user/user.query';
 import { AsyncValidatorsService } from '../helpers/async-validators.service';
 
@@ -20,8 +24,9 @@ enum ViewMode {
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tab3Page implements OnInit {
+export class Tab3Page implements OnInit, OnDestroy {
   viewMode = ViewMode.View;
   viewModes = ViewMode;
 
@@ -29,11 +34,12 @@ export class Tab3Page implements OnInit {
     userName: new FormControl('', {
       validators: Validators.required,
       asyncValidators: [
-        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(this),
+        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(
+          this.asyncValidatorsService
+        ),
       ],
       updateOn: 'blur',
     }),
-
     firstName: new FormControl('', {
       validators: Validators.required,
     }),
@@ -43,7 +49,9 @@ export class Tab3Page implements OnInit {
     phoneNumber: new FormControl('', {
       validators: Validators.required,
       asyncValidators: [
-        this.asyncValidatorsService.checkPhoneNumberIsTakenValidator.bind(this),
+        this.asyncValidatorsService.checkPhoneNumberIsTakenValidator.bind(
+          this.asyncValidatorsService
+        ),
       ],
       updateOn: 'blur',
     }),
@@ -55,6 +63,7 @@ export class Tab3Page implements OnInit {
   phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
 
   user$ = this.uerQuery.selectUser$;
+  destroy$ = new Subject();
 
   constructor(
     private uerQuery: UserQuery,
@@ -62,7 +71,32 @@ export class Tab3Page implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.userNameControl.valueChanges.subscribe((x) =>
+      console.log('userNameControl: ', x)
+    );
+    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      if (user) {
+        console.log(
+          'this.asyncValidatorsService: ',
+          this.asyncValidatorsService
+        );
+        const { userName, firstName, lastName, phoneNumber } = user;
+
+        this.profileSettingsForm.disable();
+        this.profileSettingsForm.patchValue(
+          {
+            userName,
+            firstName,
+            lastName,
+            phoneNumber,
+          },
+          { emitEvent: false, onlySelf: true }
+        );
+        this.profileSettingsForm.enable();
+      } else {
+        console.warn('user is null');
+      }
+    });
   }
 
   setViewMode(mode: ViewMode) {
@@ -96,23 +130,7 @@ export class Tab3Page implements OnInit {
     }
   }
 
-  // checkUserNameIsTakenValidator(control: AbstractControl) {
-  //   return this.authFacade.checkUserNameIsTaken(control.value).pipe(
-  //     map(() => {
-  //       return null;
-  //     }),
-  //     catchError(() => of({ isTaken: true }))
-  //   );
-  // }
-
-  // checkEmailIsTakenValidator(control: AbstractControl) {
-  //   return this.authFacade.checkEmailIsTaken(control.value).pipe(
-  //     map(() => {
-  //       return null;
-  //     }),
-  //     catchError(() => of({ isTaken: true }))
-  //   );
-  // }
-
-  // checkPhoneIsTakenValidator(control: AbstractControl) {}
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
 }
