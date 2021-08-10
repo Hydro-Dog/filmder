@@ -9,8 +9,14 @@ import { ID } from '@datorama/akita';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getUser(userId: ID): Observable<UserRO> {
-    console.log('UserService: ', userId);
-    return this.http.get<UserRO>(`${environment.apiUrl}/api/users/${userId}`);
+  getUser(id: ID): Observable<UserRO> {
+    const params = new HttpParams({
+      fromObject: {
+        id,
+      },
+    });
+    return this.http.get<UserRO>(`${environment.apiUrl}/api/users/userId`, {
+      params,
+    });
   }
 }

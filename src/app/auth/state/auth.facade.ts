@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
 import { User } from '@src/app/data-layers/user/user.models';
 import { UserQuery } from '@src/app/data-layers/user/user.query';
+import { ApiError } from '@src/app/shared/models/api-error';
 import { Observable } from 'rxjs';
 import { login, register } from './auth.actions';
 import { AuthQuery } from './auth.query';

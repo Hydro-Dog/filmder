@@ -8,8 +8,6 @@
     </ion-fab-button>
   </div>
 
-  user {{user$ | async}}
-
   <div *ngIf="viewMode === viewModes.View; else editForm">
     <ion-item>
       <ion-label class="fw-600"> User name </ion-label>
@@ -25,7 +23,7 @@
     </ion-item>
     <ion-item>
       <ion-label class="fw-600"> Phone </ion-label>
-      <ion-label> {{phoneNumberControl.value}} </ion-label>
+      <ion-label> {{phoneControl.value}} </ion-label>
     </ion-item>
   </div>
 
@@ -80,28 +78,17 @@
       <ion-item>
         <div class="d-flex d-column form-label">
           <ion-label
-            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
+            [color]="isControlInvalid('phone') ? 'danger' : 'medium'"
             class="form-label fw-600"
           >
-            Phone
+            Last name
           </ion-label>
           <div>
-            {{ isControlInvalid("phoneNumber") ? getErrorMessage("phoneNumber")
-            : "" }}
+            {{ isControlInvalid("phone") ? getErrorMessage("phone") : "" }}
           </div>
         </div>
-        <!-- <div class="d-flex d-column form-label">
-          <ion-label
-            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
-            class="form-label fw-600"
-          >
-            <div>
-              Phone {{ isControlInvalid("phoneNumber") ?
-              getErrorMessage("phoneNumber") : "" }}
-            </div>
-          </ion-label>
-        </div> -->
-        <ion-input type="text" formControlName="phoneNumber"></ion-input>
+
+        <ion-input type="text" formControlName="phone"></ion-input>
       </ion-item>
     </form>
   </ng-template>
@@ -119,11 +106,9 @@
       fill="outline"
       >Cancel</ion-button
     >
-    <ion-button
-      (click)="setViewMode(viewModes.View)"
-      class="complete-button"
-      expand="round"
+    <ion-button (click)="saveChanges()" class="complete-button" expand="round"
       >Save</ion-button
     >
   </div>
+  <filmder-toast-example></filmder-toast-example>
 </ion-content>

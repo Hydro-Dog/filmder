@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   FormGroup,
@@ -10,10 +12,14 @@ import {
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil, skip } from 'rxjs/operators';
+import { combineLatest, forkJoin, of, Subject } from 'rxjs';
+import { takeUntil, skip, switchMap, catchError, tap } from 'rxjs/operators';
+import { AuthFacade } from '../auth/state/auth.facade';
+import { AuthService } from '../auth/state/auth.service';
 import { UserQuery } from '../data-layers/user/user.query';
 import { AsyncValidatorsService } from '../helpers/async-validators.service';
+import { ToastComponentShared } from '../shared/components/toast-component/toast.component';
+import { ApiError } from '../shared/models/api-error';
 
 enum ViewMode {
   View,
@@ -27,17 +33,14 @@ enum ViewMode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tab3Page implements OnInit, OnDestroy {
+  @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
   viewMode = ViewMode.View;
   viewModes = ViewMode;
+  toastErrorMessage: string;
 
   profileSettingsForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [
-        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(
-          this.asyncValidatorsService
-        ),
-      ],
       updateOn: 'blur',
     }),
     firstName: new FormControl('', {
@@ -46,13 +49,8 @@ export class Tab3Page implements OnInit, OnDestroy {
     lastName: new FormControl('', {
       validators: [Validators.required],
     }),
-    phoneNumber: new FormControl('', {
+    phone: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [
-        this.asyncValidatorsService.checkPhoneNumberIsTakenValidator.bind(
-          this.asyncValidatorsService
-        ),
-      ],
       updateOn: 'blur',
     }),
   });
@@ -60,43 +58,62 @@ export class Tab3Page implements OnInit, OnDestroy {
   userNameControl = this.profileSettingsForm.get('userName');
   firstNameControl = this.profileSettingsForm.get('firstName');
   lastNameControl = this.profileSettingsForm.get('lastName');
-  phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
+  phoneControl = this.profileSettingsForm.get('phone');
 
   user$ = this.uerQuery.selectUser$;
+  saveChanges$ = new Subject();
   destroy$ = new Subject();
 
   constructor(
     private uerQuery: UserQuery,
-    private asyncValidatorsService: AsyncValidatorsService
+    private authFacade: AuthFacade,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.userNameControl.valueChanges.subscribe((x) =>
-      console.log('userNameControl: ', x)
-    );
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        console.log(
-          'this.asyncValidatorsService: ',
-          this.asyncValidatorsService
-        );
         const { userName, firstName, lastName, phoneNumber } = user;
 
-        this.profileSettingsForm.disable();
         this.profileSettingsForm.patchValue(
           {
             userName,
             firstName,
             lastName,
-            phoneNumber,
+            phone: phoneNumber,
           },
           { emitEvent: false, onlySelf: true }
         );
-        this.profileSettingsForm.enable();
+        this.cd.detectChanges();
       } else {
         console.warn('user is null');
       }
     });
+
+    this.saveChanges$
+      .pipe(
+        switchMap(() => {
+          return forkJoin([
+            this.authFacade
+              .checkUserNameIsTaken(this.userNameControl.value)
+              .pipe(catchError((e) => of(e))),
+            this.authFacade
+              .checkPhoneNumberIsTaken(this.phoneControl.value)
+              .pipe(catchError((e) => of(e))),
+          ]).pipe(
+            tap((err) => {
+              const errorMessages = (err as ApiError[])
+                .filter((x) => x.error)
+                .map((x) => x.error.message);
+              if (errorMessages.length) {
+                this.toastComponentShared.displayToast(errorMessages[0]);
+              }
+            })
+          );
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 
   setViewMode(mode: ViewMode) {
@@ -114,20 +131,11 @@ export class Tab3Page implements OnInit, OnDestroy {
     if (this.profileSettingsForm.controls[controlName].hasError('required')) {
       return '(Field required)';
     }
+  }
 
-    if (
-      controlName === 'userName' &&
-      this.profileSettingsForm.controls[controlName].hasError('isTaken')
-    ) {
-      return '(Username is taken)';
-    }
-
-    if (
-      controlName === 'phoneNumber' &&
-      this.profileSettingsForm.controls[controlName].hasError('isTaken')
-    ) {
-      return '(Phone number is taken)';
-    }
+  saveChanges() {
+    this.setViewMode(this.viewModes.View);
+    this.saveChanges$.next();
   }
 
   ngOnDestroy(): void {
