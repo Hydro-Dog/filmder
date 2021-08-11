@@ -15,6 +15,7 @@ import {
 } from '../services/storage.service';
 import { AuthService } from '../auth/state/auth.service';
 import { Router } from '@angular/router';
+import { ApiError } from '../shared/models/api-error';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
@@ -32,6 +33,11 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((error) => {
+        if (error.error.message === 'Refresh expired') {
+          this.storageService.setValue({ key: ACCESS_TOKEN_KEY, value: null });
+          this.storageService.setValue({ key: REFRESH_TOKEN_KEY, value: null });
+          this.router.navigate(['/auth']);
+        }
         if (error.status === 401) {
           this.request = request;
           console.log('ERROR CATCHED: ', request);
@@ -59,6 +65,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             })
           );
         }
+
         return throwError(error);
       })
     );

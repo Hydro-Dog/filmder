@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable } from 'rxjs';
-import { getUser } from './user.actions';
+import { getUser, updateUser } from './user.actions';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
@@ -23,7 +23,10 @@ export class UserFacade {
   }
 
   getUser(userId: ID) {
-    console.log('getUser: ', userId);
     this.actions.dispatch(getUser({ userId }));
+  }
+
+  updateUser(user: Partial<User>) {
+    this.actions.dispatch(updateUser({ user }));
   }
 }

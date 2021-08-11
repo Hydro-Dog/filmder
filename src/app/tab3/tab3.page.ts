@@ -16,6 +16,7 @@ import { combineLatest, forkJoin, of, Subject } from 'rxjs';
 import { takeUntil, skip, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthService } from '../auth/state/auth.service';
+import { UserFacade } from '../data-layers/user/user.facade';
 import { UserQuery } from '../data-layers/user/user.query';
 import { AsyncValidatorsService } from '../helpers/async-validators.service';
 import { ToastComponentShared } from '../shared/components/toast-component/toast.component';
@@ -67,6 +68,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   constructor(
     private uerQuery: UserQuery,
     private authFacade: AuthFacade,
+    private userFacade: UserFacade,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -107,6 +109,8 @@ export class Tab3Page implements OnInit, OnDestroy {
                 .map((x) => x.error.message);
               if (errorMessages.length) {
                 this.toastComponentShared.displayToast(errorMessages[0]);
+              } else {
+                this.userFacade.updateUser(this.profileSettingsForm.value);
               }
             })
           );

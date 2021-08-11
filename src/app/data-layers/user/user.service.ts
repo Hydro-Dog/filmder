@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
-import { UserRO } from './user.models';
+import { User, UserRO } from './user.models';
 import { ID } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
@@ -18,5 +18,9 @@ export class UserService {
     return this.http.get<UserRO>(`${environment.apiUrl}/api/users/userId`, {
       params,
     });
+  }
+
+  updateUser(payload: Partial<User>): Observable<UserRO> {
+    return this.http.put<UserRO>(`${environment.apiUrl}/api/users`, payload);
   }
 }

@@ -15,7 +15,10 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private storageService: StorageService) {}
   canActivate(): Observable<boolean> {
     return from(this.storageService.getValue(ACCESS_TOKEN_KEY)).pipe(
-      map((token) => !!token),
+      map((token) => {
+        console.log('token: ', token);
+        return !!token;
+      }),
       tap((hasToken) => {
         if (!hasToken) {
           this.router.navigate(['/auth']);

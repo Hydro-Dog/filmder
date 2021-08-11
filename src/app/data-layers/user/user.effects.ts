@@ -7,7 +7,12 @@ import {
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { getUser, getUserSuccess } from './user.actions';
+import {
+  getUser,
+  getUserSuccess,
+  updateUser,
+  updateUserSuccess,
+} from './user.actions';
 import { UserService } from './user.service';
 import { UserStore } from './user.store';
 
@@ -38,6 +43,24 @@ export class UserEffects {
     { dispatch: true }
   );
 
+  updateUser$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(updateUser),
+        switchMap(({ user }) => {
+          this.userStore.update((state) => ({
+            ...state,
+            userLoading: true,
+          }));
+          console.log(1000);
+          return this.userService
+            .updateUser(user)
+            .pipe(map((user) => updateUserSuccess({ user })));
+        })
+      ),
+    { dispatch: true }
+  );
+
   @Effect()
   getUserSuccess$ = this.actions$.pipe(
     ofType(getUserSuccess),
@@ -50,36 +73,15 @@ export class UserEffects {
     })
   );
 
-  // @Effect()
-  // registerError$ = this.actions$.pipe(
-  //   ofType(registerError),
-  //   tap((error) => this.authStore.update((state) => ({ ...state, error })))
-  // );
-
-  // @Effect()
-  // loginSuccess$ = this.actions$.pipe(
-  //   ofType(loginSuccess),
-  //   tap(({ user }) => {
-  //     console.log('res user: ', user);
-  //     this.storageService.setValue({ key: USER_ID, value: user.id });
-  //     this.storageService.setValue({
-  //       key: ACCESS_TOKEN_KEY,
-  //       value: user.accessToken,
-  //     });
-  //     this.storageService.setValue({
-  //       key: REFRESH_TOKEN_KEY,
-  //       value: user.refreshToken,
-  //     });
-  //   }),
-  //   map((x) => x.user),
-  //   tap((user) =>
-  //     this.authStore.update((state) => {
-  //       return {
-  //         ...state,
-  //         user,
-  //         userLoading: false,
-  //       };
-  //     })
-  //   )
-  // );
+  @Effect()
+  updateUserSuccess$ = this.actions$.pipe(
+    ofType(updateUserSuccess),
+    tap(({ user }) => {
+      return this.userStore.update((state) => ({
+        ...state,
+        userLoading: false,
+        user,
+      }));
+    })
+  );
 }
