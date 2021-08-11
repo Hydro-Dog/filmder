@@ -23,7 +23,7 @@
     </ion-item>
     <ion-item>
       <ion-label class="fw-600"> Phone </ion-label>
-      <ion-label> {{phoneControl.value}} </ion-label>
+      <ion-label> {{phoneNumberControl.value}} </ion-label>
     </ion-item>
   </div>
 
@@ -78,17 +78,18 @@
       <ion-item>
         <div class="d-flex d-column form-label">
           <ion-label
-            [color]="isControlInvalid('phone') ? 'danger' : 'medium'"
+            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
             class="form-label fw-600"
           >
             Last name
           </ion-label>
           <div>
-            {{ isControlInvalid("phone") ? getErrorMessage("phone") : "" }}
+            {{ isControlInvalid("phoneNumber") ? getErrorMessage("phoneNumber")
+            : "" }}
           </div>
         </div>
 
-        <ion-input type="text" formControlName="phone"></ion-input>
+        <ion-input type="text" formControlName="phoneNumber"></ion-input>
       </ion-item>
     </form>
   </ng-template>

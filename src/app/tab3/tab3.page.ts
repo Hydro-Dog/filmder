@@ -50,7 +50,7 @@ export class Tab3Page implements OnInit, OnDestroy {
     lastName: new FormControl('', {
       validators: [Validators.required],
     }),
-    phone: new FormControl('', {
+    phoneNumber: new FormControl('', {
       validators: Validators.required,
       updateOn: 'blur',
     }),
@@ -59,7 +59,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   userNameControl = this.profileSettingsForm.get('userName');
   firstNameControl = this.profileSettingsForm.get('firstName');
   lastNameControl = this.profileSettingsForm.get('lastName');
-  phoneControl = this.profileSettingsForm.get('phone');
+  phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
 
   user$ = this.uerQuery.selectUser$;
   saveChanges$ = new Subject();
@@ -82,7 +82,7 @@ export class Tab3Page implements OnInit, OnDestroy {
             userName,
             firstName,
             lastName,
-            phone: phoneNumber,
+            phoneNumber,
           },
           { emitEvent: false, onlySelf: true }
         );
@@ -100,7 +100,7 @@ export class Tab3Page implements OnInit, OnDestroy {
               .checkUserNameIsTaken(this.userNameControl.value)
               .pipe(catchError((e) => of(e))),
             this.authFacade
-              .checkPhoneNumberIsTaken(this.phoneControl.value)
+              .checkPhoneNumberIsTaken(this.phoneNumberControl.value)
               .pipe(catchError((e) => of(e))),
           ]).pipe(
             tap((err) => {
