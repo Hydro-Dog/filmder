@@ -5,7 +5,7 @@ import { AuthStore, AuthState } from './auth.store';
 @Injectable({ providedIn: 'root' })
 export class AuthQuery extends Query<AuthState> {
   selectIsLogin$ = this.select('token');
-  selectError$ = this.select('error');
+  selectLoginError$ = this.select('loginError');
   selectIdLoading$ = this.select('idLoading');
   selectUserLoading$ = this.select('userLoading');
 

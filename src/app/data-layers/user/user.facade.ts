@@ -13,11 +13,7 @@ export class UserFacade {
   selectId$: Observable<number>;
   selectError$: Observable<any>;
 
-  constructor(
-    private userQuery: UserQuery,
-    private userService: UserService,
-    private actions: Actions
-  ) {
+  constructor(private userQuery: UserQuery, private actions: Actions) {
     this.selectUser$ = this.userQuery.selectUser$;
     this.selectError$ = this.userQuery.selectError$;
   }

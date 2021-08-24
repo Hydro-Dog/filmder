@@ -32,7 +32,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     userName: new FormControl('', {
       validators: Validators.required,
       asyncValidators: [
-        this.asyncValidatorsService.checkUserNameIsTakenValidator.bind(this),
+        this.asyncValidatorsService.checkUserNameIsTakenRegStep.bind(this),
       ],
       updateOn: 'blur',
     }),
@@ -70,6 +70,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   passwordConfirmControl = this.registrationForm.get('passwordConfirm');
 
   selectIdLoading$ = this.authQuery.selectIdLoading$;
+  selectIsLogin$ = this.authQuery.selectIsLogin$;
   destroy$ = new Subject();
 
   constructor(
@@ -119,6 +120,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   isControlInvalid(controlName: string): boolean {
     const control = this.registrationForm.controls[controlName];
+    console.log(this.registrationForm.controls['userName']);
 
     const result = control.dirty && control.invalid;
 

@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
 import { UserQuery } from '../data-layers/user/user.query';
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
   passwordsMissMatch: boolean;
   user$ = this.userQuery.selectUser$;
   userLoading$ = this.authQuery.selectUserLoading$;
+  selectLoginError$ = this.authQuery.selectLoginError$;
 
   loginForm = new FormGroup({
     userName: new FormControl('', {
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit {
   userNameControl = this.loginForm.get('userName');
   passwordControl = this.loginForm.get('password');
 
+  showError$ = new BehaviorSubject(false);
   destroy$ = new Subject();
 
   constructor(
@@ -41,8 +44,8 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.user$.subscribe((user) => {
-      console.log('user: ', user);
+    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      console.log('user!!!', user);
       if (user) {
         this.router.navigate(['/tabs/tab2']);
       }
@@ -50,9 +53,24 @@ export class LoginComponent implements OnInit {
     this.userLoading$.subscribe((userLoading) =>
       console.log('userLoading: ', userLoading)
     );
+
+    this.selectLoginError$
+      .pipe(
+        filter((x) => !!x),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((err) => {
+        console.log('selectLoginError: ', err);
+
+        this.showError$.next(true);
+        setTimeout(() => {
+          this.showError$.next(false);
+        }, 3000);
+      });
   }
 
   loginClicked() {
+    console.log('loginClicked:');
     this.authFacade.login(
       this.userNameControl.value,
       this.passwordControl.value

@@ -37,17 +37,10 @@ export class AppComponent implements OnInit, OnDestroy {
         withLatestFrom(this.user$, from(this.storageService.getValue(USER_ID)))
       )
       .subscribe(([_, user, userId]) => {
-        if (!user) {
+        if (!user && userId) {
           this.userFacade.getUser(userId);
         }
       });
-    // combineLatest([this.user$, from(this.storageService.getValue(USER_ID))])
-    //   .pipe(takeUntil(this.destroy$))
-    // .subscribe(([user, userId]) => {
-    //   if (!user) {
-    //     this.userFacade.getUser(userId);
-    //   }
-    // });
 
     this.showStorageValue$
       .pipe(
@@ -57,18 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  onShowStorageValueClick(val: string) {
-    this.showStorageValue$.next(val);
-  }
-
-  onClearStorageClick() {
-    this.storageService.clearStorage();
-
-    from(this.storageService.getStorage()).subscribe((storage) =>
-      console.log('storage: ', storage)
-    );
   }
 
   ngOnDestroy(): void {

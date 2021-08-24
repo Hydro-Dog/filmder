@@ -26,6 +26,7 @@ export class AuthFacade {
   }
 
   login(userName: string, password: string) {
+    console.log('login!!!');
     this.actions.dispatch(login({ userName, password }));
   }
 
@@ -35,6 +36,9 @@ export class AuthFacade {
 
   checkEmailIsTaken(value: string) {
     return this.authService.checkEmailIsTaken(value);
+  }
+  getByUsername(value: string) {
+    return this.authService.getByUsername(value);
   }
   checkUserNameIsTaken(value: string) {
     return this.authService.checkUserNameIsTaken(value);

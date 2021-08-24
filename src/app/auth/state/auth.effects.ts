@@ -7,7 +7,8 @@ import {
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
 import { UserStore } from '@src/app/data-layers/user/user.store';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
@@ -16,6 +17,7 @@ import {
 } from '../../services/storage.service';
 import {
   login,
+  loginError,
   loginSuccess,
   register,
   registerError,
@@ -63,9 +65,21 @@ export class AuthEffects {
             userLoading: true,
           }));
 
-          return this.authService
-            .login(userName, password)
-            .pipe(map((user) => loginSuccess({ user })));
+          console.log('ofType(login)');
+
+          return this.authService.login(userName, password).pipe(
+            map((user) => loginSuccess({ user })),
+            catchError((error) => of(loginError({ error })))
+            // catchError((error) => {
+            //   loginError({ error });
+            //   this.authStore.update((state) => ({
+            //     ...state,
+            //     loginError: error,
+            //     userLoading: false,
+            //   }));
+            //   return of(error);
+            // })
+          );
         })
       ),
     { dispatch: true }
@@ -94,7 +108,7 @@ export class AuthEffects {
   loginSuccess$ = this.actions$.pipe(
     ofType(loginSuccess),
     tap(({ user }) => {
-      console.log('res user: ', user);
+      console.log('    ofType(loginSuccess)');
       this.storageService.setValue({ key: USER_ID, value: user.id });
       this.storageService.setValue({
         key: ACCESS_TOKEN_KEY,
@@ -115,5 +129,18 @@ export class AuthEffects {
         };
       })
     )
+  );
+
+  @Effect()
+  loginError$ = this.actions$.pipe(
+    ofType(loginError),
+    tap((error) => {
+      console.log('ofType(loginError)');
+      this.authStore.update((state) => ({
+        ...state,
+        loginError: error,
+        userLoading: false,
+      }));
+    })
   );
 }

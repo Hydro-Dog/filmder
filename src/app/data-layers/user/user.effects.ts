@@ -34,7 +34,6 @@ export class UserEffects {
             ...state,
             userLoading: true,
           }));
-          console.log(1000);
           return this.userService
             .getUser(userId)
             .pipe(map((user) => getUserSuccess({ user })));
@@ -52,7 +51,6 @@ export class UserEffects {
             ...state,
             userLoading: true,
           }));
-          console.log(1000);
           return this.userService
             .updateUser(user)
             .pipe(map((user) => updateUserSuccess({ user })));

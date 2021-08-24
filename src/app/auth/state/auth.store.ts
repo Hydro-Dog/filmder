@@ -6,7 +6,7 @@ export interface AuthState {
   user: UserRO | null;
   token: string | null;
   id: number | null;
-  error: any;
+  loginError: any;
   idLoading: boolean;
   userLoading: boolean;
 }
@@ -16,7 +16,7 @@ export function createInitialState(): AuthState {
     user: null,
     token: null,
     id: null,
-    error: null,
+    loginError: null,
     idLoading: false,
     userLoading: false,
   };
