@@ -32,13 +32,14 @@
   </form>
   <ion-button
     class="d-flex"
-    [disabled]="loginForm.invalid || (userLoading$ | async)"
+    [disabled]="
+      loginForm.invalid || (userLoading$ | async) || (userLoading$ | async)
+    "
     (click)="loginClicked()"
     >Login</ion-button
   >
-  <div *ngIf="(userLoading$ | async) && !(showError$ | async)" class="m-t-20">
-    <ion-spinner class="d-flex m-auto" name="bubbles"></ion-spinner>
-  </div>
+
   {{ showError$ | async }}
   <div *ngIf="showError$ | async">Invalid Username or Password</div>
+  <filmder-toast-example [position]="'bottom'"></filmder-toast-example>
 </ion-content>

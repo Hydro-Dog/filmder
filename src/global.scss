@@ -29,6 +29,12 @@
 .d-flex {
   display: flex;
 }
+
+.d-r-flex {
+  display: flex;
+  flex-direction: row;
+}
+
 .d-middle {
   justify-content: center;
 }

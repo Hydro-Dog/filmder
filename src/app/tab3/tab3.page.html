@@ -94,12 +94,18 @@
     </form>
   </ng-template>
 
-  <div class="d-flex d-column">
+  <div
+    [hidden]="viewMode === viewModes.Edit"
+    class="d-r-flex d-middle form-buttons-container"
+  >
     <ion-button fill="outline">Change email</ion-button>
     <ion-button fill="outline">Change password</ion-button>
   </div>
 
-  <div class="d-flex d-middle complete-buttons-container">
+  <div
+    [hidden]="viewMode !== viewModes.Edit"
+    class="d-flex d-middle complete-buttons-container"
+  >
     <ion-button
       (click)="setViewMode(viewModes.View)"
       class="complete-button"
@@ -107,7 +113,11 @@
       fill="outline"
       >Cancel</ion-button
     >
-    <ion-button (click)="saveChanges()" class="complete-button" expand="round"
+    <ion-button
+      [disabled]="profileSettingsForm.invalid"
+      (click)="saveChanges()"
+      class="complete-button"
+      expand="round"
       >Save</ion-button
     >
   </div>

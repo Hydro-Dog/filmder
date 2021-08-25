@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
@@ -7,6 +12,10 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
 import { UserQuery } from '../data-layers/user/user.query';
+import {
+  ToastComponentShared,
+  ToastPosition,
+} from '@shared/components/toast-component/toast.component';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +24,9 @@ import { UserQuery } from '../data-layers/user/user.query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
+  ToastPosition = ToastPosition;
+  @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
+  loginErrorMessage = 'Invalid username or password';
   passwordsMissMatch: boolean;
   user$ = this.userQuery.selectUser$;
   userLoading$ = this.authQuery.selectUserLoading$;
@@ -59,13 +71,8 @@ export class LoginComponent implements OnInit {
         filter((x) => !!x),
         takeUntil(this.destroy$)
       )
-      .subscribe((err) => {
-        console.log('selectLoginError: ', err);
-
-        this.showError$.next(true);
-        setTimeout(() => {
-          this.showError$.next(false);
-        }, 3000);
+      .subscribe(() => {
+        this.toastComponentShared.displayToast(this.loginErrorMessage);
       });
   }
 

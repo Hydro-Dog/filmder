@@ -1,16 +1,16 @@
-#toast-container {
+.toast-container {
+  z-index: 1;
   display: none;
   position: absolute;
   width: 100%;
-  top: 0;
 
-  #content {
+  .content {
     text-align: center;
     margin: auto;
     background: var(--main-red);
     color: white;
     padding: 10px;
     width: 70%;
-    border-radius: 0px 0px 15px 15px;
+    // border-radius: 0px 0px 15px 15px;
   }
 }

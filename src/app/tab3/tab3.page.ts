@@ -6,19 +6,12 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
-import { combineLatest, forkJoin, of, Subject } from 'rxjs';
-import { takeUntil, skip, switchMap, catchError, tap } from 'rxjs/operators';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { forkJoin, of, Subject } from 'rxjs';
+import { takeUntil, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
-import { AuthService } from '../auth/state/auth.service';
 import { UserFacade } from '../data-layers/user/user.facade';
 import { UserQuery } from '../data-layers/user/user.query';
-import { AsyncValidatorsService } from '../helpers/async-validators.service';
 import { ToastComponentShared } from '../shared/components/toast-component/toast.component';
 import { ApiError } from '../shared/models/api-error';
 
@@ -51,7 +44,6 @@ export class Tab3Page implements OnInit, OnDestroy {
       validators: [Validators.required],
     }),
     phoneNumber: new FormControl('', {
-      validators: Validators.required,
       updateOn: 'blur',
     }),
   });
@@ -111,6 +103,7 @@ export class Tab3Page implements OnInit, OnDestroy {
                 this.toastComponentShared.displayToast(errorMessages[0]);
               } else {
                 this.userFacade.updateUser(this.profileSettingsForm.value);
+                this.setViewMode(this.viewModes.View);
               }
             })
           );
@@ -138,7 +131,6 @@ export class Tab3Page implements OnInit, OnDestroy {
   }
 
   saveChanges() {
-    this.setViewMode(this.viewModes.View);
     this.saveChanges$.next();
   }
 
