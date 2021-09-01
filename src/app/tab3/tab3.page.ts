@@ -12,7 +12,7 @@ import { takeUntil, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layers/user/user.facade';
 import { UserQuery } from '../data-layers/user/user.query';
-import { ToastComponentShared } from '../shared/components/toast-component/toast.component';
+import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { ApiError } from '../shared/models/api-error';
 
 enum ViewMode {

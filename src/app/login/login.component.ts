@@ -15,7 +15,7 @@ import { UserQuery } from '../data-layers/user/user.query';
 import {
   ToastComponentShared,
   ToastPosition,
-} from '@shared/components/toast-component/toast.component';
+} from '@shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-login',

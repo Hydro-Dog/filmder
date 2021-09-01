@@ -1,43 +1,37 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ComponentRef,
   ElementRef,
-  HostListener,
-  OnDestroy,
+  OnInit,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import {
+  AlertConfirm,
+  AlertExample,
+} from '../shared/components/modal/modal.component';
 
 @Component({
   templateUrl: 'match-invites.component.html',
   styleUrls: ['match-invites.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatchInvitesComponent implements OnDestroy {
-  @ViewChild(MatchInvitesComponent)
-  myComponentRef: ComponentRef<MatchInvitesComponent>;
-  constructor(
-    private navController: NavController,
-    private viewContainer: ViewContainerRef,
-    private elementRef: ElementRef
-  ) {}
+export class MatchInvitesComponent implements OnInit {
+  @ViewChild(AlertExample, { static: true })
+  alertExample: AlertExample;
 
-  @HostListener('unloaded')
-  ngOnDestroy(): void {
-    console.log('ngOnDestroy');
-    this.elementRef.nativeElement.remove();
-  }
+  constructor(private navController: NavController) {}
+
+  ngOnInit(): void {}
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
   }
 
-  ionViewDidLeave() {
-    console.log('ionViewDidLeave myComponentRef: ', this.viewContainer);
-    // this.elementRef.nativeElement.remove();
-    // this.myComponentRef.destroy();
-    this.ngOnDestroy();
+  openConfirmationModal() {
+    this.alertExample
+      .presentAlertConfirm('Accept invite?')
+      .then((x: AlertConfirm) => console.log('x: ', x.role));
   }
 }
