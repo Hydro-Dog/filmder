@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="h100 d-flex">
+    <div class="w100 m-auto d-c-flex form-buttons-container">
+      <ion-list>
+        <ion-list-header>
+          <ion-label> Fast game </ion-label>
+        </ion-list-header>
+        <form [formGroup]="fastMatchForm">
+          <ion-item>
+            <ion-label>Mode</ion-label>
+            <ion-select
+              formControlName="mode"
+              value="brown"
+              okText="Okay"
+              cancelText="Dismiss"
+            >
+              <ion-select-option value="matchModes.Popular"
+                >Popular</ion-select-option
+              >
+              <ion-select-option value="matchModes.TopRated"
+                >Top rated</ion-select-option
+              >
+              <ion-select-option value="matchModes.Latest"
+                >Latest</ion-select-option
+              >
+              <ion-select-option value="matchModes.NowPlaying"
+                >Now playing</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Region</ion-label>
+            <ion-select
+              formControlName="region"
+              value="brown"
+              okText="Okay"
+              cancelText="Dismiss"
+            >
+              <ion-select-option value="matchModes.Popular"
+                >Popular</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <div class="d-flex d-c-flex form-label">
+              <ion-label> Matches limit </ion-label>
+              <!-- <div>
+                {{ isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
+                }}
+              </div> -->
+            </div>
+            <ion-input
+              type="number"
+              min="1"
+              max="9"
+              formControlName="matchLimit"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-list>
+    </div>
+  </div>
+  <div (click)="click()">aaaa</div>
+  <filmder-picker></filmder-picker>
+</ion-content>

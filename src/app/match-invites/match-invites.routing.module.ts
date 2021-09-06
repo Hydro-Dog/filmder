@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatchInvitesComponent } from '../match-invites/match-invites.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: MatchInvitesComponent,
-  },
+  // {
+  //   path: '',
+  //   component: MatchInvitesComponent,
+  // },
 ];
 
 @NgModule({

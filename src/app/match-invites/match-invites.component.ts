@@ -9,7 +9,7 @@ import {
 import { NavController } from '@ionic/angular';
 import {
   AlertConfirm,
-  AlertExample,
+  ModalComponentShared,
 } from '../shared/components/modal/modal.component';
 
 @Component({
@@ -18,8 +18,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatchInvitesComponent implements OnInit {
-  @ViewChild(AlertExample, { static: true })
-  alertExample: AlertExample;
+  @ViewChild(ModalComponentShared, { static: true })
+  alertExample: ModalComponentShared;
 
   constructor(private navController: NavController) {}
 

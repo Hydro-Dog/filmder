@@ -30,20 +30,18 @@
   display: flex;
 }
 
-.d-r-flex {
-  display: flex;
-  flex-direction: row;
-}
-
 .d-middle {
+  display: flex;
   justify-content: center;
 }
 
 .d-r-reverse {
+  display: flex;
   flex-direction: row-reverse;
 }
 
-.d-column {
+.d-c-flex {
+  display: flex;
   flex-direction: column;
 }
 
@@ -51,8 +49,12 @@
   margin: auto;
 }
 
-.h-100 {
+.h100 {
   height: 100%;
+}
+
+.w100 {
+  width: 100%;
 }
 
 .fw-500 {

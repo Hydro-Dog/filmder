@@ -30,7 +30,7 @@
   <ng-template #editForm>
     <form [formGroup]="profileSettingsForm">
       <ion-item>
-        <div class="d-flex d-column form-label">
+        <div class="d-flex d-c-flex form-label">
           <ion-label
             [color]="isControlInvalid('userName') ? 'danger' : 'medium'"
             class="fw-600"
@@ -45,7 +45,7 @@
         <ion-input type="text" formControlName="userName"></ion-input>
       </ion-item>
       <ion-item>
-        <div class="d-flex d-column form-label">
+        <div class="d-flex d-c-flex form-label">
           <ion-label
             [color]="isControlInvalid('firstName') ? 'danger' : 'medium'"
             class="form-label fw-600"
@@ -60,7 +60,7 @@
         <ion-input type="text" formControlName="firstName"></ion-input>
       </ion-item>
       <ion-item>
-        <div class="d-flex d-column form-label">
+        <div class="d-flex d-c-flex form-label">
           <ion-label
             [color]="isControlInvalid('lastName') ? 'danger' : 'medium'"
             class="form-label fw-600"
@@ -76,7 +76,7 @@
         <ion-input type="text" formControlName="lastName"></ion-input>
       </ion-item>
       <ion-item>
-        <div class="d-flex d-column form-label">
+        <div class="d-flex d-c-flex form-label">
           <ion-label
             [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
             class="form-label fw-600"
@@ -96,7 +96,7 @@
 
   <div
     [hidden]="viewMode === viewModes.Edit"
-    class="d-r-flex d-middle form-buttons-container"
+    class="d-flex d-middle form-buttons-container"
   >
     <ion-button fill="outline">Change email</ion-button>
     <ion-button fill="outline">Change password</ion-button>
@@ -121,5 +121,5 @@
       >Save</ion-button
     >
   </div>
-  <filmder-toast-example></filmder-toast-example>
+  <filmder-toast></filmder-toast>
 </ion-content>

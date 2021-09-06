@@ -16,11 +16,11 @@ export interface AlertConfirm {
 }
 
 @Component({
-  selector: 'alert-example',
+  selector: 'filmder-modal',
   templateUrl: 'modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class AlertExample {
+export class ModalComponentShared {
   constructor(public alertController: AlertController) {}
 
   async presentAlert(
