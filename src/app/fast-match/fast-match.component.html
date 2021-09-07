@@ -36,8 +36,8 @@
             </ion-select>
           </ion-item>
           <ion-item>
-            <ion-label>Region</ion-label>
-            <ion-select
+            <ion-label (click)="regionClicked$.next()">Region</ion-label>
+            <!-- <ion-select
               formControlName="region"
               value="brown"
               okText="Okay"
@@ -46,7 +46,7 @@
               <ion-select-option value="matchModes.Popular"
                 >Popular</ion-select-option
               >
-            </ion-select>
+            </ion-select> -->
           </ion-item>
           <ion-item>
             <div class="d-flex d-c-flex form-label">
@@ -67,6 +67,5 @@
       </ion-list>
     </div>
   </div>
-  <div (click)="click()">aaaa</div>
   <filmder-picker></filmder-picker>
 </ion-content>

@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/token.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { UserEffects } from './data-layers/user/user.effects';
+import { FilmEffects } from './data-layers/film/film.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +25,7 @@ import { UserEffects } from './data-layers/user/user.effects';
       rippleEffect: false,
     }),
     IonicStorageModule.forRoot(),
-    AkitaNgEffectsModule.forFeature([AuthEffects, UserEffects]),
+    AkitaNgEffectsModule.forFeature([AuthEffects, UserEffects, FilmEffects]),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,

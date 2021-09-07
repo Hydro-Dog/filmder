@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { PickerController } from '@ionic/angular';
 import { PickerOptions } from '@ionic/core';
 
+export interface PickerOptionsInterface {
+  text: string;
+  value: string;
+}
+
 @Component({
   selector: 'filmder-picker',
   templateUrl: 'picker.component.html',
@@ -11,8 +16,8 @@ export class PickerComponentShared {
   animals: string[] = ['Tiger', 'Lion', 'Elephant', 'Fox', 'Wolf'];
   constructor(private pickerController: PickerController) {}
 
-  async showPicker() {
-    let options: PickerOptions = {
+  async showPicker(options: PickerOptionsInterface[]) {
+    let pickerOptions: PickerOptions = {
       buttons: [
         {
           text: 'Cancel',
@@ -27,21 +32,13 @@ export class PickerComponentShared {
       ],
       columns: [
         {
-          name: 'Animals',
-          options: this.getColumnOptions(),
+          name: 'Regions',
+          options,
         },
       ],
     };
 
-    let picker = await this.pickerController.create(options);
+    let picker = await this.pickerController.create(pickerOptions);
     picker.present();
-  }
-
-  getColumnOptions() {
-    let options = [];
-    this.animals.forEach((x) => {
-      options.push({ text: x, value: x });
-    });
-    return options;
   }
 }
