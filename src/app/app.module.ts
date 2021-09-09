@@ -11,10 +11,11 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { FormsModule } from '@angular/forms';
-import { AuthInterceptor } from './interceptors/token.interceptor';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { AuthInterceptor } from './shared/interceptors/token.interceptor';
 import { UserEffects } from './data-layers/user/user.effects';
 import { FilmEffects } from './data-layers/film/film.effects';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
+import { GameModesEffects } from './data-layers/game-mode/game-mode.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,12 @@ import { FilmEffects } from './data-layers/film/film.effects';
       rippleEffect: false,
     }),
     IonicStorageModule.forRoot(),
-    AkitaNgEffectsModule.forFeature([AuthEffects, UserEffects, FilmEffects]),
+    AkitaNgEffectsModule.forFeature([
+      AuthEffects,
+      UserEffects,
+      FilmEffects,
+      GameModesEffects,
+    ]),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,

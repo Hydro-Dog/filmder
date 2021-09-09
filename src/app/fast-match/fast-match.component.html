@@ -21,10 +21,12 @@
               okText="Okay"
               cancelText="Dismiss"
             >
-              <ion-select-option value="matchModes.Popular"
-                >Popular</ion-select-option
+              <ion-select-option
+                *ngFor="let gameMode of gameModes$ | async"
+                value="gameMode.id"
+                >{{ gameMode.name }}</ion-select-option
               >
-              <ion-select-option value="matchModes.TopRated"
+              <!-- <ion-select-option value="matchModes.TopRated"
                 >Top rated</ion-select-option
               >
               <ion-select-option value="matchModes.Latest"
@@ -32,7 +34,7 @@
               >
               <ion-select-option value="matchModes.NowPlaying"
                 >Now playing</ion-select-option
-              >
+              > -->
             </ion-select>
           </ion-item>
           <ion-item>

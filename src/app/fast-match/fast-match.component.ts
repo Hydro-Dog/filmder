@@ -10,6 +10,7 @@ import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { FilmFacade } from '../data-layers/film/film.facade';
+import { GameModesFacade } from '../data-layers/game-mode/game-mode.facade';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
 import { MatchModes } from '../shared/models/match-modes';
 
@@ -41,18 +42,22 @@ export class FastMatchComponent implements OnInit, OnDestroy {
       }));
     })
   );
+  gameModes$ = this.gameModesFacade.selectGameModes$;
   regionClicked$ = new Subject();
   destroy$ = new Subject();
 
   constructor(
     private navController: NavController,
     private fb: FormBuilder,
-    private filmFacade: FilmFacade
+    private filmFacade: FilmFacade,
+    private gameModesFacade: GameModesFacade
   ) {}
 
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
-    this.regions$.subscribe((x) => console.log('x: ', x));
+    this.gameModesFacade.getGameModes();
+    this.regions$.subscribe((x) => console.log('regions: ', x));
+    this.gameModes$.subscribe((x) => console.log('game modes: ', x));
 
     this.regionClicked$
       .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
@@ -69,10 +74,4 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
   }
-  // async regionClicked() {
-  //   console.log('regionClicked');
-  //   const regions = await this.regions$.toPromise();
-  //   console.log('regions: ', regions);
-  //   this.pickerComponent.showPicker(regions);
-  // }
 }
