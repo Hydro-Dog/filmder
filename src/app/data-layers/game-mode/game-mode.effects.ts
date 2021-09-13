@@ -6,6 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
+import { startCase } from 'lodash';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { getGameModes, getGameModesSuccess } from './game-mode.actions';
 import { GameModesService } from './game-mode.service';
@@ -44,10 +45,14 @@ export class GameModesEffects {
   getGameModesSuccess$ = this.actions$.pipe(
     ofType(getGameModesSuccess),
     tap(({ gameModes }) => {
+      console.log('gameModes: ', gameModes);
       return this.gameModesStore.update((state) => ({
         ...state,
         gameModesLoading: false,
-        gameModes,
+        gameModes: gameModes.map((item) => ({
+          ...item,
+          name: startCase(item.value),
+        })),
       }));
     })
   );

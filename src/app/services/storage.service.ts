@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { from } from 'rxjs';
 import { Storage } from '@ionic/storage';
 
 export const ACCESS_TOKEN_KEY = 'access-token';

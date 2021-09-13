@@ -11,11 +11,11 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { FormsModule } from '@angular/forms';
-import { AuthInterceptor } from './shared/interceptors/token.interceptor';
 import { UserEffects } from './data-layers/user/user.effects';
 import { FilmEffects } from './data-layers/film/film.effects';
-import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
+import { ErrorInterceptor } from './auth/error.interceptor';
 import { GameModesEffects } from './data-layers/game-mode/game-mode.effects';
+import { AuthInterceptor } from './auth/token.interceptor';
 
 @NgModule({
   declarations: [AppComponent],

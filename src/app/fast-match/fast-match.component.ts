@@ -26,19 +26,26 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   fastMatchForm = this.fb.group({
     mode: [MatchModes.Popular, Validators.required],
     region: ['', Validators.required],
-    matchLimit: ['', Validators.required],
+    matchLimit: [
+      '',
+      [Validators.required, Validators.min(1), Validators.max(25)],
+    ],
     partnerUsername: ['', Validators.required],
+    inviteUser: ['', Validators.required],
   });
 
   regions$ = this.filmFacade.selectAvailableRegions$.pipe(
     map((x) => {
       console.log(
         'map: ',
-        x.map((item) => ({ name: item.english_name, value: item.english_name }))
+        x.map((item) => ({
+          name: item.english_name,
+          value: item.iso_3166_1,
+        }))
       );
       return x.map((item) => ({
         text: item.english_name,
-        value: item.english_name,
+        value: item.iso_3166_1,
       }));
     })
   );
@@ -56,14 +63,13 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
-    this.regions$.subscribe((x) => console.log('regions: ', x));
-    this.gameModes$.subscribe((x) => console.log('game modes: ', x));
-
     this.regionClicked$
       .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
       .subscribe(([_, regions]) => {
         //todo: why regions items have 'duration', 'transform' fields?
-        this.pickerComponent.showPicker(regions);
+        this.pickerComponent
+          .showPicker(regions)
+          .then(({ data }) => console.log('picker: ', data.Regions));
       });
   }
 

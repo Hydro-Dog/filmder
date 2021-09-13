@@ -26,43 +26,28 @@
                 value="gameMode.id"
                 >{{ gameMode.name }}</ion-select-option
               >
-              <!-- <ion-select-option value="matchModes.TopRated"
-                >Top rated</ion-select-option
-              >
-              <ion-select-option value="matchModes.Latest"
-                >Latest</ion-select-option
-              >
-              <ion-select-option value="matchModes.NowPlaying"
-                >Now playing</ion-select-option
-              > -->
             </ion-select>
           </ion-item>
           <ion-item>
             <ion-label (click)="regionClicked$.next()">Region</ion-label>
-            <!-- <ion-select
-              formControlName="region"
-              value="brown"
-              okText="Okay"
-              cancelText="Dismiss"
-            >
-              <ion-select-option value="matchModes.Popular"
-                >Popular</ion-select-option
-              >
-            </ion-select> -->
           </ion-item>
           <ion-item>
-            <div class="d-flex d-c-flex form-label">
-              <ion-label> Matches limit </ion-label>
-              <!-- <div>
-                {{ isControlInvalid("firstName") ? getErrorMessage("firstName") : ""
-                }}
-              </div> -->
-            </div>
+            <ion-label> Matches limit </ion-label>
+
             <ion-input
               type="number"
               min="1"
-              max="9"
+              max="25"
               formControlName="matchLimit"
+              placeholder="1-25"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label> Guest username </ion-label>
+
+            <ion-input
+              formControlName="inviteUser"
+              placeholder="Username"
             ></ion-input>
           </ion-item>
         </form>

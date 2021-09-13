@@ -12,10 +12,10 @@ import {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
   StorageService,
-} from '../../services/storage.service';
-import { AuthService } from '../../auth/state/auth.service';
+} from '../services/storage.service';
+import { AuthService } from './state/auth.service';
 import { Router } from '@angular/router';
-import { ApiError } from '../models/api-error';
+import { ApiError } from '../shared/models/api-error';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {

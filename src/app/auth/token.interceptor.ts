@@ -7,12 +7,13 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { combineLatest, from, Observable } from 'rxjs';
+
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   ACCESS_TOKEN_KEY,
   StorageService,
   USER_ID,
-} from '../../services/storage.service';
-import { map, switchMap, tap } from 'rxjs/operators';
+} from '../services/storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {

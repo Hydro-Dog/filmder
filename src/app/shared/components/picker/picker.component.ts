@@ -40,5 +40,6 @@ export class PickerComponentShared {
 
     let picker = await this.pickerController.create(pickerOptions);
     picker.present();
+    return await picker.onDidDismiss();
   }
 }
