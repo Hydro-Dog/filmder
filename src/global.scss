@@ -69,6 +69,18 @@
   color: rgb(153, 153, 153) !important;
 }
 
+.ta-r {
+  text-align: right;
+}
+
+.ta-l {
+  text-align: left;
+}
+
+.ta-c {
+  text-align: center;
+}
+
 $max: 50;
 $offset: 5;
 $unit: "px"; // Feel free to change the unit.

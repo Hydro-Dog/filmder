@@ -14,25 +14,28 @@
         </ion-list-header>
         <form [formGroup]="fastMatchForm">
           <ion-item>
-            <ion-label>Mode</ion-label>
+            <div class="m-r-10 fw-600">Mode</div>
             <ion-select
-              formControlName="mode"
+              formControlName="gameMode"
               value="brown"
               okText="Okay"
               cancelText="Dismiss"
             >
               <ion-select-option
                 *ngFor="let gameMode of gameModes$ | async"
-                value="gameMode.id"
+                [value]="gameMode.id"
                 >{{ gameMode.name }}</ion-select-option
               >
             </ion-select>
           </ion-item>
           <ion-item>
-            <ion-label (click)="regionClicked$.next()">Region</ion-label>
+            <div class="m-r-10 fw-600" (click)="regionClicked$.next()">
+              Region
+            </div>
+            <div>{{ (pickedRegion$ | async).text }}</div>
           </ion-item>
           <ion-item>
-            <ion-label> Matches limit </ion-label>
+            <div class="m-r-10 fw-600">Matches limit</div>
 
             <ion-input
               type="number"
@@ -43,15 +46,24 @@
             ></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label> Guest username </ion-label>
+            <div class="m-r-10 fw-600">Guest username</div>
 
             <ion-input
-              formControlName="inviteUser"
+              formControlName="guestUsername"
               placeholder="Username"
             ></ion-input>
           </ion-item>
         </form>
       </ion-list>
+      <!-- todo: create straightforward validator for disabling the button -->
+      <ion-button
+        (click)="createGame()"
+        [disabled]="
+          (fastMatchForm.statusChanges | async) === 'INVALID' ||
+          !(pickedRegion$ | async).value
+        "
+        >Create
+      </ion-button>
     </div>
   </div>
   <filmder-picker></filmder-picker>

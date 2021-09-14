@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PickerController } from '@ionic/angular';
-import { PickerOptions } from '@ionic/core';
+import { OverlayEventDetail, PickerOptions } from '@ionic/core';
 
 export interface PickerOptionsInterface {
   text: string;
@@ -16,7 +16,9 @@ export class PickerComponentShared {
   animals: string[] = ['Tiger', 'Lion', 'Elephant', 'Fox', 'Wolf'];
   constructor(private pickerController: PickerController) {}
 
-  async showPicker(options: PickerOptionsInterface[]) {
+  async showPicker(
+    options: PickerOptionsInterface[]
+  ): Promise<OverlayEventDetail<any>> {
     let pickerOptions: PickerOptions = {
       buttons: [
         {

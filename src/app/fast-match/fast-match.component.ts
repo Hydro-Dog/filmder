@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { FilmFacade } from '../data-layers/film/film.facade';
 import { GameModesFacade } from '../data-layers/game-mode/game-mode.facade';
@@ -24,33 +24,25 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   pickerComponent: PickerComponentShared;
   matchModes = MatchModes;
   fastMatchForm = this.fb.group({
-    mode: [MatchModes.Popular, Validators.required],
-    region: ['', Validators.required],
+    gameMode: ['', Validators.required],
     matchLimit: [
       '',
       [Validators.required, Validators.min(1), Validators.max(25)],
     ],
-    partnerUsername: ['', Validators.required],
-    inviteUser: ['', Validators.required],
+    guestUsername: ['', Validators.required],
   });
 
   regions$ = this.filmFacade.selectAvailableRegions$.pipe(
-    map((x) => {
-      console.log(
-        'map: ',
-        x.map((item) => ({
-          name: item.english_name,
-          value: item.iso_3166_1,
-        }))
-      );
-      return x.map((item) => ({
+    map((x) =>
+      x.map((item) => ({
         text: item.english_name,
         value: item.iso_3166_1,
-      }));
-    })
+      }))
+    )
   );
   gameModes$ = this.gameModesFacade.selectGameModes$;
   regionClicked$ = new Subject();
+  pickedRegion$ = new BehaviorSubject({ text: '', value: '' });
   destroy$ = new Subject();
 
   constructor(
@@ -67,14 +59,20 @@ export class FastMatchComponent implements OnInit, OnDestroy {
       .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
       .subscribe(([_, regions]) => {
         //todo: why regions items have 'duration', 'transform' fields?
-        this.pickerComponent
-          .showPicker(regions)
-          .then(({ data }) => console.log('picker: ', data.Regions));
+        this.pickerComponent.showPicker(regions).then(({ data }) => {
+          this.pickedRegion$.next(data.Regions);
+          console.log('picker: ', data.Regions);
+        });
       });
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab2/create');
+  }
+
+  createGame() {
+    console.log(this.fastMatchForm.value);
+    console.log(this.pickedRegion$.value);
   }
 
   ngOnDestroy(): void {
