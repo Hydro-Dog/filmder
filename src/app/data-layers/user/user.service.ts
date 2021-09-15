@@ -23,4 +23,39 @@ export class UserService {
   updateUser(payload: Partial<User>): Observable<UserRO> {
     return this.http.put<UserRO>(`${environment.apiUrl}/api/users`, payload);
   }
+
+  checkUserNameIsTaken(userName: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/api/users/checkUserName`, {
+      userName,
+    });
+  }
+
+  getByUsername(userName: string): Observable<any> {
+    const params = new HttpParams({
+      fromObject: {
+        userName,
+      },
+    });
+
+    return this.http.get(`${environment.apiUrl}/api/users/userName`, {
+      params,
+    });
+  }
+
+  checkEmailIsTaken(email: string): Observable<any> {
+    const params = new HttpParams({
+      fromObject: {
+        email,
+      },
+    });
+    return this.http.get(`${environment.apiUrl}/api/users/email`, {
+      params,
+    });
+  }
+
+  checkPhoneNumberIsTaken(phoneNumber: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/api/users/checkPhoneNumber`, {
+      phoneNumber,
+    });
+  }
 }

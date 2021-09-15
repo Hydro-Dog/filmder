@@ -53,13 +53,12 @@ export class Tab3Page implements OnInit, OnDestroy {
   lastNameControl = this.profileSettingsForm.get('lastName');
   phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
 
-  user$ = this.uerQuery.selectUser$;
+  user$ = this.userQuery.selectUser$;
   saveChanges$ = new Subject();
   destroy$ = new Subject();
 
   constructor(
-    private uerQuery: UserQuery,
-    private authFacade: AuthFacade,
+    private userQuery: UserQuery,
     private userFacade: UserFacade,
     private cd: ChangeDetectorRef
   ) {}
@@ -88,10 +87,10 @@ export class Tab3Page implements OnInit, OnDestroy {
       .pipe(
         switchMap(() => {
           return forkJoin([
-            this.authFacade
+            this.userFacade
               .checkUserNameIsTaken(this.userNameControl.value)
               .pipe(catchError((e) => of(e))),
-            this.authFacade
+            this.userFacade
               .checkPhoneNumberIsTaken(this.phoneNumberControl.value)
               .pipe(catchError((e) => of(e))),
           ]).pipe(

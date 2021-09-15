@@ -16,7 +16,7 @@ import { of, Subject } from 'rxjs';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
 import { User } from '../data-layers/user/user.models';
-import { AsyncValidatorsService } from '../helpers/async-validators.service';
+import { AsyncValidatorsService } from '../services/async-validators.service';
 
 @Component({
   selector: 'app-registration',

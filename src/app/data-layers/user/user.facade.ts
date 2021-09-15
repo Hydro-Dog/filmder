@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { getUser, updateUser } from './user.actions';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
@@ -13,7 +14,11 @@ export class UserFacade {
   selectId$: Observable<number>;
   selectError$: Observable<any>;
 
-  constructor(private userQuery: UserQuery, private actions: Actions) {
+  constructor(
+    private userQuery: UserQuery,
+    private userService: UserService,
+    private actions: Actions
+  ) {
     this.selectUser$ = this.userQuery.selectUser$;
     this.selectError$ = this.userQuery.selectError$;
   }
@@ -24,5 +29,21 @@ export class UserFacade {
 
   updateUser(user: Partial<User>) {
     this.actions.dispatch(updateUser({ user }));
+  }
+
+  checkEmailIsTaken(value: string) {
+    return this.userService.checkEmailIsTaken(value);
+  }
+
+  getByUsername(value: string) {
+    return this.userService.getByUsername(value).pipe(map((val) => val.user));
+  }
+
+  checkUserNameIsTaken(value: string) {
+    return this.userService.checkUserNameIsTaken(value);
+  }
+
+  checkPhoneNumberIsTaken(value: string) {
+    return this.userService.checkPhoneNumberIsTaken(value);
   }
 }

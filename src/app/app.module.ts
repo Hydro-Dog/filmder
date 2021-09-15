@@ -16,6 +16,9 @@ import { FilmEffects } from './data-layers/film/film.effects';
 import { ErrorInterceptor } from './auth/error.interceptor';
 import { GameModesEffects } from './data-layers/game-mode/game-mode.effects';
 import { AuthInterceptor } from './auth/token.interceptor';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +39,7 @@ import { AuthInterceptor } from './auth/token.interceptor';
     HttpClientModule,
     FormsModule,
     AkitaNgRouterStoreModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

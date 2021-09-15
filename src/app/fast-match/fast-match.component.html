@@ -1,4 +1,5 @@
 <ion-header>
+  <filmder-toast></filmder-toast>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
@@ -9,11 +10,8 @@
   <div class="h100 d-flex">
     <div class="w100 m-auto d-c-flex form-buttons-container">
       <ion-list>
-        <ion-list-header>
-          <ion-label> Fast game </ion-label>
-        </ion-list-header>
         <form [formGroup]="fastMatchForm">
-          <ion-item>
+          <ion-item class="p-l-15">
             <div class="m-r-10 fw-600">Mode</div>
             <ion-select
               formControlName="gameMode"
@@ -28,13 +26,15 @@
               >
             </ion-select>
           </ion-item>
+
           <ion-item>
-            <div class="m-r-10 fw-600" (click)="regionClicked$.next()">
+            <div class="m-r-10 p-l-15 fw-600" (click)="regionClicked$.next()">
               Region
             </div>
             <div>{{ (pickedRegion$ | async).text }}</div>
           </ion-item>
-          <ion-item>
+
+          <ion-item class="p-l-15">
             <div class="m-r-10 fw-600">Matches limit</div>
 
             <ion-input
@@ -45,7 +45,8 @@
               placeholder="1-25"
             ></ion-input>
           </ion-item>
-          <ion-item>
+
+          <ion-item class="p-l-15">
             <div class="m-r-10 fw-600">Guest username</div>
 
             <ion-input
@@ -55,7 +56,7 @@
           </ion-item>
         </form>
       </ion-list>
-      <!-- todo: create straightforward validator for disabling the button -->
+      <!-- TODO: create straightforward validator for disabling the button -->
       <ion-button
         (click)="createGame()"
         [disabled]="

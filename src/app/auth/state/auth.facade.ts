@@ -34,16 +34,19 @@ export class AuthFacade {
     this.actions.dispatch(register({ user }));
   }
 
-  checkEmailIsTaken(value: string) {
-    return this.authService.checkEmailIsTaken(value);
-  }
-  getByUsername(value: string) {
-    return this.authService.getByUsername(value);
-  }
-  checkUserNameIsTaken(value: string) {
-    return this.authService.checkUserNameIsTaken(value);
-  }
-  checkPhoneNumberIsTaken(value: string) {
-    return this.authService.checkPhoneNumberIsTaken(value);
-  }
+  // checkEmailIsTaken(value: string) {
+  //   return this.authService.checkEmailIsTaken(value);
+  // }
+
+  // getByUsername(value: string) {
+  //   return this.authService.getByUsername(value);
+  // }
+
+  // checkUserNameIsTaken(value: string) {
+  //   return this.authService.checkUserNameIsTaken(value);
+  // }
+
+  // checkPhoneNumberIsTaken(value: string) {
+  //   return this.authService.checkPhoneNumberIsTaken(value);
+  // }
 }
