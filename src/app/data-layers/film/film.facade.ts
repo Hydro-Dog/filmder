@@ -7,15 +7,16 @@ import { FilmQuery } from './film.query';
 
 @Injectable({ providedIn: 'root' })
 export class FilmFacade {
-  selectAvailableRegions$: Observable<Region[]>;
-  selectError$: Observable<any>;
-  selectAvailableRegionsLoading$: Observable<boolean>;
+  selectAvailableRegions$ = this.filmQuery.selectAvailableRegions$;
+  selectError$ = this.filmQuery.selectError$;
+  selectAvailableRegionsLoading$ =
+    this.filmQuery.selectAvailableRegionsLoading$;
 
   constructor(private filmQuery: FilmQuery, private actions: Actions) {
-    this.selectAvailableRegions$ = this.filmQuery.selectAvailableRegions$;
-    this.selectError$ = this.filmQuery.selectError$;
-    this.selectAvailableRegionsLoading$ =
-      this.filmQuery.selectAvailableRegionsLoading$;
+    // this.selectAvailableRegions$ = this.filmQuery.selectAvailableRegions$;
+    // this.selectError$ = this.filmQuery.selectError$;
+    // this.selectAvailableRegionsLoading$ =
+    //   this.filmQuery.selectAvailableRegionsLoading$;
   }
 
   getAvailableRegions() {

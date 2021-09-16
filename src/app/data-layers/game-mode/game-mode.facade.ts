@@ -7,17 +7,17 @@ import { GameModesQuery } from './game-mode.query';
 
 @Injectable({ providedIn: 'root' })
 export class GameModesFacade {
-  selectGameModes$: Observable<GameModes[]>;
-  selectError$: Observable<any>;
-  selectGameModesLoading$: Observable<boolean>;
+  selectGameModes$ = this.gameModesQuery.selectGameModes$;
+  selectError$ = this.gameModesQuery.selectError$;
+  selectGameModesLoading$ = this.gameModesQuery.selectGameModesLoading$;
 
   constructor(
     private gameModesQuery: GameModesQuery,
     private actions: Actions
   ) {
-    this.selectGameModes$ = this.gameModesQuery.selectGameModes$;
-    this.selectError$ = this.gameModesQuery.selectError$;
-    this.selectGameModesLoading$ = this.gameModesQuery.selectGameModesLoading$;
+    // this.selectGameModes$ = this.gameModesQuery.selectGameModes$;
+    // this.selectError$ = this.gameModesQuery.selectError$;
+    // this.selectGameModesLoading$ = this.gameModesQuery.selectGameModesLoading$;
   }
 
   getGameModes() {
