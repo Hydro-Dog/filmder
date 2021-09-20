@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { FilmFacade } from '../data-layers/film/film.facade';
 import { GameModesFacade } from '../data-layers/game-mode/game-mode.facade';
+import { MatchSessionFacade } from '../data-layers/match-session/match-session.facade';
 import { UserFacade } from '../data-layers/user/user.facade';
 import { UserQuery } from '../data-layers/user/user.query';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
@@ -28,7 +29,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   @ViewChild(ToastComponentShared)
   readonly toastComponentShared: ToastComponentShared;
 
-  readonly matchModes = MatchModes;
   readonly fastMatchForm = this.fb.group({
     gameMode: ['', Validators.required],
     matchLimit: [
@@ -58,7 +58,8 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     private filmFacade: FilmFacade,
     private gameModesFacade: GameModesFacade,
     private userFacade: UserFacade,
-    private userQuery: UserQuery
+    private userQuery: UserQuery,
+    private matchSessionFacade: MatchSessionFacade
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +94,17 @@ export class FastMatchComponent implements OnInit, OnDestroy {
           this.toastComponentShared.displayToast(
             `Sorry, you can't invite yourself`
           );
+        } else {
+          this.matchSessionFacade.createMatchSession({
+            category: this.fastMatchForm.value.gameMode,
+            matchLimit: this.fastMatchForm.value.matchLimit,
+            lang: this.pickedRegion$.value.value,
+            // lang: string;
+            // matchLimit: number;
+            // category: string;
+            // hostId: number;
+            guestId: guestUser.id as number,
+          });
         }
       });
     console.log(this.fastMatchForm.value);

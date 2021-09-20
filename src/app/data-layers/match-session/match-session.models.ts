@@ -2,10 +2,9 @@ import { ID } from '@datorama/akita';
 
 //CO - create object
 export interface MatchSessionCO {
-  region: string;
-  matchesLimit: number;
-  filterParams: string;
-  hostId: number;
+  lang: string;
+  matchLimit: number;
+  category: string;
   guestId: number;
 }
 

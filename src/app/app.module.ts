@@ -17,6 +17,7 @@ import { ErrorInterceptor } from './auth/error.interceptor';
 import { GameModesEffects } from './data-layers/game-mode/game-mode.effects';
 import { AuthInterceptor } from './auth/token.interceptor';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { MatchSessionEffects } from './data-layers/match-session/match-session.effects';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
@@ -34,6 +35,7 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
       UserEffects,
       FilmEffects,
       GameModesEffects,
+      MatchSessionEffects,
     ]),
     AppRoutingModule,
     HttpClientModule,

@@ -11,6 +11,7 @@ export class MatchSessionFacade {
   ) {}
 
   createMatchSession(matchSession: MatchSessionCO) {
+    console.log('matchSession: ', matchSession);
     this.actions.dispatch(createMatchSession({ matchSession }));
   }
 }

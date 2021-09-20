@@ -16,21 +16,20 @@ import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
 
 @Injectable()
-export class GameModesEffects {
+export class MatchSessionEffects {
   type: ActionType;
   constructor(
     private actions$: Actions,
     private matchSessionService: MatchSessionService,
     private matchSessionStore: MatchSessionStore
-  ) {
-    console.log('GameModesEffects');
-  }
+  ) {}
 
   createMatchSession$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(createMatchSession),
         switchMap(({ matchSession }) => {
+          console.log('createMatchSession!!!');
           this.matchSessionStore.update((state) => ({
             ...state,
             matchSessionsLoading: true,

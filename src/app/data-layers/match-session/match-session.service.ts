@@ -9,8 +9,10 @@ export class MatchSessionService {
   constructor(private http: HttpClient) {}
 
   create(matchSession: MatchSessionCO): Observable<MatchSession> {
-    return this.http.get<MatchSession>(
-      `${environment.apiUrl}/api/matchsession`
+    console.log('send req matchSession:  ', matchSession);
+    return this.http.post<MatchSession>(
+      `${environment.apiUrl}/api/matchsession`,
+      matchSession
     );
   }
 }

@@ -21,7 +21,7 @@
             >
               <ion-select-option
                 *ngFor="let gameMode of gameModes$ | async"
-                [value]="gameMode.id"
+                [value]="gameMode.value"
                 >{{ gameMode.name }}</ion-select-option
               >
             </ion-select>
