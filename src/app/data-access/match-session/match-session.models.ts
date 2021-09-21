@@ -22,3 +22,8 @@ export interface MatchSession {
   matchesLimit: number;
   acceptedByGuest: boolean;
 }
+
+export enum ScopeSearchMatchSession {
+  Hosted = 'hosted',
+  Invited = 'invites',
+}

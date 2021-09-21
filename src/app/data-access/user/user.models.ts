@@ -6,11 +6,11 @@ export interface User {
   firstName: string;
   lastName: string;
   password?: string;
-  id?: ID;
+  id?: number;
 }
 
 export interface UserRO {
-  id: ID;
+  id: number;
   created: string;
   firstName: string;
   lastName: string;

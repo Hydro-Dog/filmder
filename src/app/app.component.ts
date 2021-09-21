@@ -7,8 +7,8 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { AuthQuery } from './auth/state/auth.query';
-import { UserFacade } from './data-layers/user/user.facade';
-import { UserQuery } from './data-layers/user/user.query';
+import { UserFacade } from './data-access/user/user.facade';
+import { UserQuery } from './data-access/user/user.query';
 import { StorageService, USER_ID } from './services/storage.service';
 
 @Component({

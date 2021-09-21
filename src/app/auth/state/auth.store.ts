@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { UserRO } from '@src/app/data-layers/user/user.models';
+import { UserRO } from '@src/app/data-access/user/user.models';
 
 export interface AuthState {
   user: UserRO | null;

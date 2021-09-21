@@ -11,7 +11,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
-import { UserQuery } from '../data-layers/user/user.query';
+import { UserQuery } from '../data-access/user/user.query';
 import {
   ToastComponentShared,
   ToastPosition,

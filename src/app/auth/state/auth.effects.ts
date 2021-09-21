@@ -6,7 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { UserStore } from '@src/app/data-layers/user/user.store';
+import { UserStore } from '@src/app/data-access/user/user.store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
