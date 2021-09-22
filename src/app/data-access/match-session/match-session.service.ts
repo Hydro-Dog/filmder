@@ -20,12 +20,24 @@ export class MatchSessionService {
     );
   }
 
-  search(
-    userId: number,
-    scope: ScopeSearchMatchSession
-  ): Observable<MatchSession[]> {
+  // search(
+  //   userId: number,
+  //   scope: ScopeSearchMatchSession
+  // ): Observable<MatchSession[]> {
+  //   return this.http.get<MatchSession[]>(
+  //     `${environment.apiUrl}/api/matchsession/${userId}?scope=${scope}`
+  //   );
+  // }
+
+  getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
     return this.http.get<MatchSession[]>(
-      `${environment.apiUrl}/api/matchsession/${userId}?scope=${scope}`
+      `${environment.apiUrl}/api/activematchsession/${userId}`
+    );
+  }
+
+  getInvitesMatchSessions(userId: number): Observable<MatchSession[]> {
+    return this.http.get<MatchSession[]>(
+      `${environment.apiUrl}/api/invitesmatchsession/${userId}`
     );
   }
 }

@@ -11,8 +11,9 @@ export interface MatchSessionCO {
 export interface MatchSession {
   id: number;
   region: string;
-  hostId: number;
-  guestId: number;
+  category: string;
+  hostId: string;
+  guestId: string;
   hostCurrentPage: number;
   guestCurrentPage: number;
   hostLikedMovies: number[];
@@ -20,7 +21,7 @@ export interface MatchSession {
   filterParams: string;
   matchedMoviesIds: number[];
   matchesLimit: number;
-  acceptedByGuest: boolean;
+  accepted: boolean;
 }
 
 export enum ScopeSearchMatchSession {

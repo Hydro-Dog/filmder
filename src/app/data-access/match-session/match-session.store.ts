@@ -3,8 +3,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { MatchSession } from './match-session.models';
 
 export interface MatchSessionState {
-  hostedMatchSessions: MatchSession[];
-  invitedMatchSessions: MatchSession[];
+  matchSessions: MatchSession[];
   matchSessionsLoading: boolean;
   currentMatchSessionId: number;
   error: any;
@@ -12,8 +11,7 @@ export interface MatchSessionState {
 
 export function createInitialState(): MatchSessionState {
   return {
-    hostedMatchSessions: [],
-    invitedMatchSessions: [],
+    matchSessions: [],
     matchSessionsLoading: false,
     currentMatchSessionId: null,
     error: null,

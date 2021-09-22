@@ -11,7 +11,6 @@ import { UserService } from './user.service';
 @Injectable({ providedIn: 'root' })
 export class UserFacade {
   selectUser$: Observable<User> = this.userQuery.selectUser$;
-  selectId$: Observable<number>;
   selectError$: Observable<any> = this.userQuery.selectError$;
 
   constructor(

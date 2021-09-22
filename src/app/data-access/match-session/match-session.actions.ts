@@ -24,24 +24,43 @@ export const createMatchSessionError = createAction(
   }>()
 );
 
-export const searchMatchSessions = createAction(
-  '[Match Session] Search',
-  props<{ userId: number; scope: ScopeSearchMatchSession }>()
+export const getMatchSessionsByUserId = createAction(
+  '[Match Session] Get By User Id',
+  props<{ userId: number }>()
 );
 
-export const searchMatchSessionsHostedSuccess = createAction(
-  '[Match Session] Search Hosted Success',
+export const getMatchSessionsByUserIdSuccess = createAction(
+  '[Match Session] Get By User Id Success',
   props<{
     matchSessions: MatchSession[];
   }>()
 );
 
-export const searchMatchSessionsHostedError = createAction(
-  '[Match Session] Search Hosted Error',
+export const getMatchSessionsByUserIdError = createAction(
+  '[Match Session] Get By User Id Error',
   props<{
     error: any;
   }>()
 );
+
+// export const searchMatchSessions = createAction(
+//   '[Match Session] Search',
+//   props<{ userId: number; scope: ScopeSearchMatchSession }>()
+// );
+
+// export const searchMatchSessionsHostedSuccess = createAction(
+//   '[Match Session] Search Hosted Success',
+//   props<{
+//     matchSessions: MatchSession[];
+//   }>()
+// );
+
+// export const searchMatchSessionsHostedError = createAction(
+//   '[Match Session] Search Hosted Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
 
 export const searchMatchSessionsInvitedSuccess = createAction(
   '[Match Session] Search Invited Success',

@@ -6,16 +6,14 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { startCase } from 'lodash';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   createMatchSession,
   createMatchSessionSuccess,
-  searchMatchSessions,
-  searchMatchSessionsHostedSuccess,
+  getMatchSessionsByUserId,
+  getMatchSessionsByUserIdSuccess,
   searchMatchSessionsInvitedSuccess,
 } from './match-session.actions';
-import { ScopeSearchMatchSession } from './match-session.models';
 import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
 
@@ -48,45 +46,36 @@ export class MatchSessionEffects {
     { dispatch: true }
   );
 
-  searchMatchSessions$ = createEffect(
+  getMatchSessionsByUserId$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(searchMatchSessions),
-        switchMap(({ userId, scope }) => {
+        ofType(getMatchSessionsByUserId),
+        switchMap(({ userId }) => {
           this.matchSessionStore.update((state) => ({
             ...state,
             matchSessionsLoading: true,
           }));
-          if (scope === ScopeSearchMatchSession.Hosted) {
-            return this.matchSessionService
-              .search(userId, scope)
-              .pipe(
-                map((matchSessions) =>
-                  searchMatchSessionsHostedSuccess({ matchSessions })
-                )
-              );
-          } else if (scope === ScopeSearchMatchSession.Invited) {
-            return this.matchSessionService
-              .search(userId, scope)
-              .pipe(
-                map((matchSessions) =>
-                  searchMatchSessionsInvitedSuccess({ matchSessions })
-                )
-              );
-          }
+
+          return this.matchSessionService
+            .getMatchSessionsByUserId(userId)
+            .pipe(
+              map((matchSessions) =>
+                getMatchSessionsByUserIdSuccess({ matchSessions })
+              )
+            );
         })
       ),
     { dispatch: true }
   );
 
   @Effect()
-  searchMatchSessionsHostedSuccess$ = this.actions$.pipe(
-    ofType(searchMatchSessionsHostedSuccess),
+  getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
+    ofType(getMatchSessionsByUserIdSuccess),
     tap(({ matchSessions }) => {
       return this.matchSessionStore.update((state) => ({
         ...state,
         matchSessionsLoading: false,
-        hostedMatchSessions: matchSessions,
+        matchSessions,
       }));
     })
   );
