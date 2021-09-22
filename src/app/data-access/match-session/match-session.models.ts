@@ -13,7 +13,9 @@ export interface MatchSession {
   region: string;
   category: string;
   hostId: string;
+  hostName: string;
   guestId: string;
+  guestName: string;
   hostCurrentPage: number;
   guestCurrentPage: number;
   hostLikedMovies: number[];
