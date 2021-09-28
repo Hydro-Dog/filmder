@@ -43,25 +43,6 @@ export const getMatchSessionsByUserIdError = createAction(
   }>()
 );
 
-// export const searchMatchSessions = createAction(
-//   '[Match Session] Search',
-//   props<{ userId: number; scope: ScopeSearchMatchSession }>()
-// );
-
-// export const searchMatchSessionsHostedSuccess = createAction(
-//   '[Match Session] Search Hosted Success',
-//   props<{
-//     matchSessions: MatchSession[];
-//   }>()
-// );
-
-// export const searchMatchSessionsHostedError = createAction(
-//   '[Match Session] Search Hosted Error',
-//   props<{
-//     error: any;
-//   }>()
-// );
-
 export const searchMatchSessionsInvitedSuccess = createAction(
   '[Match Session] Search Invited Success',
   props<{

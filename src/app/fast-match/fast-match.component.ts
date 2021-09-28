@@ -9,11 +9,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { FilmFacade } from '../data-access/film/film.facade';
-import { GameModesFacade } from '../data-access/game-mode/game-mode.facade';
-import { MatchSessionFacade } from '../data-access/match-session/match-session.facade';
-import { UserFacade } from '../data-access/user/user.facade';
-import { UserQuery } from '../data-access/user/user.query';
+import { FilmFacade } from '../data-layer/film/film.facade';
+import { GameModesFacade } from '../data-layer/game-mode/game-mode.facade';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { UserFacade } from '../data-layer/user/user.facade';
+import { UserQuery } from '../data-layer/user/user.query';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { MatchModes } from './match-modes.model';
@@ -95,14 +95,11 @@ export class FastMatchComponent implements OnInit, OnDestroy {
             `Sorry, you can't invite yourself`
           );
         } else {
+          console.log('FIREEEEEEE');
           this.matchSessionFacade.createMatchSession({
             category: this.fastMatchForm.value.gameMode,
             matchLimit: this.fastMatchForm.value.matchLimit,
             lang: this.pickedRegion$.value.value,
-            // lang: string;
-            // matchLimit: number;
-            // category: string;
-            // hostId: number;
             guestId: guestUser.id as number,
           });
         }

@@ -12,10 +12,8 @@ import { MatchSessionQuery } from './match-session.query';
 export class MatchSessionFacade {
   selectMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectMatchSessions$;
-  selectInvitesMatchSessions$: Observable<MatchSession[]> =
-    this.matchSessionQuery.selectInvitesMatchSessions$;
-  selectCurrentMatchSessions$: Observable<MatchSession[]> =
-    this.matchSessionQuery.selectCurrentMatchSessions$;
+  selectGuestedMatchSessions$: Observable<MatchSession[]> =
+    this.matchSessionQuery.selectGuestedMatchSessions$;
 
   constructor(
     private actions: Actions,
@@ -23,21 +21,11 @@ export class MatchSessionFacade {
   ) {}
 
   createMatchSession(matchSession: MatchSessionCO) {
-    console.log('matchSession: ', matchSession);
     this.actions.dispatch(createMatchSession({ matchSession }));
   }
 
-  // /**
-  //  * Returns array of match session basing on the passed 'scope' value
-  //  * @param userId - id of host or guest match session participant.
-  //  * @param scope - scope that is used as filter for search.
-  //  */
-  // searchMatchSessions(userId: number, scope: ScopeSearchMatchSession) {
-  //   this.actions.dispatch(searchMatchSessions({ userId, scope }));
-  // }
-
   /**
-   * Returns array of match session where user is host or guest.
+   * Returns array of match sessions where user is host or guest.
    * @param userId
    */
   getMatchSessionsByUserId(userId: number) {

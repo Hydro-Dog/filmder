@@ -8,14 +8,15 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { startCase } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
-import { MatchSessionFacade } from '../data-access/match-session/match-session.facade';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import {
   MatchSession,
   ScopeSearchMatchSession,
-} from '../data-access/match-session/match-session.models';
-import { UserFacade } from '../data-access/user/user.facade';
+} from '../data-layer/match-session/match-session.models';
+import { UserFacade } from '../data-layer/user/user.facade';
 import {
   AlertConfirm,
   ModalComponentShared,
@@ -30,8 +31,9 @@ export class MatchInvitesComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponentShared, { static: true })
   readonly alertExample: ModalComponentShared;
 
-  readonly selectInvitesMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions$;
+  readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
+  readonly guestedMatchSessions$ =
+    this.matchSessionFacade.selectGuestedMatchSessions$;
 
   readonly matchSessionId = (index: number, item: MatchSession) => item.id;
 
@@ -44,13 +46,12 @@ export class MatchInvitesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.selectInvitesMatchSessions$.subscribe((selectInvitedMatchSessions) =>
-      console.log('selectInvitedMatchSessions: ', selectInvitedMatchSessions)
+    this.guestedMatchSessions$.subscribe((guestedMatchSessions) =>
+      console.log('guestedMatchSessions: ', guestedMatchSessions)
     );
 
-    this.matchSessionFacade.selectMatchSessions$.subscribe(
-      (selectMatchSessions) =>
-        console.log('selectMatchSessions: ', selectMatchSessions)
+    this.matchSessions$.subscribe((matchSessions) =>
+      console.log('matchSessions: ', matchSessions)
     );
 
     this.userFacade.selectUser$

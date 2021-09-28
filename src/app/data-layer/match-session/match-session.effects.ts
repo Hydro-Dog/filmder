@@ -31,7 +31,6 @@ export class MatchSessionEffects {
       this.actions$.pipe(
         ofType(createMatchSession),
         switchMap(({ matchSession }) => {
-          console.log('createMatchSession!!!');
           this.matchSessionStore.update((state) => ({
             ...state,
             matchSessionsLoading: true,

@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
-import { MatchSessionFacade } from '../data-access/match-session/match-session.facade';
-import { UserFacade } from '../data-access/user/user.facade';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { UserFacade } from '../data-layer/user/user.facade';
 import { InviteService } from './invite.service';
 
 @Component({

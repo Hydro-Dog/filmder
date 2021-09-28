@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  MatchSession,
-  MatchSessionCO,
-  ScopeSearchMatchSession,
-} from './match-session.models';
+import { MatchSession, MatchSessionCO } from './match-session.models';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionService {
@@ -20,24 +16,9 @@ export class MatchSessionService {
     );
   }
 
-  // search(
-  //   userId: number,
-  //   scope: ScopeSearchMatchSession
-  // ): Observable<MatchSession[]> {
-  //   return this.http.get<MatchSession[]>(
-  //     `${environment.apiUrl}/api/matchsession/${userId}?scope=${scope}`
-  //   );
-  // }
-
   getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
     return this.http.get<MatchSession[]>(
-      `${environment.apiUrl}/api/activematchsession/${userId}`
-    );
-  }
-
-  getInvitesMatchSessions(userId: number): Observable<MatchSession[]> {
-    return this.http.get<MatchSession[]>(
-      `${environment.apiUrl}/api/invitesmatchsession/${userId}`
+      `${environment.apiUrl}/api/matchsessions/${userId}`
     );
   }
 }

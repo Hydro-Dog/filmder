@@ -6,30 +6,27 @@ import { MatchSessionState, MatchSessionStore } from './match-session.store';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionQuery extends Query<MatchSessionState> {
-  // TODO(vbabaev): change string selectiors to enums
+  // TODO(vbabaev): change string selectors to enums
+
+  /**
+   * Returns array of match sessions where the user is host or guest
+   */
   selectMatchSessions$ = this.select('matchSessions');
-  selectInvitesMatchSessions$ = this.selectMatchSessions$.pipe(
+
+  /**
+   * Returns array of match sessions where the user is guest
+   */
+  selectGuestedMatchSessions$ = this.selectMatchSessions$.pipe(
     withLatestFrom(this.userFacade.selectUser$),
     map(([items, user]) =>
       items.filter(
         (item) =>
-          item.guestId.toString() === user.id.toString() && !item.accepted
+          item.guestId.id.toString() === user.id.toString() && !item.accepted
       )
     )
   );
 
-  selectCurrentMatchSessions$ = this.selectMatchSessions$.pipe(
-    withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) =>
-      items.filter(
-        (item) =>
-          item.hostId.toString() === user.id.toString() ||
-          item.guestId.toString() === user.id.toString()
-      )
-    )
-  );
   selectError$ = this.select('error');
-  selectGameModesLoading$ = this.select('matchSessionsLoading');
 
   constructor(
     protected store: MatchSessionStore,

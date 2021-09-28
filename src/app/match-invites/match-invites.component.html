@@ -11,11 +11,12 @@
       <ion-item (click)="openConfirmationModal()">
         <ion-label
           *ngFor="
-            let matchSession of selectInvitesMatchSessions$ | async;
+            let matchSession of guestedMatchSessions$ | async;
             trackBy: matchSessionId
           "
         >
-          category {{ matchSession.category }} from {{ matchSession.hostName }}
+          category {{ matchSession.category }} from
+          {{ matchSession.hostId.userName | startCase }}
         </ion-label>
       </ion-item>
       <ion-item-options>

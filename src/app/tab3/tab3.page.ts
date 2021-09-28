@@ -10,8 +10,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin, of, Subject } from 'rxjs';
 import { takeUntil, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
-import { UserFacade } from '../data-access/user/user.facade';
-import { UserQuery } from '../data-access/user/user.query';
+import { UserFacade } from '../data-layer/user/user.facade';
+import { UserQuery } from '../data-layer/user/user.query';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { ApiError } from '../shared/models/api-error';
 

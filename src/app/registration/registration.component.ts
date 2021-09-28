@@ -15,7 +15,7 @@ import { NavController } from '@ionic/angular';
 import { of, Subject } from 'rxjs';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
-import { User } from '../data-access/user/user.models';
+import { User } from '../data-layer/user/user.models';
 import { AsyncValidatorsService } from '../services/async-validators.service';
 
 @Component({

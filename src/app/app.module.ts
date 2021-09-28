@@ -11,13 +11,13 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { FormsModule } from '@angular/forms';
-import { UserEffects } from './data-access/user/user.effects';
-import { FilmEffects } from './data-access/film/film.effects';
+import { UserEffects } from './data-layer/user/user.effects';
+import { FilmEffects } from './data-layer/film/film.effects';
 import { ErrorInterceptor } from './auth/error.interceptor';
-import { GameModesEffects } from './data-access/game-mode/game-mode.effects';
+import { GameModesEffects } from './data-layer/game-mode/game-mode.effects';
 import { AuthInterceptor } from './auth/token.interceptor';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { MatchSessionEffects } from './data-access/match-session/match-session.effects';
+import { MatchSessionEffects } from './data-layer/match-session/match-session.effects';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 

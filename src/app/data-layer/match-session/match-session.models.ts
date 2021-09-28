@@ -1,4 +1,5 @@
 import { ID } from '@datorama/akita';
+import { User } from '../user/user.models';
 
 //CO - create object
 export interface MatchSessionCO {
@@ -12,9 +13,10 @@ export interface MatchSession {
   id: number;
   region: string;
   category: string;
-  hostId: string;
+  //TODO: find a way to use aliases for relations in typeORM
+  hostId: User;
   hostName: string;
-  guestId: string;
+  guestId: User;
   guestName: string;
   hostCurrentPage: number;
   guestCurrentPage: number;
