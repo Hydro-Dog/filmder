@@ -1,26 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { startCase } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import {
-  MatchSession,
-  ScopeSearchMatchSession,
-} from '../data-layer/match-session/match-session.models';
+import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
 import {
   AlertConfirm,
   ModalComponentShared,
 } from '../shared/components/modal/modal.component';
+import { InviteService } from '../data-layer/match-session/invite.service';
 
 @Component({
   templateUrl: 'match-invites.component.html',
@@ -42,10 +37,14 @@ export class MatchInvitesComponent implements OnInit, OnDestroy {
   constructor(
     private navController: NavController,
     private userFacade: UserFacade,
-    private matchSessionFacade: MatchSessionFacade
+    private matchSessionFacade: MatchSessionFacade,
+    private inviteService: InviteService
   ) {}
 
   ngOnInit(): void {
+    this.inviteService.message$.subscribe((message) =>
+      console.log('message: ', message)
+    );
     this.guestedMatchSessions$.subscribe((guestedMatchSessions) =>
       console.log('guestedMatchSessions: ', guestedMatchSessions)
     );

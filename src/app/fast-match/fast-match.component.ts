@@ -71,7 +71,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
         //todo: why regions items have 'duration', 'transform' fields?
         this.pickerComponent.showPicker(regions).then(({ data }) => {
           this.pickedRegion$.next(data.Regions);
-          console.log('picker: ', data.Regions);
         });
       });
   }
@@ -85,9 +84,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
       .getByUsername(this.fastMatchForm.value.guestUsername)
       .pipe(withLatestFrom(this.selectedUser$), takeUntil(this.destroy$))
       .subscribe(([guestUser, selectedUser]) => {
-        console.log('selectedUser: ', selectedUser);
-        console.log('guestUser: ', guestUser);
-
         if (!guestUser) {
           this.toastComponentShared.displayToast(`Sorry, no such user`);
         } else if (guestUser.id === selectedUser.id) {
@@ -95,7 +91,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
             `Sorry, you can't invite yourself`
           );
         } else {
-          console.log('FIREEEEEEE');
           this.matchSessionFacade.createMatchSession({
             category: this.fastMatchForm.value.gameMode,
             matchLimit: this.fastMatchForm.value.matchLimit,
@@ -104,9 +99,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
           });
         }
       });
-    console.log(this.fastMatchForm.value);
-    console.log(this.pickedRegion$.value);
-    //check if guestName exists
   }
 
   ngOnDestroy(): void {

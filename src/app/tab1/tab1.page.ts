@@ -4,11 +4,9 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
-import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { UserFacade } from '../data-layer/user/user.facade';
-import { InviteService } from './invite.service';
+import { from, Subject } from 'rxjs';
+import { InviteService } from '../data-layer/match-session/invite.service';
+import { StorageService, USER_ID } from '../services/storage.service';
 
 @Component({
   selector: 'app-tab1',
@@ -19,11 +17,19 @@ import { InviteService } from './invite.service';
 export class Tab1Page implements OnInit, OnDestroy {
   destroy$ = new Subject();
 
-  constructor(private inviteService: InviteService) {}
+  constructor(
+    private inviteService: InviteService,
+    private storageService: StorageService
+  ) {}
 
-  ngOnInit(): void {
-    this.inviteService.msgToServer('Hi');
+  async ngOnInit() {
+    const id = await this.storageService.getValue(USER_ID);
+    console.log('id: ', id);
+    this.inviteService.msgToServer('request_user_match_sessions', { id });
     this.inviteService.message$.subscribe((message) =>
+      console.log('message: ', message)
+    );
+    this.inviteService.socketOn$.subscribe((message) =>
       console.log('message: ', message)
     );
   }
