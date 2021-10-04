@@ -2,14 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
-import { MatchSession, MatchSessionCO } from './match-session.models';
+import {
+  MatchSession,
+  MatchSessionCO,
+  MatchSessionSocketEvents,
+} from './match-session.models';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private socket: Socket) {}
+
+  getPushedNewMatchSession$ = this.socket.fromEvent<string>(
+    MatchSessionSocketEvents.PushNewMatchSession
+  );
 
   create(matchSession: MatchSessionCO): Observable<MatchSession> {
-    console.log('send req matchSession:  ', matchSession);
     return this.http.post<MatchSession>(
       `${environment.apiUrl}/api/matchsession`,
       matchSession

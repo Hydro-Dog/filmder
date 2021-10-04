@@ -8,15 +8,16 @@
 <ion-content [fullscreen]="true">
   <ion-list>
     <ion-item-sliding>
-      <ion-item (click)="openConfirmationModal()">
-        <ion-label
-          *ngFor="
-            let matchSession of guestedMatchSessions$ | async;
-            trackBy: matchSessionId
-          "
-        >
-          category {{ matchSession.category }} from
-          {{ matchSession.hostId.userName | startCase }}
+      <ion-item
+        *ngFor="
+          let matchSession of guestedMatchSessions$ | async;
+          trackBy: matchSessionId
+        "
+        (click)="openConfirmationModal()"
+      >
+        <ion-label>
+          Category {{ matchSession.category | startCase }} from
+          {{ matchSession.host.userName }}
         </ion-label>
       </ion-item>
       <ion-item-options>

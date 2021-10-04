@@ -15,7 +15,6 @@ import {
   AlertConfirm,
   ModalComponentShared,
 } from '../shared/components/modal/modal.component';
-import { InviteService } from '../data-layer/match-session/invite.service';
 
 @Component({
   templateUrl: 'match-invites.component.html',
@@ -25,7 +24,6 @@ import { InviteService } from '../data-layer/match-session/invite.service';
 export class MatchInvitesComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponentShared, { static: true })
   readonly alertExample: ModalComponentShared;
-
   readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
   readonly guestedMatchSessions$ =
     this.matchSessionFacade.selectGuestedMatchSessions$;
@@ -37,22 +35,10 @@ export class MatchInvitesComponent implements OnInit, OnDestroy {
   constructor(
     private navController: NavController,
     private userFacade: UserFacade,
-    private matchSessionFacade: MatchSessionFacade,
-    private inviteService: InviteService
+    private matchSessionFacade: MatchSessionFacade
   ) {}
 
   ngOnInit(): void {
-    this.inviteService.message$.subscribe((message) =>
-      console.log('message: ', message)
-    );
-    this.guestedMatchSessions$.subscribe((guestedMatchSessions) =>
-      console.log('guestedMatchSessions: ', guestedMatchSessions)
-    );
-
-    this.matchSessions$.subscribe((matchSessions) =>
-      console.log('matchSessions: ', matchSessions)
-    );
-
     this.userFacade.selectUser$
       .pipe(
         filter((x) => !!x),

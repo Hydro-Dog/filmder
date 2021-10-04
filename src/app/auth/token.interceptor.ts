@@ -6,35 +6,29 @@ import {
   HttpRequest,
   HttpHeaders,
 } from '@angular/common/http';
-import { combineLatest, from, Observable } from 'rxjs';
-
-import { map, switchMap, tap } from 'rxjs/operators';
-import {
-  ACCESS_TOKEN_KEY,
-  StorageService,
-  USER_ID,
-} from '../services/storage.service';
+import { from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { STORAGE_ITEMS, StorageFacade } from '../services/storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private storageService: StorageService) {}
+  constructor(private storageService: StorageFacade) {}
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    return combineLatest([
-      from(this.storageService.getValue(ACCESS_TOKEN_KEY)),
-      from(this.storageService.getValue(USER_ID)),
-    ]).pipe(
-      map(([accessToken, userId]) => {
-        if (accessToken && userId) {
+    return from(
+      this.storageService.getItem(STORAGE_ITEMS.ACCESS_TOKEN_KEY)
+    ).pipe(
+      map((accessToken) => {
+        if (accessToken) {
           const headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`,
           });
           return req.url.includes('/api') ? req.clone({ headers }) : req;
         }
-        console.warn('no headers were set');
+
         return req;
       }),
       switchMap((req) => next.handle(req))

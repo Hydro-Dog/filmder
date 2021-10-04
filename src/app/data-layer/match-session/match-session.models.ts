@@ -13,11 +13,8 @@ export interface MatchSession {
   id: number;
   region: string;
   category: string;
-  //TODO: find a way to use aliases for relations in typeORM
-  hostId: User;
-  hostName: string;
-  guestId: User;
-  guestName: string;
+  host: User;
+  guest: User;
   hostCurrentPage: number;
   guestCurrentPage: number;
   hostLikedMovies: number[];
@@ -31,4 +28,8 @@ export interface MatchSession {
 export enum ScopeSearchMatchSession {
   Hosted = 'hosted',
   Invited = 'invites',
+}
+
+export enum MatchSessionSocketEvents {
+  PushNewMatchSession = 'push_new_match_session',
 }

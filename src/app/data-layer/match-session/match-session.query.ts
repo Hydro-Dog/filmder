@@ -21,7 +21,28 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
     map(([items, user]) =>
       items.filter(
         (item) =>
-          item.guestId.id.toString() === user.id.toString() && !item.accepted
+          item.guest.id.toString() === user.id.toString() && !item.accepted
+      )
+    )
+  );
+
+  /**
+   * Returns array of match sessions accepted by both participants
+   */
+  selectAcceptedMatchSessions$ = this.selectMatchSessions$.pipe(
+    withLatestFrom(this.userFacade.selectUser$),
+    map(([items, user]) => items.filter((item) => item.accepted))
+  );
+
+  /**
+   * Match session that were not accepted yet or declined
+   */
+  selectPendingMatchSessions$ = this.selectMatchSessions$.pipe(
+    withLatestFrom(this.userFacade.selectUser$),
+    map(([items, user]) =>
+      items.filter(
+        (item) =>
+          !item.accepted && item.host.id.toString() === user.id.toString()
       )
     )
   );

@@ -14,6 +14,10 @@ export class MatchSessionFacade {
     this.matchSessionQuery.selectMatchSessions$;
   selectGuestedMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectGuestedMatchSessions$;
+  selectAcceptedMatchSessions$: Observable<MatchSession[]> =
+    this.matchSessionQuery.selectAcceptedMatchSessions$;
+  selectPendingMatchSessions$: Observable<MatchSession[]> =
+    this.matchSessionQuery.selectPendingMatchSessions$;
 
   constructor(
     private actions: Actions,

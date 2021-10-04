@@ -16,7 +16,6 @@ import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
-import { MatchModes } from './match-modes.model';
 
 @Component({
   templateUrl: 'fast-match.component.html',

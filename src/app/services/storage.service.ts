@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
-export const ACCESS_TOKEN_KEY = 'access-token';
-export const REFRESH_TOKEN_KEY = 'refresh-token';
-export const USER_ID = 'user-id';
+export enum STORAGE_ITEMS {
+  ACCESS_TOKEN_KEY = 'access-token',
+  REFRESH_TOKEN_KEY = 'refresh-token',
+  USER_ID = 'user-id',
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
+export class StorageFacade {
   constructor(private storage: Storage) {}
 
   createStorage() {
-    this.storage.create();
+    console.log('createStorage');
+    return this.storage.create();
   }
 
-  async getValue(key: string) {
+  async getItem(key: string) {
     return await this.storage.get(key);
   }
 
@@ -27,7 +30,11 @@ export class StorageService {
     return this.storage.clear();
   }
 
-  setValue({ key, value }) {
+  setItem({ key, value }) {
     this.storage.set(key, value);
+  }
+
+  removeItem(key: string) {
+    this.storage.remove(key);
   }
 }

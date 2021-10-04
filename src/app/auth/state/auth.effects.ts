@@ -9,12 +9,7 @@ import { ActionType } from '@datorama/akita-ng-entity-service';
 import { UserStore } from '@src/app/data-layer/user/user.store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  StorageService,
-  USER_ID,
-} from '../../services/storage.service';
+import { STORAGE_ITEMS, StorageFacade } from '../../services/storage.service';
 import {
   login,
   loginError,
@@ -34,7 +29,7 @@ export class AuthEffects {
     private authService: AuthService,
     private authStore: AuthStore,
     private userStore: UserStore,
-    private storageService: StorageService
+    private storageService: StorageFacade
   ) {}
 
   register$ = createEffect(
@@ -70,15 +65,6 @@ export class AuthEffects {
           return this.authService.login(userName, password).pipe(
             map((user) => loginSuccess({ user })),
             catchError((error) => of(loginError({ error })))
-            // catchError((error) => {
-            //   loginError({ error });
-            //   this.authStore.update((state) => ({
-            //     ...state,
-            //     loginError: error,
-            //     userLoading: false,
-            //   }));
-            //   return of(error);
-            // })
           );
         })
       ),
@@ -109,13 +95,16 @@ export class AuthEffects {
     ofType(loginSuccess),
     tap(({ user }) => {
       console.log('    ofType(loginSuccess)');
-      this.storageService.setValue({ key: USER_ID, value: user.id });
-      this.storageService.setValue({
-        key: ACCESS_TOKEN_KEY,
+      this.storageService.setItem({
+        key: STORAGE_ITEMS.USER_ID,
+        value: user.id,
+      });
+      this.storageService.setItem({
+        key: STORAGE_ITEMS.ACCESS_TOKEN_KEY,
         value: user.accessToken,
       });
-      this.storageService.setValue({
-        key: REFRESH_TOKEN_KEY,
+      this.storageService.setItem({
+        key: STORAGE_ITEMS.REFRESH_TOKEN_KEY,
         value: user.refreshToken,
       });
     }),

@@ -8,21 +8,19 @@ import {
 import { Injectable } from '@angular/core';
 import { combineLatest, from, Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  StorageService,
-} from '../services/storage.service';
+import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { AuthService } from './state/auth.service';
 import { Router } from '@angular/router';
-import { ApiError } from '../shared/models/api-error';
+
+const UNAUTHORIZED_STATUS_CODE = 401;
+const REFRESH_EXPIRED_STATUS_MESSAGE = 'Refresh expired';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
   request: HttpRequest<any>;
 
   constructor(
-    private storageService: StorageService,
+    private storageFacade: StorageFacade,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -33,30 +31,31 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((error) => {
-        if (error.error.message === 'Refresh expired') {
-          this.storageService.setValue({ key: ACCESS_TOKEN_KEY, value: null });
-          this.storageService.setValue({ key: REFRESH_TOKEN_KEY, value: null });
+        if (error.error.message === REFRESH_EXPIRED_STATUS_MESSAGE) {
+          this.storageFacade.removeItem(STORAGE_ITEMS.ACCESS_TOKEN_KEY);
+          this.storageFacade.removeItem(STORAGE_ITEMS.REFRESH_TOKEN_KEY);
+          this.storageFacade.removeItem(STORAGE_ITEMS.USER_ID);
           this.router.navigate(['/auth']);
         }
-        if (error.status === 401) {
+        if (error.status === UNAUTHORIZED_STATUS_CODE) {
           this.request = request;
-          console.log('ERROR CATCHED: ', request);
+
           return combineLatest([
-            from(this.storageService.getValue(ACCESS_TOKEN_KEY)),
-            from(this.storageService.getValue(REFRESH_TOKEN_KEY)),
+            from(this.storageFacade.getItem(STORAGE_ITEMS.ACCESS_TOKEN_KEY)),
+            from(this.storageFacade.getItem(STORAGE_ITEMS.REFRESH_TOKEN_KEY)),
           ]).pipe(
             switchMap(([accessToken, refreshToken]) => {
               return this.authService.refresh(
                 refreshToken,
-                getAuthHeaders(accessToken)
+                getAuthHeader(accessToken)
               );
             }),
             switchMap((user) => {
-              this.storageService.setValue({
-                key: ACCESS_TOKEN_KEY,
+              this.storageFacade.setItem({
+                key: STORAGE_ITEMS.ACCESS_TOKEN_KEY,
                 value: user.accessToken,
               });
-              console.log('comed back user: ', user);
+
               return next.handle(
                 this.request.clone({
                   setHeaders: { Authorization: `Bearer ${user.accessToken}` },
@@ -72,7 +71,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 }
 
-function getAuthHeaders(accessToken: string) {
+function getAuthHeader(accessToken: string) {
   return new HttpHeaders({
     Authorization: `Bearer ${accessToken}`,
   });

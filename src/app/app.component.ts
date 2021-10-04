@@ -1,15 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, from, Subject, timer } from 'rxjs';
-import {
-  combineAll,
-  switchMap,
-  takeUntil,
-  withLatestFrom,
-} from 'rxjs/operators';
-import { AuthQuery } from './auth/state/auth.query';
+import { combineLatest, from, Subject } from 'rxjs';
+import { first, switchMap } from 'rxjs/operators';
 import { UserFacade } from './data-layer/user/user.facade';
 import { UserQuery } from './data-layer/user/user.query';
-import { StorageService, USER_ID } from './services/storage.service';
+import { StorageFacade, STORAGE_ITEMS } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -23,33 +17,27 @@ export class AppComponent implements OnInit, OnDestroy {
   user$ = this.userQuery.selectUser$;
 
   constructor(
-    private storageService: StorageService,
+    private storageFacade: StorageFacade,
     private userFacade: UserFacade,
     private userQuery: UserQuery
   ) {}
 
   ngOnInit() {
-    this.storageService.createStorage();
-
-    //use timer to wait until storage created
-    timer(300)
+    from(this.storageFacade.createStorage())
       .pipe(
-        withLatestFrom(this.user$, from(this.storageService.getValue(USER_ID)))
+        first(),
+        switchMap(() =>
+          combineLatest([
+            this.user$,
+            from(this.storageFacade.getItem(STORAGE_ITEMS.USER_ID)),
+          ])
+        )
       )
-      .subscribe(([_, user, userId]) => {
+      .subscribe(([user, userId]) => {
         if (!user && userId) {
           this.userFacade.getUser(userId);
         }
       });
-
-    this.showStorageValue$
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((key) => {
-          return this.storageService.getValue(key);
-        })
-      )
-      .subscribe();
   }
 
   ngOnDestroy(): void {

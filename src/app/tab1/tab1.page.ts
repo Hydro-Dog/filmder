@@ -4,9 +4,10 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { from, Subject } from 'rxjs';
-import { InviteService } from '../data-layer/match-session/invite.service';
-import { StorageService, USER_ID } from '../services/storage.service';
+import { Subject } from 'rxjs';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { MatchSessionService } from '../data-layer/match-session/match-session.service';
+import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 
 @Component({
   selector: 'app-tab1',
@@ -15,23 +16,23 @@ import { StorageService, USER_ID } from '../services/storage.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tab1Page implements OnInit, OnDestroy {
-  destroy$ = new Subject();
+  readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
+  readonly selectPendingMatchSessions$ =
+    this.matchSessionFacade.selectPendingMatchSessions$;
+  readonly guestedMatchSessions$ =
+    this.matchSessionFacade.selectGuestedMatchSessions$;
+  readonly acceptedMatchSessions$ =
+    this.matchSessionFacade.selectAcceptedMatchSessions$;
+  readonly destroy$ = new Subject();
 
   constructor(
-    private inviteService: InviteService,
-    private storageService: StorageService
+    private storageService: StorageFacade,
+    private matchSessionFacade: MatchSessionFacade
   ) {}
 
   async ngOnInit() {
-    const id = await this.storageService.getValue(USER_ID);
-    console.log('id: ', id);
-    this.inviteService.msgToServer('request_user_match_sessions', { id });
-    this.inviteService.message$.subscribe((message) =>
-      console.log('message: ', message)
-    );
-    this.inviteService.socketOn$.subscribe((message) =>
-      console.log('message: ', message)
-    );
+    const id = await this.storageService.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id);
   }
 
   ngOnDestroy(): void {
