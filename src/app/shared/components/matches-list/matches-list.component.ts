@@ -36,15 +36,12 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
 
   @ViewChild(AlertComponentShared, { static: true })
   readonly alertExample: AlertComponentShared;
-  // readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
-  // readonly guestedMatchSessions$ =
-  //   this.matchSessionFacade.selectGuestedMatchSessions$;
 
   readonly matchSessionId = (index: number, item: MatchSession) => item.id;
 
   readonly destroy$ = new Subject();
 
-  constructor(public modalController: ModalController) {} // private matchSessionFacade: MatchSessionFacade // private userFacade: UserFacade, // private navController: NavController,
+  constructor(public modalController: ModalController) {}
 
   ngOnInit(): void {}
 
@@ -76,26 +73,6 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
     });
     modal.present();
     modal.onDidDismiss().then((res) => console.log('res: ', res));
-    // switch (this.matchSessionsListTypes) {
-    //   case MatchSessionsListTypes.Current:
-    //     // code block
-    //     break;
-    //   case MatchSessionsListTypes.Pending:
-    //     // code block
-    //     break;
-    //   case MatchSessionsListTypes.Invites:
-    //     // code block
-    //     break;
-    //   default:
-    //   // code block
-    // }
-
-    // this.alertExample
-    //   .presentAlert(
-    //     'Match details',
-    //     `${matchSession.category} ${matchSession.host.userName} ${matchSession.matchLimit} ${matchSession.region}`
-    //   )
-    //   .then((x) => console.log('x: ', x));
   }
 
   ngOnDestroy(): void {
