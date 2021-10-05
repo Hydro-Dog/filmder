@@ -1,0 +1,37 @@
+<div class="d-flex">
+  <div class="m-auto">
+    <h3>Match Details</h3>
+    <div>host: {{ host }}</div>
+    <div>guest: {{ guest }}</div>
+    <div>region: {{ region }}</div>
+    <div>category: {{ category | startCase }}</div>
+    <div>matchLimit: {{ matchLimit }}</div>
+    <div>accepted: {{ accepted }}</div>
+
+    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Accept">
+      <ion-button
+        (click)="closeModal(true)"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Accept</ion-button
+      >
+      <ion-button
+        (click)="closeModal(false)"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Decline</ion-button
+      >
+    </ng-container>
+    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Info">
+      <ion-button
+        (click)="closeModal()"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Close</ion-button
+      >
+    </ng-container>
+  </div>
+</div>

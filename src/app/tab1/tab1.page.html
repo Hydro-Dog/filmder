@@ -6,7 +6,7 @@
   </ion-header>
   <ion-list>
     <ion-item>Current Games {{(matchSessions$ | async).length}}</ion-item>
-    <ion-item
+    <ion-item routerLink="pending"
       >Pending Games {{(selectPendingMatchSessions$ | async).length}}</ion-item
     >
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MatchInvitesComponent } from '../match-invites/match-invites.component';
+import { MatchesInvitesModule } from '../matches-invites/matches-invites.module';
 import { Tab1Page } from './tab1.page';
 
 const routes: Routes = [
@@ -10,7 +10,17 @@ const routes: Routes = [
   },
   {
     path: 'invites',
-    component: MatchInvitesComponent,
+    loadChildren: () =>
+      import('../matches-invites/matches-invites.module').then(
+        (m) => m.MatchesInvitesModule
+      ),
+  },
+  {
+    path: 'pending',
+    loadChildren: () =>
+      import('../matches-pending/matches-pending.module').then(
+        (m) => m.MatchesPendingModule
+      ),
   },
 ];
 

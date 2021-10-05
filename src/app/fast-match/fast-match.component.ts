@@ -67,7 +67,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     this.regionClicked$
       .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
       .subscribe(([_, regions]) => {
-        //todo: why regions items have 'duration', 'transform' fields?
         this.pickerComponent.showPicker(regions).then(({ data }) => {
           this.pickedRegion$.next(data.Regions);
         });
@@ -94,6 +93,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
             category: this.fastMatchForm.value.gameMode,
             matchLimit: this.fastMatchForm.value.matchLimit,
             lang: this.pickedRegion$.value.value,
+            region: this.pickedRegion$.value.text,
             guestId: guestUser.id as number,
           });
         }

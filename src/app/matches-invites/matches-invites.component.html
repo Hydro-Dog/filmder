@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <filmder-matches-table
+    [matchSessionsListTypes]="matchSessionsListTypes.Invites"
+    [matches]="selectGuestedMatchSessions$ | async"
+  ></filmder-matches-table>
+</ion-content>

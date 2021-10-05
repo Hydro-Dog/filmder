@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MatchInvitesComponent } from '../match-invites/match-invites.component';
+import { MatchesInvitesComponent } from './matches-invites.component';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: MatchInvitesComponent,
-  // },
+  {
+    path: '',
+    component: MatchesInvitesComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class InvitesRoutingModule {}
+export class MatchesInvitesRoutingModule {}

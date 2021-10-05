@@ -62,12 +62,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }),
   });
 
-  userNameControl = this.registrationForm.get('userName');
-  emailControl = this.registrationForm.get('email');
-  firstNameControl = this.registrationForm.get('firstName');
-  lastNameControl = this.registrationForm.get('lastName');
-  passwordControl = this.registrationForm.get('password');
-  passwordConfirmControl = this.registrationForm.get('passwordConfirm');
+  userNameControl = this.registrationForm.controls.userName;
+  emailControl = this.registrationForm.controls.email;
+  firstNameControl = this.registrationForm.controls.firstName;
+  lastNameControl = this.registrationForm.controls.lastName;
+  passwordControl = this.registrationForm.controls.password;
+  passwordConfirmControl = this.registrationForm.controls.passwordConfirm;
 
   selectIdLoading$ = this.authQuery.selectIdLoading$;
   selectIsLogin$ = this.authQuery.selectIsLogin$;

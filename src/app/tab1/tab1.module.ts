@@ -3,9 +3,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
-
 import { Tab1PageRoutingModule } from './tab1-routing.module';
-import { MatchInvitesModule } from '../match-invites/match-invites.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -13,7 +12,7 @@ import { MatchInvitesModule } from '../match-invites/match-invites.module';
     CommonModule,
     FormsModule,
     Tab1PageRoutingModule,
-    MatchInvitesModule,
+    SharedModule,
   ],
   declarations: [Tab1Page],
 })

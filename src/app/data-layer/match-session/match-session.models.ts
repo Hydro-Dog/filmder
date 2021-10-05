@@ -3,6 +3,7 @@ import { User } from '../user/user.models';
 
 //CO - create object
 export interface MatchSessionCO {
+  region: string;
   lang: string;
   matchLimit: number;
   category: string;
@@ -21,7 +22,7 @@ export interface MatchSession {
   guestLikedMovies: number[];
   filterParams: string;
   matchedMoviesIds: number[];
-  matchesLimit: number;
+  matchLimit: number;
   accepted: boolean;
 }
 
