@@ -19,6 +19,7 @@ export class MatchDetailsModal {
   @Input() category: string;
   @Input() matchLimit: string;
   @Input() accepted: string;
+  @Input() id: string;
 
   readonly matchDetailsDisplayMode = MatchDetailsDisplayMode;
 
@@ -27,6 +28,7 @@ export class MatchDetailsModal {
   closeModal(accepted?: boolean) {
     this.modalController.dismiss({
       accepted,
+      id: this.id,
     });
   }
 }

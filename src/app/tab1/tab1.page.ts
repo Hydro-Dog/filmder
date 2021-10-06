@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { MatchSessionSocketEvents } from '../data-layer/match-session/match-session.models';
 import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 
@@ -20,22 +21,27 @@ export class Tab1Page implements OnInit, OnDestroy {
   readonly selectPendingMatchSessions$ =
     this.matchSessionFacade.selectPendingMatchSessions$;
   readonly guestedMatchSessions$ =
-    this.matchSessionFacade.selectGuestedMatchSessions$;
+    this.matchSessionFacade.selectInvitesMatchSessions;
   readonly acceptedMatchSessions$ =
     this.matchSessionFacade.selectAcceptedMatchSessions$;
   readonly destroy$ = new Subject();
 
   constructor(
-    private storageService: StorageFacade,
+    private storageFacade: StorageFacade,
     private matchSessionFacade: MatchSessionFacade
   ) {}
 
   async ngOnInit() {
-    const id = await this.storageService.getItem(STORAGE_ITEMS.USER_ID);
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
+
+    this.matchSessionFacade.registerNewListener(id);
+
+    this.matchSessionFacade.listenForNewMatches();
   }
 
   ngOnDestroy(): void {
+    this.matchSessionFacade.stopListenForNewMatches();
     this.destroy$.next();
   }
 }

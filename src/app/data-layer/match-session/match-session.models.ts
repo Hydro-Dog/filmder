@@ -24,6 +24,7 @@ export interface MatchSession {
   matchedMoviesIds: number[];
   matchLimit: number;
   accepted: boolean;
+  declined: boolean;
 }
 
 export enum ScopeSearchMatchSession {
@@ -33,4 +34,5 @@ export enum ScopeSearchMatchSession {
 
 export enum MatchSessionSocketEvents {
   PushNewMatchSession = 'push_new_match_session',
+  RegisterNewListener = 'register_listener',
 }

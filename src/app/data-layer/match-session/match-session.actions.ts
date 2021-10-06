@@ -1,9 +1,5 @@
 import { createAction, props } from '@datorama/akita-ng-effects';
-import {
-  MatchSession,
-  MatchSessionCO,
-  ScopeSearchMatchSession,
-} from './match-session.models';
+import { MatchSession, MatchSessionCO } from './match-session.models';
 
 export const createMatchSession = createAction(
   '[Match Session] Create',
@@ -19,6 +15,44 @@ export const createMatchSessionSuccess = createAction(
 
 export const createMatchSessionError = createAction(
   '[Match Session] Create Error',
+  props<{
+    error: any;
+  }>()
+);
+
+export const deleteMatchSession = createAction(
+  '[Match Session] Delete',
+  props<{ id: string }>()
+);
+
+export const deleteMatchSessionSuccess = createAction(
+  '[Match Session] Delete Success',
+  props<{
+    id: string;
+  }>()
+);
+
+export const deleteMatchSessionError = createAction(
+  '[Match Session] Delete Error',
+  props<{
+    error: any;
+  }>()
+);
+
+export const updateMatchSession = createAction(
+  '[Match Session] Update',
+  props<{ matchSession: MatchSession }>()
+);
+
+export const updateMatchSessionSuccess = createAction(
+  '[Match Session] Update Success',
+  props<{
+    matchSession: MatchSession;
+  }>()
+);
+
+export const updateMatchSessionError = createAction(
+  '[Match Session] Update Error',
   props<{
     error: any;
   }>()
@@ -50,9 +84,16 @@ export const searchMatchSessionsInvitedSuccess = createAction(
   }>()
 );
 
-export const searchMatchSessionsInvitedError = createAction(
-  '[Match Session] Search Invited Error',
+export const socketPushMatchSessionSuccess = createAction(
+  '[Match Session] Socket Push Match Session Success',
   props<{
-    error: any;
+    matchSession: MatchSession;
   }>()
 );
+
+// export const searchMatchSessionsInvitedError = createAction(
+//   '[Match Session] Search Invited Error',
+//   props<{
+//     error: any;
+//   }>()
+// );

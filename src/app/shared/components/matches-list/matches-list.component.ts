@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
@@ -30,13 +32,17 @@ export enum MatchSessionsListTypes {
 export class MatchesListComponentShared implements OnInit, OnDestroy {
   @Input()
   matches: MatchSession[] = [];
-
   @Input()
   matchSessionsListTypes: MatchSessionsListTypes;
 
+  @Output()
+  inviteAccepted = new EventEmitter();
+
+  @Output()
+  inviteDeclined = new EventEmitter();
+
   @ViewChild(AlertComponentShared, { static: true })
   readonly alertExample: AlertComponentShared;
-
   readonly matchSessionId = (index: number, item: MatchSession) => item.id;
 
   readonly destroy$ = new Subject();
@@ -54,6 +60,7 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   }
 
   async openDetailsModal(matchSession: MatchSession) {
+    console.log('matchSession to modal: ', matchSession);
     const modal = await this.modalController.create({
       component: MatchDetailsModal,
       // cssClass: 'my-custom-class',
@@ -69,10 +76,19 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
         category: matchSession.category,
         matchLimit: matchSession.matchLimit,
         accepted: matchSession.accepted,
+        id: matchSession.id,
       },
     });
     modal.present();
-    modal.onDidDismiss().then((res) => console.log('res: ', res));
+    modal.onDidDismiss().then(({ data }) => {
+      if (data) {
+        if (data.accepted) {
+          this.inviteAccepted.emit(matchSession);
+        } else if (data.accepted === false) {
+          this.inviteDeclined.emit(matchSession);
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {

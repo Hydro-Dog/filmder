@@ -16,12 +16,14 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Returns array of match sessions where the user is guest
    */
-  selectGuestedMatchSessions$ = this.selectMatchSessions$.pipe(
+  selectInvitesMatchSessions$ = this.selectMatchSessions$.pipe(
     withLatestFrom(this.userFacade.selectUser$),
     map(([items, user]) =>
       items.filter(
         (item) =>
-          item.guest.id.toString() === user.id.toString() && !item.accepted
+          item.guest.id.toString() === user.id.toString() &&
+          !item.declined &&
+          !item.accepted
       )
     )
   );
@@ -30,8 +32,7 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
    * Returns array of match sessions accepted by both participants
    */
   selectAcceptedMatchSessions$ = this.selectMatchSessions$.pipe(
-    withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) => items.filter((item) => item.accepted))
+    map((items) => items.filter((item) => item.accepted))
   );
 
   /**
@@ -39,12 +40,15 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
    */
   selectPendingMatchSessions$ = this.selectMatchSessions$.pipe(
     withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) =>
-      items.filter(
+    map(([items, user]) => {
+      console.log('items: ', items);
+      return items.filter(
         (item) =>
-          !item.accepted && item.host.id.toString() === user.id.toString()
-      )
-    )
+          !item.accepted &&
+          !item.declined &&
+          item.host.id.toString() === user.id.toString()
+      );
+    })
   );
 
   selectError$ = this.select('error');

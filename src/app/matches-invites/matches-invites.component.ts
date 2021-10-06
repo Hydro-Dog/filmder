@@ -1,24 +1,61 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import {
+  MatchSession,
+  MatchSessionSocketEvents,
+} from '../data-layer/match-session/match-session.models';
+import { MatchSessionService } from '../data-layer/match-session/match-session.service';
+import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
 
 @Component({
   templateUrl: 'matches-invites.component.html',
 })
-export class MatchesInvitesComponent {
+export class MatchesInvitesComponent implements OnInit, OnDestroy {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
   readonly selectGuestedMatchSessions$ =
-    this.matchSessionFacade.selectGuestedMatchSessions$;
+    this.matchSessionFacade.selectInvitesMatchSessions;
+
+  readonly destroy$ = new Subject();
 
   constructor(
     private matchSessionFacade: MatchSessionFacade,
+    private storageFacade: StorageFacade,
     private navController: NavController
-  ) {
-    this.selectGuestedMatchSessions$.subscribe((x) => console.log('x: ', x));
+  ) {}
+
+  async ngOnInit() {
+    this.selectGuestedMatchSessions$.subscribe((selectGuestedMatchSessions) =>
+      console.log('selectGuestedMatchSessions: ', selectGuestedMatchSessions)
+    );
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id);
+    this.matchSessionFacade.registerNewListener(id);
+    this.matchSessionFacade.listenForNewMatches();
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
+  }
+
+  inviteAccepted(matchSession: MatchSession) {
+    this.matchSessionFacade.updateMatchSession({
+      ...matchSession,
+      accepted: true,
+    });
+  }
+
+  inviteDeclined(matchSession: MatchSession) {
+    this.matchSessionFacade.updateMatchSession({
+      ...matchSession,
+      declined: true,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.matchSessionFacade.stopListenForNewMatches();
+    this.destroy$.next();
   }
 }

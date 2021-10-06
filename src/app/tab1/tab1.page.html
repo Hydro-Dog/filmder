@@ -5,7 +5,9 @@
     </ion-toolbar>
   </ion-header>
   <ion-list>
-    <ion-item>Current Games {{(matchSessions$ | async).length}}</ion-item>
+    <ion-item
+      >Active Games {{(acceptedMatchSessions$ | async).length}}</ion-item
+    >
     <ion-item routerLink="pending"
       >Pending Games {{(selectPendingMatchSessions$ | async).length}}</ion-item
     >
