@@ -9,10 +9,10 @@ const routes: Routes = [
     component: Tab1Page,
   },
   {
-    path: 'invites',
+    path: 'active',
     loadChildren: () =>
-      import('../matches-invites/matches-invites.module').then(
-        (m) => m.MatchesInvitesModule
+      import('../matches-active/matches-active.module').then(
+        (m) => m.MatchesActiveModule
       ),
   },
   {
@@ -20,6 +20,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('../matches-pending/matches-pending.module').then(
         (m) => m.MatchesPendingModule
+      ),
+  },
+  {
+    path: 'invites',
+    loadChildren: () =>
+      import('../matches-invites/matches-invites.module').then(
+        (m) => m.MatchesInvitesModule
       ),
   },
 ];

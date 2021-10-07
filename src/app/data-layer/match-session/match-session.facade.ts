@@ -6,7 +6,7 @@ import {
   createMatchSession,
   deleteMatchSession,
   getMatchSessionsByUserId,
-  socketPushMatchSessionSuccess,
+  socketGetMatchSessionSuccess,
   updateMatchSession,
 } from './match-session.actions';
 import {
@@ -22,11 +22,11 @@ export class MatchSessionFacade {
   readonly selectMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectMatchSessions$;
 
-  readonly selectInvitesMatchSessions: Observable<MatchSession[]> =
+  readonly selectInvitesMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectInvitesMatchSessions$;
 
-  readonly selectAcceptedMatchSessions$: Observable<MatchSession[]> =
-    this.matchSessionQuery.selectAcceptedMatchSessions$;
+  readonly selectActiveMatchSessions$: Observable<MatchSession[]> =
+    this.matchSessionQuery.selectActiveMatchSessions$;
 
   readonly selectPendingMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectPendingMatchSessions$;
@@ -73,13 +73,14 @@ export class MatchSessionFacade {
     );
   }
 
-  listenForNewMatches() {
+  listenForMatchSessionsChanges() {
     this.socketMatchSessionSub =
-      this.matchSessionService.listenForNewMatchSessions$.subscribe(
+      this.matchSessionService.listenForMatchSessionsChanges$.subscribe(
         ({ message }) => {
           this.actions.dispatch(
-            socketPushMatchSessionSuccess({
-              matchSession: message,
+            socketGetMatchSessionSuccess({
+              matchSession: message.matchSession,
+              event: message.event,
             })
           );
         }

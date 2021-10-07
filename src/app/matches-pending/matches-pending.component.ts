@@ -24,12 +24,11 @@ export class MatchesPendingComponent {
   async ngOnInit() {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
-    this.matchSessionFacade.registerNewListener(id);
-    this.matchSessionFacade.listenForNewMatches();
+    // this.matchSessionFacade.registerNewListener(id);
+    // this.matchSessionFacade.listenForNewMatches();
   }
 
   ngOnDestroy(): void {
-    this.matchSessionFacade.stopListenForNewMatches();
     this.destroy$.next();
   }
 

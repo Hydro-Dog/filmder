@@ -1,5 +1,9 @@
 import { createAction, props } from '@datorama/akita-ng-effects';
-import { MatchSession, MatchSessionCO } from './match-session.models';
+import {
+  MatchSession,
+  MatchSessionChangesEvents,
+  MatchSessionCO,
+} from './match-session.models';
 
 export const createMatchSession = createAction(
   '[Match Session] Create',
@@ -84,10 +88,11 @@ export const searchMatchSessionsInvitedSuccess = createAction(
   }>()
 );
 
-export const socketPushMatchSessionSuccess = createAction(
-  '[Match Session] Socket Push Match Session Success',
+export const socketGetMatchSessionSuccess = createAction(
+  '[Match Session] Socket Get Match Session Success',
   props<{
     matchSession: MatchSession;
+    event: MatchSessionChangesEvents;
   }>()
 );
 

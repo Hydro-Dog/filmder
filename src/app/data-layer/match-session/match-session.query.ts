@@ -31,7 +31,7 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Returns array of match sessions accepted by both participants
    */
-  selectAcceptedMatchSessions$ = this.selectMatchSessions$.pipe(
+  selectActiveMatchSessions$ = this.selectMatchSessions$.pipe(
     map((items) => items.filter((item) => item.accepted))
   );
 

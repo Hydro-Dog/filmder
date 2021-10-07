@@ -33,6 +33,11 @@ export enum ScopeSearchMatchSession {
 }
 
 export enum MatchSessionSocketEvents {
-  PushNewMatchSession = 'push_new_match_session',
+  MatchSessionChanges = 'match_session_changes',
   RegisterNewListener = 'register_listener',
+}
+
+export enum MatchSessionChangesEvents {
+  Add = 'add',
+  ChangeStatus = 'change_status',
 }

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, from, Subject } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
+import { MatchSessionFacade } from './data-layer/match-session/match-session.facade';
 import { UserFacade } from './data-layer/user/user.facade';
 import { UserQuery } from './data-layer/user/user.query';
 import { StorageFacade, STORAGE_ITEMS } from './services/storage.service';
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private storageFacade: StorageFacade,
     private userFacade: UserFacade,
-    private userQuery: UserQuery
+    private userQuery: UserQuery,
+    private matchSessionFacade: MatchSessionFacade
   ) {}
 
   ngOnInit() {
@@ -31,12 +33,16 @@ export class AppComponent implements OnInit, OnDestroy {
             this.user$,
             from(this.storageFacade.getItem(STORAGE_ITEMS.USER_ID)),
           ])
-        )
+        ),
+        first()
       )
       .subscribe(([user, userId]) => {
         if (!user && userId) {
           this.userFacade.getUser(userId);
         }
+
+        this.matchSessionFacade.registerNewListener(userId);
+        this.matchSessionFacade.listenForMatchSessionsChanges();
       });
   }
 

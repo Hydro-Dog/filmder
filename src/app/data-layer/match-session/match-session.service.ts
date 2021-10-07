@@ -13,12 +13,11 @@ import { Socket } from 'ngx-socket-io';
 export class MatchSessionService {
   constructor(private http: HttpClient, private socket: Socket) {}
 
-  listenForNewMatchSessions$: Observable<any> = this.socket.fromEvent(
-    MatchSessionSocketEvents.PushNewMatchSession
+  listenForMatchSessionsChanges$: Observable<any> = this.socket.fromEvent(
+    MatchSessionSocketEvents.MatchSessionChanges
   );
 
   msgToServer(event: string, message: any) {
-    console.log('msgToServer: ', event);
     this.socket.emit(event, message);
   }
 

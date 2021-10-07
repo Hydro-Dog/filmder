@@ -5,6 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSessionSocketEvents } from '../data-layer/match-session/match-session.models';
 import { MatchSessionService } from '../data-layer/match-session/match-session.service';
@@ -21,9 +22,9 @@ export class Tab1Page implements OnInit, OnDestroy {
   readonly selectPendingMatchSessions$ =
     this.matchSessionFacade.selectPendingMatchSessions$;
   readonly guestedMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions;
+    this.matchSessionFacade.selectInvitesMatchSessions$;
   readonly acceptedMatchSessions$ =
-    this.matchSessionFacade.selectAcceptedMatchSessions$;
+    this.matchSessionFacade.selectActiveMatchSessions$;
   readonly destroy$ = new Subject();
 
   constructor(
@@ -34,10 +35,12 @@ export class Tab1Page implements OnInit, OnDestroy {
   async ngOnInit() {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
+    // this.matchSessionFacade.registerNewListener(id);
+    // this.matchSessionFacade.listenForNewMatches();
 
-    this.matchSessionFacade.registerNewListener(id);
-
-    this.matchSessionFacade.listenForNewMatches();
+    this.guestedMatchSessions$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((x) => console.log('TAB1'));
   }
 
   ngOnDestroy(): void {

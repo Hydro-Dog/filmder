@@ -8,16 +8,32 @@
     <div>matchLimit: {{ matchLimit }}</div>
     <div>accepted: {{ accepted }}</div>
 
+    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Continue">
+      <ion-button
+        (click)="closeModal(matchDetailsModalActions.Continue)"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Continue</ion-button
+      >
+      <ion-button
+        (click)="closeModal(matchDetailsModalActions.Leave)"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Leave game</ion-button
+      >
+    </ng-container>
     <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Accept">
       <ion-button
-        (click)="closeModal(true)"
+        (click)="closeModal(matchDetailsModalActions.Accept)"
         size="large"
         expand="block"
         fill="clear"
         >Accept</ion-button
       >
       <ion-button
-        (click)="closeModal(false)"
+        (click)="closeModal(matchDetailsModalActions.Decline)"
         size="large"
         expand="block"
         fill="clear"
@@ -26,7 +42,7 @@
     </ng-container>
     <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Info">
       <ion-button
-        (click)="closeModal()"
+        (click)="closeModal(matchDetailsModalActions.Nothing)"
         size="large"
         expand="block"
         fill="clear"

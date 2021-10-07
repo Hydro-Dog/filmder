@@ -4,6 +4,15 @@ import { ModalController } from '@ionic/angular';
 export enum MatchDetailsDisplayMode {
   Info,
   Accept,
+  Continue,
+}
+
+export enum MatchDetailsModalActions {
+  Continue,
+  Leave,
+  Accept,
+  Decline,
+  Nothing,
 }
 
 @Component({
@@ -22,12 +31,13 @@ export class MatchDetailsModal {
   @Input() id: string;
 
   readonly matchDetailsDisplayMode = MatchDetailsDisplayMode;
+  readonly matchDetailsModalActions = MatchDetailsModalActions;
 
   constructor(private modalController: ModalController) {}
 
-  closeModal(accepted?: boolean) {
+  closeModal(event: MatchDetailsModalActions) {
     this.modalController.dismiss({
-      accepted,
+      event,
       id: this.id,
     });
   }

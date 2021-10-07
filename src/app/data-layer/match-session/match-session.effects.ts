@@ -14,11 +14,11 @@ import {
   deleteMatchSessionSuccess,
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
-  searchMatchSessionsInvitedSuccess,
-  socketPushMatchSessionSuccess,
+  socketGetMatchSessionSuccess,
   updateMatchSession,
   updateMatchSessionSuccess,
 } from './match-session.actions';
+import { MatchSessionChangesEvents } from './match-session.models';
 import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
 
@@ -159,28 +159,35 @@ export class MatchSessionEffects {
     })
   );
 
-  // @Effect()
-  // searchMatchSessionsInvitedSuccess$ = this.actions$.pipe(
-  //   ofType(searchMatchSessionsInvitedSuccess),
-  //   tap(({ matchSessions }) => {
-  //     return this.matchSessionStore.update((state) => ({
-  //       ...state,
-  //       matchSessionsLoading: false,
-  //       invitedMatchSessions: matchSessions,
-  //     }));
-  //   })
-  // );
-
   @Effect()
-  socketPushMatchSessionsInvitedSuccess$ = this.actions$.pipe(
-    ofType(socketPushMatchSessionSuccess),
-    tap(({ matchSession }) => {
-      console.log('matchSession: ', matchSession);
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessionsLoading: false,
-        matchSessions: [...state.matchSessions, matchSession],
-      }));
+  socketGetMatchSessionsInvitedSuccess$ = this.actions$.pipe(
+    ofType(socketGetMatchSessionSuccess),
+    tap(({ matchSession, event }) => {
+      return this.matchSessionStore.update((state) => {
+        let matchSessions = [];
+        switch (event) {
+          case MatchSessionChangesEvents.Add:
+            matchSessions = [...state.matchSessions, matchSession];
+            break;
+
+          case MatchSessionChangesEvents.ChangeStatus:
+            const idx = state.matchSessions.findIndex(
+              (item) => item.id === matchSession.id
+            );
+            matchSessions = [...state.matchSessions];
+            matchSessions.splice(idx, 1, matchSession);
+            break;
+
+          default:
+            break;
+        }
+
+        return {
+          ...state,
+          matchSessionsLoading: false,
+          matchSessions,
+        };
+      });
     })
   );
 }

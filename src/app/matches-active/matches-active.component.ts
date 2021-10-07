@@ -11,12 +11,12 @@ import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
 
 @Component({
-  templateUrl: 'matches-invites.component.html',
+  templateUrl: 'matches-active.component.html',
 })
-export class MatchesInvitesComponent implements OnInit, OnDestroy {
+export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectGuestedMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions$;
+  readonly selectActiveMatchSessions$ =
+    this.matchSessionFacade.selectActiveMatchSessions$;
 
   readonly destroy$ = new Subject();
 
@@ -27,31 +27,12 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    // this.selectGuestedMatchSessions$.subscribe((selectGuestedMatchSessions) =>
-    //   console.log('MATCHINVITES: ')
-    // );
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
-    // this.matchSessionFacade.registerNewListener(id);
-    // this.matchSessionFacade.listenForNewMatches();
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
-  }
-
-  inviteAccepted(matchSession: MatchSession) {
-    this.matchSessionFacade.updateMatchSession({
-      ...matchSession,
-      accepted: true,
-    });
-  }
-
-  inviteDeclined(matchSession: MatchSession) {
-    this.matchSessionFacade.updateMatchSession({
-      ...matchSession,
-      declined: true,
-    });
   }
 
   ngOnDestroy(): void {

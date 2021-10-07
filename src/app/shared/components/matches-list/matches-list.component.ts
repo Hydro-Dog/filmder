@@ -15,12 +15,13 @@ import { AlertConfirm, AlertComponentShared } from '../alert/alert.component';
 import {
   MatchDetailsDisplayMode,
   MatchDetailsModal,
+  MatchDetailsModalActions,
 } from '../match-details-modal/match-details-modal.component';
 
 export enum MatchSessionsListTypes {
   Pending,
   Invites,
-  Current,
+  Active,
 }
 
 @Component({
@@ -34,10 +35,12 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   matches: MatchSession[] = [];
   @Input()
   matchSessionsListTypes: MatchSessionsListTypes;
-
+  @Output()
+  continueMatch = new EventEmitter();
+  @Output()
+  leaveMatch = new EventEmitter();
   @Output()
   inviteAccepted = new EventEmitter();
-
   @Output()
   inviteDeclined = new EventEmitter();
 
@@ -60,16 +63,29 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   }
 
   async openDetailsModal(matchSession: MatchSession) {
-    console.log('matchSession to modal: ', matchSession);
+    let displayMode: MatchDetailsDisplayMode;
+
+    switch (this.matchSessionsListTypes) {
+      case MatchSessionsListTypes.Active:
+        displayMode = MatchDetailsDisplayMode.Continue;
+        break;
+      case MatchSessionsListTypes.Pending:
+        displayMode = MatchDetailsDisplayMode.Info;
+        break;
+      case MatchSessionsListTypes.Invites:
+        displayMode = MatchDetailsDisplayMode.Accept;
+        break;
+
+      default:
+        break;
+    }
+
     const modal = await this.modalController.create({
       component: MatchDetailsModal,
       // cssClass: 'my-custom-class',
       swipeToClose: true,
       componentProps: {
-        displayMode:
-          this.matchSessionsListTypes === MatchSessionsListTypes.Invites
-            ? MatchDetailsDisplayMode.Accept
-            : MatchDetailsDisplayMode.Info,
+        displayMode,
         host: matchSession.host.userName,
         guest: matchSession.guest.userName,
         region: matchSession.region,
@@ -82,10 +98,24 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
     modal.present();
     modal.onDidDismiss().then(({ data }) => {
       if (data) {
-        if (data.accepted) {
-          this.inviteAccepted.emit(matchSession);
-        } else if (data.accepted === false) {
-          this.inviteDeclined.emit(matchSession);
+        switch (data.event) {
+          case MatchDetailsModalActions.Continue:
+            this.continueMatch.emit(matchSession);
+            break;
+          case MatchDetailsModalActions.Leave:
+            this.leaveMatch.emit(matchSession);
+            break;
+          case MatchDetailsModalActions.Accept:
+            this.inviteAccepted.emit(matchSession);
+            break;
+          case MatchDetailsModalActions.Decline:
+            this.inviteDeclined.emit(matchSession);
+            break;
+          case MatchDetailsModalActions.Nothing:
+            break;
+
+          default:
+            break;
         }
       }
     });
