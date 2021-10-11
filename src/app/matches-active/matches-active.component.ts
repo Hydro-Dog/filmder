@@ -2,11 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import {
-  MatchSession,
-  MatchSessionSocketEvents,
-} from '../data-layer/match-session/match-session.models';
-import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
 

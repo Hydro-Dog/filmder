@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CurrentMatchComponent } from '../current-match/current-match.component';
 import { Tab2Page } from './tab2.page';
 
 const routes: Routes = [
@@ -16,8 +15,11 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'current',
-    component: CurrentMatchComponent,
+    path: 'current-match',
+    loadChildren: () =>
+      import('../current-match/current-match.module').then(
+        (m) => m.CurrentMatchModule
+      ),
   },
 ];
 
