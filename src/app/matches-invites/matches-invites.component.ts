@@ -7,6 +7,7 @@ import {
   MatchSessionSocketEvents,
 } from '../data-layer/match-session/match-session.models';
 import { MatchSessionService } from '../data-layer/match-session/match-session.service';
+import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
 
@@ -22,6 +23,7 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
 
   constructor(
     private matchSessionFacade: MatchSessionFacade,
+    private userFacade: UserFacade,
     private storageFacade: StorageFacade,
     private navController: NavController
   ) {}
@@ -45,6 +47,8 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
       ...matchSession,
       accepted: true,
     });
+
+    this.userFacade.setCurrentMatchSessionSuccess(matchSession.id.toString());
   }
 
   inviteDeclined(matchSession: MatchSession) {

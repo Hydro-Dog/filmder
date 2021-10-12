@@ -3,7 +3,12 @@ import { ID } from '@datorama/akita';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getUser, updateUser } from './user.actions';
+import {
+  getUser,
+  setCurrentMatchSessionSuccess,
+  updateUser,
+  updateUserSuccess,
+} from './user.actions';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
@@ -44,5 +49,9 @@ export class UserFacade {
 
   checkPhoneNumberIsTaken(value: string) {
     return this.userService.checkPhoneNumberIsTaken(value);
+  }
+
+  setCurrentMatchSessionSuccess(id: string) {
+    this.actions.dispatch(setCurrentMatchSessionSuccess({ id }));
   }
 }

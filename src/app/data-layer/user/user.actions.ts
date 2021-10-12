@@ -36,3 +36,10 @@ export const updateUserError = createAction(
     error: any;
   }>()
 );
+
+export const setCurrentMatchSessionSuccess = createAction(
+  '[User] Set Current Match Session Success',
+  props<{
+    id: string;
+  }>()
+);

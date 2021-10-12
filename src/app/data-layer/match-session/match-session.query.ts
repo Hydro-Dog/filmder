@@ -8,6 +8,8 @@ import { MatchSessionState, MatchSessionStore } from './match-session.store';
 export class MatchSessionQuery extends Query<MatchSessionState> {
   // TODO(vbabaev): change string selectors to enums
 
+  selectCurrentMatchSession$ = this.select('currentMatchSession');
+
   /**
    * Returns array of match sessions where the user is host or guest
    */

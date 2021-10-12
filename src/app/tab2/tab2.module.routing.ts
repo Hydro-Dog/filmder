@@ -17,9 +17,7 @@ const routes: Routes = [
   {
     path: 'current-match',
     loadChildren: () =>
-      import('../current-match/current-match.module').then(
-        (m) => m.CurrentMatchModule
-      ),
+      import('../pick-film/pick-film.module').then((m) => m.PickFilmModule),
   },
 ];
 

@@ -7,10 +7,12 @@ export interface User {
   lastName: string;
   password?: string;
   id?: number;
+  currentMatchSession: string;
 }
 
 export interface UserRO {
   id: number;
+  currentMatchSession: string;
   created: string;
   firstName: string;
   lastName: string;

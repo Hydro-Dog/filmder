@@ -5,7 +5,7 @@ import { MatchSession } from './match-session.models';
 export interface MatchSessionState {
   matchSessions: MatchSession[];
   matchSessionsLoading: boolean;
-  currentMatchSessionId: number;
+  currentMatchSession: MatchSession;
   error: any;
 }
 
@@ -13,7 +13,7 @@ export function createInitialState(): MatchSessionState {
   return {
     matchSessions: [],
     matchSessionsLoading: false,
-    currentMatchSessionId: null,
+    currentMatchSession: null,
     error: null,
   };
 }

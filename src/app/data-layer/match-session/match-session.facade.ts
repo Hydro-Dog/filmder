@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import {
   createMatchSession,
   deleteMatchSession,
+  getCurrentMatchSession,
   getMatchSessionsByUserId,
   socketGetMatchSessionSuccess,
   updateMatchSession,
@@ -19,6 +20,9 @@ import { MatchSessionService } from './match-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionFacade {
+  readonly selectCurrentMatchSession$: Observable<MatchSession> =
+    this.matchSessionQuery.selectCurrentMatchSession$;
+
   readonly selectMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectMatchSessions$;
 
@@ -32,13 +36,6 @@ export class MatchSessionFacade {
     this.matchSessionQuery.selectPendingMatchSessions$;
 
   socketMatchSessionSub: Subscription;
-
-  // listenForNewMatchSessions$ =
-  //   this.matchSessionService.listenForNewMatchSessions$.pipe(
-  //     tap((matchSession) =>
-  //       this.actions.dispatch(socketPushMatchSessionSuccess({matchSession}))
-  //     )
-  //   );
 
   constructor(
     private actions: Actions,
@@ -64,6 +61,10 @@ export class MatchSessionFacade {
    */
   getMatchSessionsByUserId(userId: number) {
     this.actions.dispatch(getMatchSessionsByUserId({ userId }));
+  }
+
+  getCurrentMatchSession(matchSessionId: string) {
+    this.actions.dispatch(getCurrentMatchSession({ matchSessionId }));
   }
 
   registerNewListener(id: string) {

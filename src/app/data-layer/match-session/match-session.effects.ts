@@ -12,6 +12,8 @@ import {
   createMatchSessionSuccess,
   deleteMatchSession,
   deleteMatchSessionSuccess,
+  getCurrentMatchSession,
+  getCurrentMatchSessionSuccess,
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
   socketGetMatchSessionSuccess,
@@ -108,6 +110,28 @@ export class MatchSessionEffects {
     { dispatch: true }
   );
 
+  getCurrentMatchSession$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(getCurrentMatchSession),
+        switchMap(({ matchSessionId }) => {
+          this.matchSessionStore.update((state) => ({
+            ...state,
+            matchSessionsLoading: true,
+          }));
+
+          return this.matchSessionService
+            .getMatchSessionById(matchSessionId)
+            .pipe(
+              map((currentMatchSession) =>
+                getCurrentMatchSessionSuccess({ currentMatchSession })
+              )
+            );
+        })
+      ),
+    { dispatch: true }
+  );
+
   @Effect()
   getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
     ofType(getMatchSessionsByUserIdSuccess),
@@ -116,6 +140,18 @@ export class MatchSessionEffects {
         ...state,
         matchSessionsLoading: false,
         matchSessions,
+      }));
+    })
+  );
+
+  @Effect()
+  getCurrentMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(getCurrentMatchSessionSuccess),
+    tap(({ currentMatchSession }) => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        matchSessionsLoading: false,
+        currentMatchSession,
       }));
     })
   );

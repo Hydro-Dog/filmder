@@ -10,6 +10,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   getUser,
   getUserSuccess,
+  setCurrentMatchSessionSuccess,
   updateUser,
   updateUserSuccess,
 } from './user.actions';
@@ -79,6 +80,18 @@ export class UserEffects {
         ...state,
         userLoading: false,
         user,
+      }));
+    })
+  );
+
+  @Effect()
+  setCurrentMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(setCurrentMatchSessionSuccess),
+    tap(({ id }) => {
+      return this.userStore.update((state) => ({
+        ...state,
+        userLoading: false,
+        user: { ...state.user, currentMatchSession: id },
       }));
     })
   );

@@ -101,6 +101,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       firstName: this.firstNameControl.value,
       lastName: this.lastNameControl.value,
       password: this.passwordControl.value,
+      currentMatchSession: null,
     };
     this.authFacade.register(user);
   }

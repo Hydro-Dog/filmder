@@ -43,7 +43,13 @@ export class MatchSessionService {
 
   getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
     return this.http.get<MatchSession[]>(
-      `${environment.apiUrl}/api/matchsession/${userId}`
+      `${environment.apiUrl}/api/matchsession/?userId=${userId}`
+    );
+  }
+
+  getMatchSessionById(id: string): Observable<MatchSession> {
+    return this.http.get<MatchSession>(
+      `${environment.apiUrl}/api/matchsession/?matchSessionId=${id}`
     );
   }
 }

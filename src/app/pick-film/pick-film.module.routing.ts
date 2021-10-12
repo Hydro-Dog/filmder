@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CurrentMatchComponent } from './current-match.component';
+import { PickFilmComponent } from './pick-film.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CurrentMatchComponent,
+    component: PickFilmComponent,
   },
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CurrentMatchRoutingModule {}
+export class PickFilmRoutingModule {}

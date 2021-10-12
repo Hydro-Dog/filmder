@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../shared/shared.module';
-import { MatchesActiveRoutingModule } from './matches-active-routing.module';
+import { MatchesActiveRoutingModule } from './matches-active.module.routing';
 import { MatchesActiveComponent } from './matches-active.component';
 
 @NgModule({
