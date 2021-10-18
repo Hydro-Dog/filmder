@@ -1,10 +1,9 @@
 import { ID } from '@datorama/akita';
+import { Film } from '../film/film.models';
 import { User } from '../user/user.models';
 
 //CO - create object
 export interface MatchSessionCO {
-  region: string;
-  lang: string;
   matchLimit: number;
   category: string;
   guestId: number;
@@ -14,17 +13,24 @@ export interface MatchSession {
   id: number;
   region: string;
   category: string;
+  filmsSequenceJson: string[];
+  filmsSequence: Film[];
   host: User;
   guest: User;
-  hostCurrentPage: number;
-  guestCurrentPage: number;
-  hostLikedMovies: number[];
-  guestLikedMovies: number[];
+  lang: string;
+  hostCurrentFilmIndex: number;
+  guestCurrentFilmIndex: number;
+  hostLikedFilms: number[];
+  guestLikedFilms: number[];
+  hostLikedFilmIndex: number;
+  guestLikedFilmIndex: number;
   filterParams: string;
   matchedMoviesIds: number[];
   matchLimit: number;
   accepted: boolean;
   declined: boolean;
+  filmsMatchTookPlace: boolean;
+  completed: boolean;
 }
 
 export enum ScopeSearchMatchSession {

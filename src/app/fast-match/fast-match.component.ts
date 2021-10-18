@@ -37,17 +37,17 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     guestUsername: ['', Validators.required],
   });
 
-  readonly regions$ = this.filmFacade.selectAvailableRegions$.pipe(
-    map((x) =>
-      x.map((item) => ({
-        text: item.english_name,
-        value: item.iso_3166_1,
-      }))
-    )
-  );
+  // readonly regions$ = this.filmFacade.selectAvailableRegions$.pipe(
+  //   map((x) =>
+  //     x.map((item) => ({
+  //       text: item.english_name,
+  //       value: item.iso_3166_1,
+  //     }))
+  //   )
+  // );
   readonly gameModes$ = this.gameModesFacade.selectGameModes$;
-  readonly regionClicked$ = new Subject();
-  readonly pickedRegion$ = new BehaviorSubject({ text: '', value: '' });
+  // readonly regionClicked$ = new Subject();readonly regionClicked$ = new Subject();
+  // readonly pickedRegion$ = new BehaviorSubject({ text: '', value: '' });
   readonly selectedUser$ = this.userQuery.selectUser$;
   readonly destroy$ = new Subject();
 
@@ -64,13 +64,13 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
-    this.regionClicked$
-      .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
-      .subscribe(([_, regions]) => {
-        this.pickerComponent.showPicker(regions).then(({ data }) => {
-          this.pickedRegion$.next(data.Regions);
-        });
-      });
+    // this.regionClicked$
+    //   .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
+    //   .subscribe(([_, regions]) => {
+    //     this.pickerComponent.showPicker(regions).then(({ data }) => {
+    //       this.pickedRegion$.next(data.Regions);
+    //     });
+    //   });
   }
 
   navigateBack() {
@@ -92,8 +92,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
           this.matchSessionFacade.createMatchSession({
             category: this.fastMatchForm.value.gameMode,
             matchLimit: this.fastMatchForm.value.matchLimit,
-            lang: this.pickedRegion$.value.value,
-            region: this.pickedRegion$.value.text,
             guestId: guestUser.id as number,
           });
         }

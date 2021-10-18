@@ -1,0 +1,31 @@
+<div>
+  <div class="container">
+    <div class="background">
+      <div @fadeAnimation class="overview p-x-10" *ngIf="showOverview">
+        <div>
+          {{ film?.overview }}
+        </div>
+        <ion-icon
+          size="large"
+          name="chevron-down-circle"
+          (click)="setShowOverview(false)"
+        ></ion-icon>
+      </div>
+
+      <div @fadeAnimation class="title p-x-10" *ngIf="showOverview === false">
+        <div class="title-text">
+          {{ film?.title }}
+        </div>
+        <ion-icon
+          size="large"
+          name="chevron-up-circle"
+          (click)="setShowOverview(true)"
+        ></ion-icon>
+      </div>
+    </div>
+    <img
+      [src]="'https://image.tmdb.org/t/p/original' + film?.poster_path"
+      alt=""
+    />
+  </div>
+</div>

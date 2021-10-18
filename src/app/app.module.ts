@@ -18,6 +18,7 @@ import { GameModesEffects } from './data-layer/game-mode/game-mode.effects';
 import { AuthInterceptor } from './auth/token.interceptor';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { MatchSessionEffects } from './data-layer/match-session/match-session.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
@@ -25,6 +26,7 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     IonicModule.forRoot({
       rippleEffect: false,

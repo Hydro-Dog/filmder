@@ -148,10 +148,14 @@ export class MatchSessionEffects {
   getCurrentMatchSessionSuccess$ = this.actions$.pipe(
     ofType(getCurrentMatchSessionSuccess),
     tap(({ currentMatchSession }) => {
+      const filmsSequence = currentMatchSession.filmsSequenceJson.map(
+        (filmJson) => JSON.parse(filmJson)
+      );
+      console.timeEnd('filmJson------');
       return this.matchSessionStore.update((state) => ({
         ...state,
         matchSessionsLoading: false,
-        currentMatchSession,
+        currentMatchSession: { ...currentMatchSession, filmsSequence },
       }));
     })
   );

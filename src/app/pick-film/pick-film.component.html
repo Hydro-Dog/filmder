@@ -1,1 +1,3 @@
-<ion-card style="height: 100px" *ngFor="let p of people">{{ p.name }}</ion-card>
+<ion-card style="height: 100wh">
+  <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
+</ion-card>

@@ -4,11 +4,10 @@ import {
   ElementRef,
   Output,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { Gesture, GestureController, IonCard, Platform } from '@ionic/angular';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 
@@ -19,22 +18,40 @@ import { UserFacade } from '../data-layer/user/user.facade';
 export class PickFilmComponent implements AfterViewInit {
   @ViewChildren(IonCard, { read: ElementRef }) cards: QueryList<ElementRef>;
   @Output()
-  people = [
-    {
-      name: 'Vlad',
-      age: 25,
-    },
-    {
-      name: 'Vlad 2',
-      age: 26,
-    },
-    {
-      name: 'Vlad 3',
-      age: 27,
-    },
-  ];
-
+  // people = [
+  //   {
+  //     name: 'Vlad',
+  //     age: 25,
+  //   },
+  //   {
+  //     name: 'Vlad 2',
+  //     age: 26,
+  //   },
+  //   {
+  //     name: 'Vlad 3',
+  //     age: 27,
+  //   },
+  // ];
   readonly selectFilms$ = this.userFacade.selectUser$;
+  readonly filmsSequence$ =
+    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      filter((x) => !!x),
+      map((matchSession) => matchSession.filmsSequence)
+    );
+
+  readonly currentFilm$ =
+    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      filter((x) => !!x),
+      withLatestFrom(this.userFacade.selectUser$),
+      map(([matchSession, selectUser]) => {
+        console.log('hereeeeee');
+        if (selectUser.id === matchSession.host.id) {
+          return matchSession.filmsSequence[matchSession.hostCurrentFilmIndex];
+        } else {
+          return matchSession.filmsSequence[matchSession.guestCurrentFilmIndex];
+        }
+      })
+    );
   readonly selectCurrentMatchSession$ =
     this.matchSessionFacade.selectCurrentMatchSession$;
 
@@ -44,13 +61,18 @@ export class PickFilmComponent implements AfterViewInit {
     private gestureCtrl: GestureController,
     private platform: Platform
   ) {
+    console.log('constructor');
     this.userFacade.selectUser$.subscribe((user) => {
-      console.log('user: ', user);
-      this.matchSessionFacade.getCurrentMatchSession(user.currentMatchSession);
+      if (user) {
+        console.log('user: ', user);
+        this.matchSessionFacade.getCurrentMatchSession(
+          user.currentMatchSession
+        );
+      }
     });
 
-    this.selectCurrentMatchSession$.subscribe((selectCurrentMatchSession) =>
-      console.log('selectCurrentMatchSession$: ', selectCurrentMatchSession)
+    this.currentFilm$.subscribe((currentFilm) =>
+      console.log('currentFilm: ', currentFilm)
     );
   }
 
@@ -103,7 +125,6 @@ export class PickFilmComponent implements AfterViewInit {
   }
 
   setCardColor(x, element) {
-    console.log('x: ', x);
     let color = '';
     const abs = Math.abs(x);
     const min = Math.trunc(Math.min(16 * 16 - abs, 16 * 16));

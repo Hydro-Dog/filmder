@@ -27,12 +27,12 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <!-- <ion-item>
             <div class="m-r-10 p-l-15 fw-600" (click)="regionClicked$.next()">
               Region
             </div>
             <div>{{ (pickedRegion$ | async).text }}</div>
-          </ion-item>
+          </ion-item> -->
 
           <ion-item class="p-l-15">
             <div class="m-r-10 fw-600">Matches limit</div>
@@ -59,10 +59,7 @@
       <!-- TODO: create straightforward validator for disabling the button -->
       <ion-button
         (click)="createGame()"
-        [disabled]="
-          (fastMatchForm.statusChanges | async) === 'INVALID' ||
-          !(pickedRegion$ | async).value
-        "
+        [disabled]="(fastMatchForm.statusChanges | async) === 'INVALID'"
         >Create
       </ion-button>
     </div>
