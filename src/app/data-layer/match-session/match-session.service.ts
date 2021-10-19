@@ -52,4 +52,11 @@ export class MatchSessionService {
       `${environment.apiUrl}/api/matchsession/?matchSessionId=${id}`
     );
   }
+
+  swipeRight(matchSessionId: number, filmId: number): Observable<MatchSession> {
+    return this.http.post<MatchSession>(
+      `${environment.apiUrl}/api/approvefilm`,
+      { matchSessionId, filmId }
+    );
+  }
 }

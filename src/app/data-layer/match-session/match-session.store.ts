@@ -6,6 +6,7 @@ export interface MatchSessionState {
   matchSessions: MatchSession[];
   matchSessionsLoading: boolean;
   currentMatchSession: MatchSession;
+  currentMatchSessionLoading: boolean;
   error: any;
 }
 
@@ -14,6 +15,7 @@ export function createInitialState(): MatchSessionState {
     matchSessions: [],
     matchSessionsLoading: false,
     currentMatchSession: null,
+    currentMatchSessionLoading: false,
     error: null,
   };
 }

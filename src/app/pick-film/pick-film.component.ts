@@ -2,12 +2,16 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
+  OnInit,
   Output,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { Gesture, GestureController, IonCard, Platform } from '@ionic/angular';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 
@@ -15,23 +19,9 @@ import { UserFacade } from '../data-layer/user/user.facade';
   templateUrl: 'pick-film.component.html',
   styleUrls: ['pick-film.component.scss'],
 })
-export class PickFilmComponent implements AfterViewInit {
-  @ViewChildren(IonCard, { read: ElementRef }) cards: QueryList<ElementRef>;
-  @Output()
-  // people = [
-  //   {
-  //     name: 'Vlad',
-  //     age: 25,
-  //   },
-  //   {
-  //     name: 'Vlad 2',
-  //     age: 26,
-  //   },
-  //   {
-  //     name: 'Vlad 3',
-  //     age: 27,
-  //   },
-  // ];
+export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(IonCard, { read: ElementRef }) card: ElementRef;
+
   readonly selectFilms$ = this.userFacade.selectUser$;
   readonly filmsSequence$ =
     this.matchSessionFacade.selectCurrentMatchSession$.pipe(
@@ -44,8 +34,8 @@ export class PickFilmComponent implements AfterViewInit {
       filter((x) => !!x),
       withLatestFrom(this.userFacade.selectUser$),
       map(([matchSession, selectUser]) => {
-        console.log('hereeeeee');
         if (selectUser.id === matchSession.host.id) {
+          console.log('matchSession: ', matchSession);
           return matchSession.filmsSequence[matchSession.hostCurrentFilmIndex];
         } else {
           return matchSession.filmsSequence[matchSession.guestCurrentFilmIndex];
@@ -54,6 +44,8 @@ export class PickFilmComponent implements AfterViewInit {
     );
   readonly selectCurrentMatchSession$ =
     this.matchSessionFacade.selectCurrentMatchSession$;
+  swipeRight$ = new Subject();
+  destroy$ = new Subject();
 
   constructor(
     private userFacade: UserFacade,
@@ -62,66 +54,107 @@ export class PickFilmComponent implements AfterViewInit {
     private platform: Platform
   ) {
     console.log('constructor');
-    this.userFacade.selectUser$.subscribe((user) => {
-      if (user) {
-        console.log('user: ', user);
-        this.matchSessionFacade.getCurrentMatchSession(
-          user.currentMatchSession
-        );
-      }
-    });
-
     this.currentFilm$.subscribe((currentFilm) =>
       console.log('currentFilm: ', currentFilm)
     );
   }
-
-  ngAfterViewInit(): void {
-    const cards = this.cards.toArray();
-    console.log('cards: ', cards);
-
-    this.useTinderSwipe(cards);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  useTinderSwipe(cardArray) {
-    for (let i = 0; i < cardArray.length; i++) {
-      const card = cardArray[i];
+  ngOnInit(): void {
+    this.userFacade.selectUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        if (user) {
+          console.log('user: ', user);
+          this.matchSessionFacade.getCurrentMatchSession(
+            user.currentMatchSession
+          );
+        }
+      });
 
-      const gesture: Gesture = this.gestureCtrl.create(
-        {
-          el: card.nativeElement,
-          threshold: 15,
-          gestureName: 'swipe',
-          onStart: (ev) => {
-            console.log('ev: ', ev);
-          },
-          onMove: (ev) => {
-            card.nativeElement.style.transform = `translateX(${
-              ev.deltaX
-            }px) rotate(${ev.deltaX / 10}deg)`;
-            // this.setCardColor(ev.deltaX, card.nativeElement);
-          },
-          onEnd: (ev) => {
-            card.nativeElement.style.transition = '0.3s ease-out';
+    this.swipeRight$
+      .pipe(
+        takeUntil(this.destroy$),
+        withLatestFrom(
+          this.matchSessionFacade.selectCurrentMatchSession$,
+          this.currentFilm$
+        )
+      )
+      .subscribe(([_, currentMatchSession, currentFilm]) => {
+        this.matchSessionFacade.swipeRight(
+          currentMatchSession.id,
+          currentFilm.id
+        );
+      });
+  }
 
-            if (ev.deltaX > 150) {
-              card.nativeElement.style.transform = `translateX(${
-                this.platform.width() * 2
-              }px) rotate(${ev.deltaX / 10}deg)`;
-            } else if (ev.deltaX < -150) {
-              card.nativeElement.style.transform = `translateX(${
-                -this.platform.width() * 2
-              }px) rotate(${ev.deltaX / 10}deg)`;
-            } else {
-              card.nativeElement.style.transform = '';
-            }
-          },
+  ngAfterViewInit(): void {
+    console.log('this.card: ', this.card);
+
+    this.useTinderSwipe(this.card);
+  }
+
+  async useTinderSwipe(card) {
+    const gesture: Gesture = this.gestureCtrl.create(
+      {
+        el: card.nativeElement,
+        threshold: 15,
+        gestureName: 'swipe',
+        onStart: (ev) => {
+          console.log('ev: ', ev);
         },
-        true
-      );
+        onMove: (ev) => {
+          card.nativeElement.style.transform = `translateX(${
+            ev.deltaX
+          }px) rotate(${ev.deltaX / 10}deg)`;
+          // this.setCardColor(ev.deltaX, card.nativeElement);
+        },
+        onEnd: (ev) => {
+          card.nativeElement.style.transition = '0.3s ease-out';
 
-      gesture.enable(true);
-    }
+          if (ev.deltaX > 150) {
+            card.nativeElement.style.transform = `translateX(${
+              this.platform.width() * 2
+            }px) rotate(${ev.deltaX / 10}deg)`;
+
+            setTimeout(() => {
+              card.nativeElement.style.display = 'none';
+            }, 100);
+
+            setTimeout(() => {
+              card.nativeElement.style.transform = '';
+            }, 500);
+
+            setTimeout(() => {
+              card.nativeElement.style.display = 'block';
+            }, 500);
+
+            this.swipeRight$.next();
+          } else if (ev.deltaX < -150) {
+            card.nativeElement.style.transform = `translateX(${
+              -this.platform.width() * 2
+            }px) rotate(${ev.deltaX / 10}deg)`;
+            card.nativeElement.style.display = 'none';
+
+            setTimeout(() => {
+              card.nativeElement.style.transform = '';
+            }, 500);
+
+            setTimeout(() => {
+              card.nativeElement.style.display = 'block';
+            }, 500);
+          } else {
+            card.nativeElement.style.transform = '';
+          }
+        },
+      },
+      true
+    );
+
+    gesture.enable(true);
   }
 
   setCardColor(x, element) {

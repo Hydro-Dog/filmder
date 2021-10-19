@@ -115,6 +115,18 @@ export const socketGetMatchSessionSuccess = createAction(
   }>()
 );
 
+export const swipeRight = createAction(
+  '[Match Session] Swipe Right',
+  props<{ matchSessionId: number; filmId: number }>()
+);
+
+export const swipeRightSuccess = createAction(
+  '[Match Session] Swipe Right Success',
+  props<{
+    currentMatchSession: MatchSession;
+  }>()
+);
+
 // export const searchMatchSessionsInvitedError = createAction(
 //   '[Match Session] Search Invited Error',
 //   props<{

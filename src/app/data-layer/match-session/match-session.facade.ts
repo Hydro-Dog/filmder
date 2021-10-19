@@ -8,6 +8,7 @@ import {
   getCurrentMatchSession,
   getMatchSessionsByUserId,
   socketGetMatchSessionSuccess,
+  swipeRight,
   updateMatchSession,
 } from './match-session.actions';
 import {
@@ -90,5 +91,9 @@ export class MatchSessionFacade {
 
   stopListenForNewMatches() {
     this.socketMatchSessionSub.unsubscribe();
+  }
+
+  swipeRight(matchSessionId: number, filmId: number) {
+    this.actions.dispatch(swipeRight({ matchSessionId, filmId }));
   }
 }

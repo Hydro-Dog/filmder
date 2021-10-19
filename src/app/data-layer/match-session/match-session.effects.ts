@@ -17,6 +17,8 @@ import {
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
   socketGetMatchSessionSuccess,
+  swipeRight,
+  swipeRightSuccess,
   updateMatchSession,
   updateMatchSessionSuccess,
 } from './match-session.actions';
@@ -71,6 +73,26 @@ export class MatchSessionEffects {
     { dispatch: true }
   );
 
+  @Effect()
+  updateMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(updateMatchSessionSuccess),
+    tap(({ matchSession }) => {
+      return this.matchSessionStore.update((state) => {
+        const idx = state.matchSessions.findIndex(
+          (item) => item.id === matchSession.id
+        );
+
+        const matchSessions = [...state.matchSessions];
+        matchSessions[idx] = matchSession;
+        return {
+          ...state,
+          matchSessionsLoading: false,
+          matchSessions,
+        };
+      });
+    })
+  );
+
   deleteMatchSession$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -110,6 +132,18 @@ export class MatchSessionEffects {
     { dispatch: true }
   );
 
+  @Effect()
+  getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
+    ofType(getMatchSessionsByUserIdSuccess),
+    tap(({ matchSessions }) => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        matchSessionsLoading: false,
+        matchSessions,
+      }));
+    })
+  );
+
   getCurrentMatchSession$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -133,18 +167,6 @@ export class MatchSessionEffects {
   );
 
   @Effect()
-  getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
-    ofType(getMatchSessionsByUserIdSuccess),
-    tap(({ matchSessions }) => {
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessionsLoading: false,
-        matchSessions,
-      }));
-    })
-  );
-
-  @Effect()
   getCurrentMatchSessionSuccess$ = this.actions$.pipe(
     ofType(getCurrentMatchSessionSuccess),
     tap(({ currentMatchSession }) => {
@@ -160,42 +182,41 @@ export class MatchSessionEffects {
     })
   );
 
-  @Effect()
-  updateMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(updateMatchSessionSuccess),
-    tap(({ matchSession }) => {
-      return this.matchSessionStore.update((state) => {
-        const idx = state.matchSessions.findIndex(
-          (item) => item.id === matchSession.id
-        );
+  swipeRight$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(swipeRight),
+        switchMap(({ matchSessionId, filmId }) => {
+          this.matchSessionStore.update((state) => ({
+            ...state,
+            currentMatchSessionLoading: true,
+          }));
 
-        const matchSessions = [...state.matchSessions];
-        matchSessions[idx] = matchSession;
-        return {
-          ...state,
-          matchSessionsLoading: false,
-          matchSessions,
-        };
-      });
-    })
+          return this.matchSessionService
+            .swipeRight(matchSessionId, filmId)
+            .pipe(
+              map((currentMatchSession) =>
+                swipeRightSuccess({ currentMatchSession })
+              )
+            );
+        })
+      ),
+    { dispatch: true }
   );
 
   @Effect()
-  deleteMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(deleteMatchSessionSuccess),
-    tap(({ id }) => {
-      return this.matchSessionStore.update((state) => {
-        const idx = state.matchSessions.findIndex(
-          (item) => item.id.toString() === id
-        );
+  swipeRightSuccess$ = this.actions$.pipe(
+    ofType(swipeRightSuccess),
+    tap(({ currentMatchSession }) => {
+      const filmsSequence = currentMatchSession.filmsSequenceJson.map(
+        (filmJson) => JSON.parse(filmJson)
+      );
 
-        const matchSessions = state.matchSessions.splice(idx, 1);
-        return {
-          ...state,
-          matchSessionsLoading: false,
-          matchSessions,
-        };
-      });
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        currentMatchSessionLoading: false,
+        currentMatchSession: { ...currentMatchSession, filmsSequence },
+      }));
     })
   );
 

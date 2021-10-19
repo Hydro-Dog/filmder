@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         return !!token;
       }),
       tap((hasToken) => {
-        if (!hasToken) {
+        if (!hasToken && !this.router.url.includes('auth')) {
           console.log('here');
           this.router.navigate(['/auth']);
         }
