@@ -115,13 +115,17 @@ export const socketGetMatchSessionSuccess = createAction(
   }>()
 );
 
-export const swipeRight = createAction(
-  '[Match Session] Swipe Right',
-  props<{ matchSessionId: number; filmId: number }>()
+export const swipe = createAction(
+  '[Match Session] Swipe',
+  props<{
+    matchSessionId: number;
+    filmId: number;
+    swipeDirection: 'left' | 'right';
+  }>()
 );
 
-export const swipeRightSuccess = createAction(
-  '[Match Session] Swipe Right Success',
+export const swipeSuccess = createAction(
+  '[Match Session] Swipe Success',
   props<{
     currentMatchSession: MatchSession;
   }>()

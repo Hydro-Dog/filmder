@@ -27,7 +27,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   readonly pickerComponent: PickerComponentShared;
   @ViewChild(ToastComponentShared)
   readonly toastComponentShared: ToastComponentShared;
-
   readonly fastMatchForm = this.fb.group({
     gameMode: ['', Validators.required],
     matchLimit: [
@@ -37,18 +36,11 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     guestUsername: ['', Validators.required],
   });
 
-  // readonly regions$ = this.filmFacade.selectAvailableRegions$.pipe(
-  //   map((x) =>
-  //     x.map((item) => ({
-  //       text: item.english_name,
-  //       value: item.iso_3166_1,
-  //     }))
-  //   )
-  // );
   readonly gameModes$ = this.gameModesFacade.selectGameModes$;
-  // readonly regionClicked$ = new Subject();readonly regionClicked$ = new Subject();
-  // readonly pickedRegion$ = new BehaviorSubject({ text: '', value: '' });
   readonly selectedUser$ = this.userQuery.selectUser$;
+  readonly currentScreen$ = new BehaviorSubject<'create' | 'success' | 'error'>(
+    'create'
+  );
   readonly destroy$ = new Subject();
 
   constructor(
@@ -64,17 +56,23 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
-    // this.regionClicked$
-    //   .pipe(withLatestFrom(this.regions$), takeUntil(this.destroy$))
-    //   .subscribe(([_, regions]) => {
-    //     this.pickerComponent.showPicker(regions).then(({ data }) => {
-    //       this.pickedRegion$.next(data.Regions);
-    //     });
-    //   });
+
+    this.matchSessionFacade.getCreateResult().subscribe(
+      (getCreateResult) => {
+        this.currentScreen$.next('success');
+      },
+      (err) => {
+        this.currentScreen$.next('error');
+      }
+    );
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab2/create');
+  }
+
+  navigate(url: string) {
+    this.navController.navigateRoot(url);
   }
 
   createGame() {

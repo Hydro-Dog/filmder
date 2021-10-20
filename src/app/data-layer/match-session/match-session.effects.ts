@@ -6,7 +6,8 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   createMatchSession,
   createMatchSessionSuccess,
@@ -17,8 +18,8 @@ import {
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
   socketGetMatchSessionSuccess,
-  swipeRight,
-  swipeRightSuccess,
+  swipe,
+  swipeSuccess,
   updateMatchSession,
   updateMatchSessionSuccess,
 } from './match-session.actions';
@@ -50,6 +51,7 @@ export class MatchSessionEffects {
               map((matchSession) => createMatchSessionSuccess({ matchSession }))
             );
         })
+        // catchError(err => throwError(err))
       ),
     { dispatch: true }
   );
@@ -185,18 +187,18 @@ export class MatchSessionEffects {
   swipeRight$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(swipeRight),
-        switchMap(({ matchSessionId, filmId }) => {
+        ofType(swipe),
+        switchMap(({ matchSessionId, filmId, swipeDirection }) => {
           this.matchSessionStore.update((state) => ({
             ...state,
             currentMatchSessionLoading: true,
           }));
 
           return this.matchSessionService
-            .swipeRight(matchSessionId, filmId)
+            .swipe(matchSessionId, filmId, swipeDirection)
             .pipe(
               map((currentMatchSession) =>
-                swipeRightSuccess({ currentMatchSession })
+                swipeSuccess({ currentMatchSession })
               )
             );
         })
@@ -206,7 +208,7 @@ export class MatchSessionEffects {
 
   @Effect()
   swipeRightSuccess$ = this.actions$.pipe(
-    ofType(swipeRightSuccess),
+    ofType(swipeSuccess),
     tap(({ currentMatchSession }) => {
       const filmsSequence = currentMatchSession.filmsSequenceJson.map(
         (filmJson) => JSON.parse(filmJson)

@@ -8,9 +8,10 @@ import {
   getCurrentMatchSession,
   getMatchSessionsByUserId,
   socketGetMatchSessionSuccess,
-  swipeRight,
+  swipe,
   updateMatchSession,
 } from './match-session.actions';
+import { MatchSessionEffects } from './match-session.effects';
 import {
   MatchSession,
   MatchSessionCO,
@@ -41,8 +42,13 @@ export class MatchSessionFacade {
   constructor(
     private actions: Actions,
     private matchSessionService: MatchSessionService,
-    private matchSessionQuery: MatchSessionQuery
+    private matchSessionQuery: MatchSessionQuery,
+    private matchSessionEffects: MatchSessionEffects
   ) {}
+
+  getCreateResult() {
+    return this.matchSessionEffects.createMatchSession$;
+  }
 
   createMatchSession(matchSession: MatchSessionCO) {
     this.actions.dispatch(createMatchSession({ matchSession }));
@@ -76,7 +82,7 @@ export class MatchSessionFacade {
   }
 
   listenForMatchSessionsChanges() {
-    this.socketMatchSessionSub =
+    this.socketMatchSessionSub.add(
       this.matchSessionService.listenForMatchSessionsChanges$.subscribe(
         ({ message }) => {
           this.actions.dispatch(
@@ -86,14 +92,19 @@ export class MatchSessionFacade {
             })
           );
         }
-      );
+      )
+    );
   }
 
   stopListenForNewMatches() {
     this.socketMatchSessionSub.unsubscribe();
   }
 
-  swipeRight(matchSessionId: number, filmId: number) {
-    this.actions.dispatch(swipeRight({ matchSessionId, filmId }));
+  swipe(
+    matchSessionId: number,
+    filmId: number,
+    swipeDirection: 'left' | 'right'
+  ) {
+    this.actions.dispatch(swipe({ matchSessionId, filmId, swipeDirection }));
   }
 }

@@ -4,14 +4,23 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  Output,
-  QueryList,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
-import { Gesture, GestureController, IonCard, Platform } from '@ionic/angular';
-import { Subject } from 'rxjs';
-import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import {
+  Gesture,
+  GestureController,
+  GestureDetail,
+  IonCard,
+  Platform,
+} from '@ionic/angular';
+import { Subject, timer } from 'rxjs';
+import {
+  filter,
+  map,
+  switchMap,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 
@@ -35,7 +44,6 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       withLatestFrom(this.userFacade.selectUser$),
       map(([matchSession, selectUser]) => {
         if (selectUser.id === matchSession.host.id) {
-          console.log('matchSession: ', matchSession);
           return matchSession.filmsSequence[matchSession.hostCurrentFilmIndex];
         } else {
           return matchSession.filmsSequence[matchSession.guestCurrentFilmIndex];
@@ -44,7 +52,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   readonly selectCurrentMatchSession$ =
     this.matchSessionFacade.selectCurrentMatchSession$;
-  swipeRight$ = new Subject();
+  swipe$ = new Subject<'left' | 'right'>();
   destroy$ = new Subject();
 
   constructor(
@@ -52,30 +60,20 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     private matchSessionFacade: MatchSessionFacade,
     private gestureCtrl: GestureController,
     private platform: Platform
-  ) {
-    console.log('constructor');
-    this.currentFilm$.subscribe((currentFilm) =>
-      console.log('currentFilm: ', currentFilm)
-    );
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.userFacade.selectUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
         if (user) {
-          console.log('user: ', user);
           this.matchSessionFacade.getCurrentMatchSession(
             user.currentMatchSession
           );
         }
       });
 
-    this.swipeRight$
+    this.swipe$
       .pipe(
         takeUntil(this.destroy$),
         withLatestFrom(
@@ -83,29 +81,26 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
           this.currentFilm$
         )
       )
-      .subscribe(([_, currentMatchSession, currentFilm]) => {
-        this.matchSessionFacade.swipeRight(
+      .subscribe(([swipeDirection, currentMatchSession, currentFilm]) => {
+        this.matchSessionFacade.swipe(
           currentMatchSession.id,
-          currentFilm.id
+          currentFilm.id,
+          swipeDirection
         );
       });
   }
 
   ngAfterViewInit(): void {
-    console.log('this.card: ', this.card);
-
     this.useTinderSwipe(this.card);
   }
 
-  async useTinderSwipe(card) {
+  async useTinderSwipe(card: ElementRef<any>) {
     const gesture: Gesture = this.gestureCtrl.create(
       {
         el: card.nativeElement,
         threshold: 15,
         gestureName: 'swipe',
-        onStart: (ev) => {
-          console.log('ev: ', ev);
-        },
+        onStart: (ev) => {},
         onMove: (ev) => {
           card.nativeElement.style.transform = `translateX(${
             ev.deltaX
@@ -116,36 +111,13 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
           card.nativeElement.style.transition = '0.3s ease-out';
 
           if (ev.deltaX > 150) {
-            card.nativeElement.style.transform = `translateX(${
-              this.platform.width() * 2
-            }px) rotate(${ev.deltaX / 10}deg)`;
-
-            setTimeout(() => {
-              card.nativeElement.style.display = 'none';
-            }, 100);
-
-            setTimeout(() => {
-              card.nativeElement.style.transform = '';
-            }, 500);
-
-            setTimeout(() => {
-              card.nativeElement.style.display = 'block';
-            }, 500);
-
-            this.swipeRight$.next();
+            this.hideCard(card, ev, 'right');
+            this.scheduleCardDisplaySteps(card);
+            this.swipe$.next('right');
           } else if (ev.deltaX < -150) {
-            card.nativeElement.style.transform = `translateX(${
-              -this.platform.width() * 2
-            }px) rotate(${ev.deltaX / 10}deg)`;
-            card.nativeElement.style.display = 'none';
-
-            setTimeout(() => {
-              card.nativeElement.style.transform = '';
-            }, 500);
-
-            setTimeout(() => {
-              card.nativeElement.style.display = 'block';
-            }, 500);
+            this.hideCard(card, ev, 'left');
+            this.scheduleCardDisplaySteps(card);
+            this.swipe$.next('left');
           } else {
             card.nativeElement.style.transform = '';
           }
@@ -157,33 +129,68 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     gesture.enable(true);
   }
 
-  setCardColor(x, element) {
-    let color = '';
-    const abs = Math.abs(x);
-    const min = Math.trunc(Math.min(16 * 16 - abs, 16 * 16));
-    const hexCode = this.decimalToHex(min, 2);
-
-    if (x < 0) {
-      console.log('color +: ', color);
-      color = '#FF' + hexCode + hexCode;
-    } else {
-      color = '#' + hexCode + 'FF' + hexCode;
-    }
-
-    element.style.background = color;
+  scheduleCardDisplaySteps(card: ElementRef<any>) {
+    timer(50)
+      .pipe(
+        switchMap(() => {
+          card.nativeElement.style.display = 'none';
+          return timer(300);
+        })
+      )
+      .subscribe(() => {
+        card.nativeElement.style.display = 'block';
+        card.nativeElement.style.transform = '';
+      });
   }
 
-  decimalToHex(d, padding) {
-    let hex = Number(d).toString(16);
-    padding =
-      typeof padding === 'undefined' || padding === null
-        ? (padding = 2)
-        : padding;
-
-    while (hex.length < padding) {
-      hex = '0' + hex;
+  hideCard(
+    card: ElementRef<any>,
+    event: GestureDetail,
+    direction: 'left' | 'right'
+  ) {
+    if (direction === 'left') {
+      card.nativeElement.style.transform = `translateX(${
+        -this.platform.width() * 2
+      }px) rotate(${event.deltaX / 10}deg)`;
+    } else {
+      card.nativeElement.style.transform = `translateX(${
+        this.platform.width() * 2
+      }px) rotate(${event.deltaX / 10}deg)`;
     }
+  }
 
-    return hex;
+  // setCardColor(x, element) {
+  //   let color = '';
+  //   const abs = Math.abs(x);
+  //   const min = Math.trunc(Math.min(16 * 16 - abs, 16 * 16));
+  //   const hexCode = this.decimalToHex(min, 2);
+
+  //   if (x < 0) {
+  //     console.log('color +: ', color);
+  //     color = '#FF' + hexCode + hexCode;
+  //   } else {
+  //     color = '#' + hexCode + 'FF' + hexCode;
+  //   }
+
+  //   element.style.background = color;
+  // }
+
+  // decimalToHex(d, padding) {
+  //   let hex = Number(d).toString(16);
+  //   padding =
+  //     typeof padding === 'undefined' || padding === null
+  //       ? (padding = 2)
+  //       : padding;
+
+  //   while (hex.length < padding) {
+  //     hex = '0' + hex;
+  //   }
+
+  //   return hex;
+  // }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

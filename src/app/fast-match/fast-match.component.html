@@ -2,67 +2,94 @@
   <filmder-toast></filmder-toast>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
+      <!-- <ion-button (click)="navigate('/tabs/tab2/create')">Back</ion-button> -->
+      <ion-back-button
+        (click)="navigate('/tabs/tab2/create')"
+      ></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="h100 d-flex">
-    <div class="w100 m-auto d-c-flex form-buttons-container">
-      <ion-list>
-        <form [formGroup]="fastMatchForm">
-          <ion-item class="p-l-15">
-            <div class="m-r-10 fw-600">Mode</div>
-            <ion-select
-              formControlName="gameMode"
-              value="brown"
-              okText="Okay"
-              cancelText="Dismiss"
-            >
-              <ion-select-option
-                *ngFor="let gameMode of gameModes$ | async"
-                [value]="gameMode.value"
-                >{{ gameMode.name }}</ion-select-option
+  <div [ngSwitch]="currentScreen$ | async">
+    <div class="m-t-40 d-flex" *ngSwitchCase="'create'">
+      <div class="w100 m-auto d-c-flex form-buttons-container">
+        <ion-list>
+          <form [formGroup]="fastMatchForm">
+            <ion-item class="p-l-15">
+              <div class="m-r-10 fw-600">Mode</div>
+              <ion-select
+                formControlName="gameMode"
+                value="brown"
+                okText="Okay"
+                cancelText="Dismiss"
               >
-            </ion-select>
-          </ion-item>
+                <ion-select-option
+                  *ngFor="let gameMode of gameModes$ | async"
+                  [value]="gameMode.value"
+                  >{{ gameMode.name }}</ion-select-option
+                >
+              </ion-select>
+            </ion-item>
 
-          <!-- <ion-item>
-            <div class="m-r-10 p-l-15 fw-600" (click)="regionClicked$.next()">
-              Region
-            </div>
-            <div>{{ (pickedRegion$ | async).text }}</div>
-          </ion-item> -->
+            <ion-item class="p-l-15">
+              <div class="m-r-10 fw-600">Matches limit</div>
 
-          <ion-item class="p-l-15">
-            <div class="m-r-10 fw-600">Matches limit</div>
+              <ion-input
+                type="number"
+                min="1"
+                max="25"
+                formControlName="matchLimit"
+                placeholder="1-25"
+              ></ion-input>
+            </ion-item>
 
-            <ion-input
-              type="number"
-              min="1"
-              max="25"
-              formControlName="matchLimit"
-              placeholder="1-25"
-            ></ion-input>
-          </ion-item>
+            <ion-item class="p-l-15">
+              <div class="m-r-10 fw-600">Guest username</div>
 
-          <ion-item class="p-l-15">
-            <div class="m-r-10 fw-600">Guest username</div>
-
-            <ion-input
-              formControlName="guestUsername"
-              placeholder="Username"
-            ></ion-input>
-          </ion-item>
-        </form>
-      </ion-list>
-      <!-- TODO: create straightforward validator for disabling the button -->
-      <ion-button
-        (click)="createGame()"
-        [disabled]="(fastMatchForm.statusChanges | async) === 'INVALID'"
-        >Create
-      </ion-button>
+              <ion-input
+                formControlName="guestUsername"
+                placeholder="Username"
+              ></ion-input>
+            </ion-item>
+          </form>
+        </ion-list>
+        <!-- TODO: create straightforward validator for disabling the button -->
+        <ion-button
+          (click)="createGame()"
+          [disabled]="(fastMatchForm.statusChanges | async) === 'INVALID'"
+          >Create
+        </ion-button>
+      </div>
+    </div>
+    <div *ngSwitchCase="'success'">
+      <div class="created-successfully-container">
+        <div class="created-successfully-content">
+          <h2>Invite sent</h2>
+          <div>
+            Game will start after user
+            {{ fastMatchForm.value.guestUsername }} accept your invite
+          </div>
+          <ion-button (click)="navigate('/tabs/tab1')"
+            >Check current games</ion-button
+          >
+        </div>
+      </div>
+    </div>
+    <div *ngSwitchCase="'error'">
+      <div class="created-successfully-container">
+        <div class="created-successfully-content">
+          <h2>Something went wrong</h2>
+          <div>Oops, some error occurred...</div>
+          <div>please try again</div>
+          <ion-button (click)="navigate('/tabs/tab2/create')"
+            >Create</ion-button
+          >
+        </div>
+      </div>
     </div>
   </div>
+
   <filmder-picker></filmder-picker>
 </ion-content>
+
+<ng-template #createdSuccessfullyScreen> </ng-template>

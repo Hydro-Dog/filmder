@@ -41,6 +41,7 @@ export enum ScopeSearchMatchSession {
 export enum MatchSessionSocketEvents {
   MatchSessionChanges = 'match_session_changes',
   RegisterNewListener = 'register_listener',
+  LikesMatched = 'likes-matched',
 }
 
 export enum MatchSessionChangesEvents {

@@ -17,6 +17,10 @@ export class MatchSessionService {
     MatchSessionSocketEvents.MatchSessionChanges
   );
 
+  listenForFilmMatches$: Observable<any> = this.socket.fromEvent(
+    MatchSessionSocketEvents.LikesMatched
+  );
+
   msgToServer(event: string, message: any) {
     this.socket.emit(event, message);
   }
@@ -53,10 +57,15 @@ export class MatchSessionService {
     );
   }
 
-  swipeRight(matchSessionId: number, filmId: number): Observable<MatchSession> {
-    return this.http.post<MatchSession>(
-      `${environment.apiUrl}/api/approvefilm`,
-      { matchSessionId, filmId }
-    );
+  swipe(
+    matchSessionId: number,
+    filmId: number,
+    swipeDirection: 'left' | 'right'
+  ): Observable<MatchSession> {
+    return this.http.post<MatchSession>(`${environment.apiUrl}/api/swipefilm`, {
+      matchSessionId,
+      filmId,
+      swipeDirection,
+    });
   }
 }

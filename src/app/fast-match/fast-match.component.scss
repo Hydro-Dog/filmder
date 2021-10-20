@@ -1,0 +1,11 @@
+.created-successfully-container {
+  display: flex;
+  height: 100vh;
+
+  .created-successfully-content {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
