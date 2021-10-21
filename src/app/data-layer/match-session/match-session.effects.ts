@@ -226,6 +226,7 @@ export class MatchSessionEffects {
   socketGetMatchSessionsInvitedSuccess$ = this.actions$.pipe(
     ofType(socketGetMatchSessionSuccess),
     tap(({ matchSession, event }) => {
+      console.log('socket event: ', event);
       return this.matchSessionStore.update((state) => {
         let matchSessions = [];
         switch (event) {

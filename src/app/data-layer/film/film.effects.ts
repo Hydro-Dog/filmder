@@ -28,7 +28,6 @@ export class FilmEffects {
       this.actions$.pipe(
         ofType(getAvailableRegions),
         switchMap(() => {
-          console.log('heres');
           this.filmStore.update((state) => ({
             ...state,
             availableRegionsLoading: true,

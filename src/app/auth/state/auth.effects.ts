@@ -60,8 +60,6 @@ export class AuthEffects {
             userLoading: true,
           }));
 
-          console.log('ofType(login)');
-
           return this.authService.login(userName, password).pipe(
             map((user) => loginSuccess({ user })),
             catchError((error) => of(loginError({ error })))
@@ -94,7 +92,6 @@ export class AuthEffects {
   loginSuccess$ = this.actions$.pipe(
     ofType(loginSuccess),
     tap(({ user }) => {
-      console.log('    ofType(loginSuccess)');
       this.storageService.setItem({
         key: STORAGE_ITEMS.USER_ID,
         value: user.id,
@@ -124,7 +121,6 @@ export class AuthEffects {
   loginError$ = this.actions$.pipe(
     ofType(loginError),
     tap((error) => {
-      console.log('ofType(loginError)');
       this.authStore.update((state) => ({
         ...state,
         loginError: error,

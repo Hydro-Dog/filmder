@@ -14,7 +14,6 @@ export class StorageFacade {
   constructor(private storage: Storage) {}
 
   createStorage() {
-    console.log('createStorage');
     return this.storage.create();
   }
 

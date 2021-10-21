@@ -35,12 +35,6 @@ export class Tab1Page implements OnInit, OnDestroy {
   async ngOnInit() {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
-    // this.matchSessionFacade.registerNewListener(id);
-    // this.matchSessionFacade.listenForNewMatches();
-
-    this.guestedMatchSessions$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((x) => console.log('TAB1'));
   }
 
   ngOnDestroy(): void {

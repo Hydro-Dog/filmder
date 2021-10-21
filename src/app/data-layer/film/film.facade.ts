@@ -20,7 +20,6 @@ export class FilmFacade {
   }
 
   getAvailableRegions() {
-    console.log('getAvailableRegions1');
     this.actions.dispatch(getAvailableRegions());
   }
 }

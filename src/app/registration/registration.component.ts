@@ -84,10 +84,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.registrationForm.controls['passwordConfirm'].setValidators(
       this.matchPasswordsValidator.bind(this)
     );
-
-    this.selectIdLoading$.subscribe((x) =>
-      console.log('selectIdLoading$: ', x)
-    );
   }
 
   ngOnDestroy() {
@@ -107,7 +103,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   matchPasswordsValidator(control: AbstractControl): ValidationErrors {
-    console.log('this.passwordControl: ', this.passwordControl.dirty);
     return control.value !== this.passwordControl.value
       ? {
           passwordMismatch: true,
@@ -121,7 +116,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   isControlInvalid(controlName: string): boolean {
     const control = this.registrationForm.controls[controlName];
-    console.log(this.registrationForm.controls['userName']);
 
     const result = control.dirty && control.invalid;
 
@@ -162,12 +156,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
 
     if (controlName === 'passwordConfirm') {
-      console.log(
-        'controlName: ',
-        controlName,
-        this.registrationForm.controls[controlName]
-      );
-
       return '(Different Passwords)';
     }
   }

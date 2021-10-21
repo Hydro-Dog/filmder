@@ -35,14 +35,13 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   matches: MatchSession[] = [];
   @Input()
   matchSessionsListTypes: MatchSessionsListTypes;
-  @Output()
-  continueMatch = new EventEmitter();
-  @Output()
-  leaveMatch = new EventEmitter();
-  @Output()
-  inviteAccepted = new EventEmitter();
-  @Output()
-  inviteDeclined = new EventEmitter();
+  @Output() continueMatch = new EventEmitter();
+
+  // @Output() leaveMatch = new EventEmitter();
+
+  @Output() inviteAccepted = new EventEmitter();
+
+  @Output() matchDeclined = new EventEmitter();
 
   @ViewChild(AlertComponentShared, { static: true })
   readonly alertExample: AlertComponentShared;
@@ -82,7 +81,6 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
 
     const modal = await this.modalController.create({
       component: MatchDetailsModal,
-      // cssClass: 'my-custom-class',
       swipeToClose: true,
       componentProps: {
         displayMode,
@@ -102,19 +100,13 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
           case MatchDetailsModalActions.Continue:
             this.continueMatch.emit(matchSession);
             break;
-          case MatchDetailsModalActions.Leave:
-            this.leaveMatch.emit(matchSession);
-            break;
           case MatchDetailsModalActions.Accept:
             this.inviteAccepted.emit(matchSession);
             break;
           case MatchDetailsModalActions.Decline:
-            this.inviteDeclined.emit(matchSession);
+            this.matchDeclined.emit(matchSession);
             break;
           case MatchDetailsModalActions.Nothing:
-            break;
-
-          default:
             break;
         }
       }

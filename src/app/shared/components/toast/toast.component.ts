@@ -31,8 +31,6 @@ export class ToastComponentShared implements AfterViewInit {
   constructor(private cd: ChangeDetectorRef, private element: ElementRef) {}
 
   ngAfterViewInit(): void {
-    console.log('toastContainer: ', this.toastContainer.nativeElement);
-    console.log('this.position: ', this.position);
     if (this.position === ToastPosition.Top) {
       this.toastContainer.nativeElement.style.top = 0;
       this.toastContent.nativeElement.style.borderRadius = '0px 0px 15px 15px';
@@ -49,7 +47,6 @@ export class ToastComponentShared implements AfterViewInit {
   }
 
   displayToast(message: string) {
-    console.log('displayToast');
     this.message = message;
     this.cd.detectChanges();
     this.toastContainer.nativeElement.style.display = 'flex';

@@ -42,7 +42,8 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         this.matchSessionFacade.registerNewListener(userId);
-        this.matchSessionFacade.listenForMatchSessionsChanges();
+        // this.matchSessionFacade.listenForMatchSessionsChanges();
+        this.matchSessionFacade.listenForServer();
       });
   }
 

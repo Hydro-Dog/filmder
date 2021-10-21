@@ -8,6 +8,7 @@ import {
   getCurrentMatchSession,
   getMatchSessionsByUserId,
   socketGetMatchSessionSuccess,
+  socketGetMessageSuccess,
   swipe,
   updateMatchSession,
 } from './match-session.actions';
@@ -37,7 +38,7 @@ export class MatchSessionFacade {
   readonly selectPendingMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectPendingMatchSessions$;
 
-  socketMatchSessionSub: Subscription;
+  socketMatchSessionSub = new Subscription();
 
   constructor(
     private actions: Actions,
@@ -81,10 +82,26 @@ export class MatchSessionFacade {
     );
   }
 
+  listenForServer() {
+    console.log('listenForServer');
+    this.socketMatchSessionSub.add(
+      this.matchSessionService.listenForServer$.subscribe(({ message }) => {
+        console.log('socket says: ', message);
+        // this.actions.dispatch(
+        //   socketGetMessageSuccess({
+        //     message,
+        //     event: message.event,
+        //   })
+        // );
+      })
+    );
+  }
+
   listenForMatchSessionsChanges() {
     this.socketMatchSessionSub.add(
       this.matchSessionService.listenForMatchSessionsChanges$.subscribe(
         ({ message }) => {
+          console.log('message: ', message);
           this.actions.dispatch(
             socketGetMatchSessionSuccess({
               matchSession: message.matchSession,

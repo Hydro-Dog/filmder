@@ -57,14 +57,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      console.log('user!!!', user);
       if (user) {
         this.router.navigate(['/tabs/tab2']);
       }
     });
-    this.userLoading$.subscribe((userLoading) =>
-      console.log('userLoading: ', userLoading)
-    );
 
     this.selectLoginError$
       .pipe(
@@ -77,7 +73,6 @@ export class LoginComponent implements OnInit {
   }
 
   loginClicked() {
-    console.log('loginClicked:');
     this.authFacade.login(
       this.userNameControl.value,
       this.passwordControl.value

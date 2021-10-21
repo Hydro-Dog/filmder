@@ -19,16 +19,13 @@ export class GameModesEffects {
     private actions$: Actions,
     private gameModesService: GameModesService,
     private gameModesStore: GameModesStore
-  ) {
-    console.log('GameModesEffects');
-  }
+  ) {}
 
   getGameModes$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(getGameModes),
         switchMap(() => {
-          console.log('getGameModes 2');
           this.gameModesStore.update((state) => ({
             ...state,
             gameModesLoading: true,
@@ -45,7 +42,6 @@ export class GameModesEffects {
   getGameModesSuccess$ = this.actions$.pipe(
     ofType(getGameModesSuccess),
     tap(({ gameModes }) => {
-      console.log('gameModes: ', gameModes);
       return this.gameModesStore.update((state) => ({
         ...state,
         gameModesLoading: false,

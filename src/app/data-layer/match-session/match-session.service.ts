@@ -17,8 +17,8 @@ export class MatchSessionService {
     MatchSessionSocketEvents.MatchSessionChanges
   );
 
-  listenForFilmMatches$: Observable<any> = this.socket.fromEvent(
-    MatchSessionSocketEvents.LikesMatched
+  listenForServer$: Observable<any> = this.socket.fromEvent(
+    MatchSessionSocketEvents.ServerMessage
   );
 
   msgToServer(event: string, message: any) {

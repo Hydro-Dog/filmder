@@ -115,6 +115,14 @@ export const socketGetMatchSessionSuccess = createAction(
   }>()
 );
 
+export const socketGetMessageSuccess = createAction(
+  '[Match Session] Socket Get Match Session Success',
+  props<{
+    message: any;
+    event: MatchSessionChangesEvents;
+  }>()
+);
+
 export const swipe = createAction(
   '[Match Session] Swipe',
   props<{

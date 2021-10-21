@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
 
@@ -28,6 +29,18 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
+  }
+
+  matchDeclined(matchSession: MatchSession) {
+    console.log('----- matchDeclined');
+    this.matchSessionFacade.updateMatchSession({
+      ...matchSession,
+      declined: true,
+    });
+  }
+
+  continueMatch($event) {
+    console.log('----- continueMatch');
   }
 
   ngOnDestroy(): void {

@@ -14,14 +14,9 @@ export class GameModesFacade {
   constructor(
     private gameModesQuery: GameModesQuery,
     private actions: Actions
-  ) {
-    // this.selectGameModes$ = this.gameModesQuery.selectGameModes$;
-    // this.selectError$ = this.gameModesQuery.selectError$;
-    // this.selectGameModesLoading$ = this.gameModesQuery.selectGameModesLoading$;
-  }
+  ) {}
 
   getGameModes() {
-    console.log('getGameModes 1');
     this.actions.dispatch(getGameModes());
   }
 }
