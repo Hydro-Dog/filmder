@@ -8,7 +8,13 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin, of, Subject } from 'rxjs';
-import { takeUntil, switchMap, catchError, tap } from 'rxjs/operators';
+import {
+  takeUntil,
+  switchMap,
+  catchError,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
@@ -94,14 +100,16 @@ export class Tab3Page implements OnInit, OnDestroy {
               .checkPhoneNumberIsTaken(this.phoneNumberControl.value)
               .pipe(catchError((e) => of(e))),
           ]).pipe(
-            tap((err) => {
+            withLatestFrom(this.userFacade.selectUser$),
+            tap(([err, currentUser]) => {
               const errorMessages = (err as ApiError[])
                 .filter((x) => x.error)
                 .map((x) => x.error.message);
               if (errorMessages.length) {
                 this.toastComponentShared.displayToast(errorMessages[0]);
               } else {
-                this.userFacade.updateUser(this.profileSettingsForm.value);
+                const updatedUser = this.profileSettingsForm.value;
+                this.userFacade.updateUser({ ...currentUser, ...updatedUser });
                 this.setViewMode(this.viewModes.View);
               }
             })

@@ -10,6 +10,6 @@
     [matchSessionsListTypes]="matchSessionsListTypes.Active"
     [matches]="selectActiveMatchSessions$ | async"
     (matchDeclined)="matchDeclined($event)"
-    (continueMatch)="continueMatch($event)"
+    (continueMatch)="continueMatch$.next($event)"
   ></filmder-matches-table>
 </ion-content>
