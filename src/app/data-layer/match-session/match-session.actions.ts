@@ -111,7 +111,7 @@ export const swipe = createAction(
   '[Match Session] Swipe',
   props<{
     matchSessionId: number;
-    filmId: number;
+    filmJSON: string;
     swipeDirection: 'left' | 'right';
   }>()
 );
@@ -128,13 +128,20 @@ export const swipeSuccess = createAction(
 export const socketAddMatchSessionSuccess = createAction(
   '[Match Session] Socket Add Match Session Success',
   props<{
-    matchSession;
+    matchSession: MatchSession;
   }>()
 );
 
 export const socketChangeMatchSessionSuccess = createAction(
   '[Match Session] Socket Changes Match Session Success',
   props<{
-    matchSession;
+    matchSession: MatchSession;
+  }>()
+);
+
+export const socketFilmsMatchSuccess = createAction(
+  '[Match Session] Socket Films Match Success',
+  props<{
+    filmJSON: string;
   }>()
 );

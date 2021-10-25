@@ -35,6 +35,9 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   matches: MatchSession[] = [];
   @Input()
   matchSessionsListTypes: MatchSessionsListTypes;
+  @Input()
+  activeMatchSessionId: string;
+
   @Output() continueMatch = new EventEmitter();
 
   // @Output() leaveMatch = new EventEmitter();

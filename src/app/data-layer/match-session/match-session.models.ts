@@ -25,7 +25,7 @@ export interface MatchSession {
   hostLikedFilmIndex: number;
   guestLikedFilmIndex: number;
   filterParams: string;
-  matchedMoviesIds: number[];
+  matchedMoviesJSON: string[];
   matchLimit: number;
   accepted: boolean;
   declined: boolean;
@@ -48,4 +48,5 @@ export enum MatchSessionSocketEvents {
 export enum MatchSessionChangesEvents {
   Add = 'add',
   ChangeStatus = 'change_status',
+  FilmsMatch = 'films_match',
 }

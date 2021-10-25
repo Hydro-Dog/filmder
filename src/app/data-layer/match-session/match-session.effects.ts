@@ -20,6 +20,7 @@ import {
   getMatchSessionsByUserIdSuccess,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
+  socketFilmsMatchSuccess,
   swipe,
   swipeSuccess,
   updateMatchSession,
@@ -170,14 +171,14 @@ export class MatchSessionEffects {
     () =>
       this.actions$.pipe(
         ofType(swipe),
-        switchMap(({ matchSessionId, filmId, swipeDirection }) => {
+        switchMap(({ matchSessionId, filmJSON, swipeDirection }) => {
           this.matchSessionStore.update((state) => ({
             ...state,
             currentMatchSessionLoading: true,
           }));
 
           return this.matchSessionService
-            .swipe(matchSessionId, filmId, swipeDirection)
+            .swipe(matchSessionId, filmJSON, swipeDirection)
             .pipe(
               map((currentMatchSession) =>
                 swipeSuccess({ currentMatchSession })
@@ -235,4 +236,24 @@ export class MatchSessionEffects {
       });
     })
   );
+
+  @Effect()
+  socketFilmsMatchSuccess$ = this.actions$.pipe(
+    ofType(socketFilmsMatchSuccess),
+    tap(({ filmJSON }) => {
+      return this.matchSessionStore.update((state) => {
+        return {
+          ...state,
+          currentMatchSession: {
+            ...state.currentMatchSession,
+            matchedMoviesJSON: [
+              ...state.currentMatchSession.matchedMoviesJSON,
+              filmJSON,
+            ],
+          },
+        };
+      });
+    })
+  );
+  socketFilmsMatchSuccess;
 }

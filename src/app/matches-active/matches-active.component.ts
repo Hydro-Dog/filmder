@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
-import { filter, shareReplay, takeUntil, withLatestFrom } from 'rxjs/operators';
+import {
+  filter,
+  map,
+  shareReplay,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
@@ -19,6 +25,9 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly currentUser$ = this.userFacade.selectUser$.pipe(
     filter((x) => !!x),
     shareReplay({ refCount: true, bufferSize: 1 })
+  );
+  readonly activeMatchSessionId$ = this.currentUser$.pipe(
+    map((user) => user.currentMatchSession)
   );
 
   readonly continueMatch$ = new Subject<MatchSession>();

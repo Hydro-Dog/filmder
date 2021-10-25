@@ -7,6 +7,7 @@
         Category {{ matchSession.category | startCase }} from
         {{ matchSession.host.userName }}
       </ion-label>
+      <span *ngIf="matchSession.id === +activeMatchSessionId">(active)</span>
       <div (click)="openDetailsModal(matchSession)">...</div>
     </ion-item>
     <ion-item-options>

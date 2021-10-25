@@ -24,6 +24,7 @@ import {
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
+import { ToastComponentShared } from '../shared/components/toast/toast.component';
 
 @Component({
   templateUrl: 'pick-film.component.html',
@@ -31,13 +32,9 @@ import { UserFacade } from '../data-layer/user/user.facade';
 })
 export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(IonCard, { read: ElementRef }) card: ElementRef;
+  @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
 
   readonly selectFilms$ = this.userFacade.selectUser$;
-  readonly filmsSequence$ =
-    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
-      filter((x) => !!x),
-      map((matchSession) => matchSession.filmsSequence)
-    );
 
   readonly currentFilm$ =
     this.matchSessionFacade.selectCurrentMatchSession$.pipe(
@@ -52,10 +49,14 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     );
+
   readonly selectCurrentMatchSession$ =
-    this.matchSessionFacade.selectCurrentMatchSession$;
-  swipe$ = new Subject<'left' | 'right'>();
-  destroy$ = new Subject();
+    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
+  readonly swipe$ = new Subject<'left' | 'right'>();
+  readonly destroy$ = new Subject();
 
   constructor(
     private userFacade: UserFacade,
@@ -86,10 +87,19 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(([swipeDirection, currentMatchSession, currentFilm]) => {
         this.matchSessionFacade.swipe(
           currentMatchSession.id,
-          currentFilm.id,
+          JSON.stringify(currentFilm),
           swipeDirection
         );
       });
+
+    this.matchSessionFacade.filmsMatchHappened$.subscribe(
+      (filmsMatchHappened) => {
+        console.log('filmsMatchHappened: ', filmsMatchHappened);
+        this.toastComponentShared.displayToast(
+          `Film: ${filmsMatchHappened.film.title} Source: ${filmsMatchHappened.source}`
+        );
+      }
+    );
   }
 
   ngAfterViewInit(): void {

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { Film } from '../film/film.models';
 import {
   createMatchSession,
   deleteMatchSession,
@@ -9,6 +10,7 @@ import {
   getMatchSessionsByUserId,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
+  socketFilmsMatchSuccess,
   swipe,
   updateMatchSession,
 } from './match-session.actions';
@@ -39,7 +41,11 @@ export class MatchSessionFacade {
   readonly selectPendingMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectPendingMatchSessions$;
 
-  socketMatchSessionSub = new Subscription();
+  readonly socketMatchSessionSub = new Subscription();
+  readonly filmsMatchHappened$ = new Subject<{
+    film: Film;
+    source: 'self' | 'opponent';
+  }>();
 
   constructor(
     private actions: Actions,
@@ -84,17 +90,31 @@ export class MatchSessionFacade {
           case MatchSessionChangesEvents.Add:
             this.actions.dispatch(
               socketAddMatchSessionSuccess({
-                matchSession: message.message,
+                matchSession: message.payload,
               })
             );
 
             break;
           case MatchSessionChangesEvents.ChangeStatus:
+            console.log('message: ', message);
             this.actions.dispatch(
               socketChangeMatchSessionSuccess({
-                matchSession: message.message,
+                matchSession: message.payload,
               })
             );
+            break;
+
+          case MatchSessionChangesEvents.FilmsMatch:
+            this.actions.dispatch(
+              socketFilmsMatchSuccess({
+                filmJSON: message.payload.filmJSON,
+              })
+            );
+
+            this.filmsMatchHappened$.next({
+              film: JSON.parse(message.payload.filmJSON),
+              source: message.payload.source,
+            });
             break;
 
           default:
@@ -110,9 +130,9 @@ export class MatchSessionFacade {
 
   swipe(
     matchSessionId: number,
-    filmId: number,
+    filmJSON: string,
     swipeDirection: 'left' | 'right'
   ) {
-    this.actions.dispatch(swipe({ matchSessionId, filmId, swipeDirection }));
+    this.actions.dispatch(swipe({ matchSessionId, filmJSON, swipeDirection }));
   }
 }

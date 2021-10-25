@@ -9,6 +9,7 @@
   <filmder-matches-table
     [matchSessionsListTypes]="matchSessionsListTypes.Active"
     [matches]="selectActiveMatchSessions$ | async"
+    [activeMatchSessionId]="activeMatchSessionId$ | async"
     (matchDeclined)="matchDeclined($event)"
     (continueMatch)="continueMatch$.next($event)"
   ></filmder-matches-table>

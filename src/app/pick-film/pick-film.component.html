@@ -1,3 +1,7 @@
 <ion-card style="height: 100wh">
+  <div>
+    {{ (selectCurrentMatchSession$ | async)?.matchedMoviesJSON.length }}
+  </div>
   <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
+  <filmder-toast></filmder-toast>
 </ion-card>

@@ -55,12 +55,12 @@ export class MatchSessionService {
 
   swipe(
     matchSessionId: number,
-    filmId: number,
+    filmJSON: string,
     swipeDirection: 'left' | 'right'
   ): Observable<MatchSession> {
     return this.http.post<MatchSession>(`${environment.apiUrl}/api/swipefilm`, {
       matchSessionId,
-      filmId,
+      filmJSON,
       swipeDirection,
     });
   }
