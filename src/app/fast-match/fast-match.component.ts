@@ -8,10 +8,11 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { FilmFacade } from '../data-layer/film/film.facade';
 import { GameModesFacade } from '../data-layer/game-mode/game-mode.facade';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
@@ -56,15 +57,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
-
-    this.matchSessionFacade.getCreateResult().subscribe(
-      (getCreateResult) => {
-        this.currentScreen$.next('success');
-      },
-      (err) => {
-        this.currentScreen$.next('error');
-      }
-    );
   }
 
   navigateBack() {
@@ -78,22 +70,33 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   createGame() {
     this.userFacade
       .getByUsername(this.fastMatchForm.value.guestUsername)
-      .pipe(withLatestFrom(this.selectedUser$), takeUntil(this.destroy$))
-      .subscribe(([guestUser, selectedUser]) => {
-        if (!guestUser) {
-          this.toastComponentShared.displayToast(`Sorry, no such user`);
-        } else if (guestUser.id === selectedUser.id) {
-          this.toastComponentShared.displayToast(
-            `Sorry, you can't invite yourself`
-          );
-        } else {
-          this.matchSessionFacade.createMatchSession({
-            category: this.fastMatchForm.value.gameMode,
-            matchLimit: this.fastMatchForm.value.matchLimit,
-            guestId: guestUser.id as number,
-          });
+      .pipe(
+        withLatestFrom(this.selectedUser$),
+        takeUntil(this.destroy$),
+        switchMap(([guestUser, selectedUser]) => {
+          if (!guestUser) {
+            this.toastComponentShared.displayToast(`Sorry, no such user`);
+          } else if (guestUser.id === selectedUser.id) {
+            this.toastComponentShared.displayToast(
+              `Sorry, you can't invite yourself`
+            );
+          } else {
+            return this.matchSessionFacade.createMatchSession({
+              category: this.fastMatchForm.value.gameMode,
+              matchLimit: this.fastMatchForm.value.matchLimit,
+              guestId: guestUser.id as number,
+            });
+          }
+        })
+      )
+      .subscribe(
+        () => {
+          this.currentScreen$.next('success');
+        },
+        () => {
+          this.currentScreen$.next('error');
         }
-      });
+      );
   }
 
   ngOnDestroy(): void {

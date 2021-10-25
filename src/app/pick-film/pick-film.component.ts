@@ -17,6 +17,7 @@ import { Subject, timer } from 'rxjs';
 import {
   filter,
   map,
+  shareReplay,
   switchMap,
   takeUntil,
   withLatestFrom,
@@ -40,6 +41,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly currentFilm$ =
     this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      shareReplay({ refCount: true, bufferSize: 1 }),
       filter((x) => !!x),
       withLatestFrom(this.userFacade.selectUser$),
       map(([matchSession, selectUser]) => {

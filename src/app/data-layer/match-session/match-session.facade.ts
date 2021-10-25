@@ -7,14 +7,15 @@ import {
   deleteMatchSession,
   getCurrentMatchSession,
   getMatchSessionsByUserId,
-  socketGetMatchSessionSuccess,
-  socketGetMessageSuccess,
+  socketAddMatchSessionSuccess,
+  socketChangeMatchSessionSuccess,
   swipe,
   updateMatchSession,
 } from './match-session.actions';
 import { MatchSessionEffects } from './match-session.effects';
 import {
   MatchSession,
+  MatchSessionChangesEvents,
   MatchSessionCO,
   MatchSessionSocketEvents,
 } from './match-session.models';
@@ -47,12 +48,8 @@ export class MatchSessionFacade {
     private matchSessionEffects: MatchSessionEffects
   ) {}
 
-  getCreateResult() {
-    return this.matchSessionEffects.createMatchSession$;
-  }
-
   createMatchSession(matchSession: MatchSessionCO) {
-    this.actions.dispatch(createMatchSession({ matchSession }));
+    return this.matchSessionService.create(matchSession);
   }
 
   updateMatchSession(matchSession: MatchSession) {
@@ -63,10 +60,6 @@ export class MatchSessionFacade {
     this.actions.dispatch(deleteMatchSession({ id }));
   }
 
-  /**
-   * Returns array of match sessions where user is host or guest.
-   * @param userId
-   */
   getMatchSessionsByUserId(userId: number) {
     this.actions.dispatch(getMatchSessionsByUserId({ userId }));
   }
@@ -83,33 +76,31 @@ export class MatchSessionFacade {
   }
 
   listenForServer() {
-    console.log('listenForServer');
     this.socketMatchSessionSub.add(
       this.matchSessionService.listenForServer$.subscribe(({ message }) => {
         console.log('socket says: ', message);
-        // this.actions.dispatch(
-        //   socketGetMessageSuccess({
-        //     message,
-        //     event: message.event,
-        //   })
-        // );
-      })
-    );
-  }
 
-  listenForMatchSessionsChanges() {
-    this.socketMatchSessionSub.add(
-      this.matchSessionService.listenForMatchSessionsChanges$.subscribe(
-        ({ message }) => {
-          console.log('message: ', message);
-          this.actions.dispatch(
-            socketGetMatchSessionSuccess({
-              matchSession: message.matchSession,
-              event: message.event,
-            })
-          );
+        switch (message.event) {
+          case MatchSessionChangesEvents.Add:
+            this.actions.dispatch(
+              socketAddMatchSessionSuccess({
+                matchSession: message.message,
+              })
+            );
+
+            break;
+          case MatchSessionChangesEvents.ChangeStatus:
+            this.actions.dispatch(
+              socketChangeMatchSessionSuccess({
+                matchSession: message.message,
+              })
+            );
+            break;
+
+          default:
+            break;
         }
-      )
+      })
     );
   }
 

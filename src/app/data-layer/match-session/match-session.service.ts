@@ -13,10 +13,6 @@ import { Socket } from 'ngx-socket-io';
 export class MatchSessionService {
   constructor(private http: HttpClient, private socket: Socket) {}
 
-  listenForMatchSessionsChanges$: Observable<any> = this.socket.fromEvent(
-    MatchSessionSocketEvents.MatchSessionChanges
-  );
-
   listenForServer$: Observable<any> = this.socket.fromEvent(
     MatchSessionSocketEvents.ServerMessage
   );

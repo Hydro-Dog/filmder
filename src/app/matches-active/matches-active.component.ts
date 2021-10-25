@@ -32,16 +32,13 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   }
 
   matchDeclined(matchSession: MatchSession) {
-    console.log('----- matchDeclined');
     this.matchSessionFacade.updateMatchSession({
       ...matchSession,
       declined: true,
     });
   }
 
-  continueMatch($event) {
-    console.log('----- continueMatch');
-  }
+  continueMatch($event) {}
 
   ngOnDestroy(): void {
     this.destroy$.next();

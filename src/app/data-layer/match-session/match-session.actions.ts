@@ -107,22 +107,6 @@ export const searchMatchSessionsInvitedSuccess = createAction(
   }>()
 );
 
-export const socketGetMatchSessionSuccess = createAction(
-  '[Match Session] Socket Get Match Session Success',
-  props<{
-    matchSession: MatchSession;
-    event: MatchSessionChangesEvents;
-  }>()
-);
-
-export const socketGetMessageSuccess = createAction(
-  '[Match Session] Socket Get Match Session Success',
-  props<{
-    message: any;
-    event: MatchSessionChangesEvents;
-  }>()
-);
-
 export const swipe = createAction(
   '[Match Session] Swipe',
   props<{
@@ -139,9 +123,18 @@ export const swipeSuccess = createAction(
   }>()
 );
 
-// export const searchMatchSessionsInvitedError = createAction(
-//   '[Match Session] Search Invited Error',
-//   props<{
-//     error: any;
-//   }>()
-// );
+// sockets---------------------------------------------------
+
+export const socketAddMatchSessionSuccess = createAction(
+  '[Match Session] Socket Add Match Session Success',
+  props<{
+    matchSession;
+  }>()
+);
+
+export const socketChangeMatchSessionSuccess = createAction(
+  '[Match Session] Socket Changes Match Session Success',
+  props<{
+    matchSession;
+  }>()
+);

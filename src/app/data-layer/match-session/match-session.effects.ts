@@ -6,6 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
+import { stat } from 'fs';
 import { throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -17,7 +18,8 @@ import {
   getCurrentMatchSessionSuccess,
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
-  socketGetMatchSessionSuccess,
+  socketAddMatchSessionSuccess,
+  socketChangeMatchSessionSuccess,
   swipe,
   swipeSuccess,
   updateMatchSession,
@@ -35,26 +37,6 @@ export class MatchSessionEffects {
     private matchSessionService: MatchSessionService,
     private matchSessionStore: MatchSessionStore
   ) {}
-
-  createMatchSession$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(createMatchSession),
-        switchMap(({ matchSession }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            matchSessionsLoading: true,
-          }));
-          return this.matchSessionService
-            .create(matchSession)
-            .pipe(
-              map((matchSession) => createMatchSessionSuccess({ matchSession }))
-            );
-        })
-        // catchError(err => throwError(err))
-      ),
-    { dispatch: true }
-  );
 
   updateMatchSession$ = createEffect(
     () =>
@@ -222,34 +204,33 @@ export class MatchSessionEffects {
     })
   );
 
+  // sockets -----------------------------------------------------
+
   @Effect()
-  socketGetMatchSessionsInvitedSuccess$ = this.actions$.pipe(
-    ofType(socketGetMatchSessionSuccess),
-    tap(({ matchSession, event }) => {
-      console.log('socket event: ', event);
+  socketAddMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(socketAddMatchSessionSuccess),
+    tap(({ matchSession }) => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        matchSessions: [...state.matchSessions, matchSession],
+      }));
+    })
+  );
+
+  @Effect()
+  socketChangeMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(socketChangeMatchSessionSuccess),
+    tap(({ matchSession }) => {
       return this.matchSessionStore.update((state) => {
-        let matchSessions = [];
-        switch (event) {
-          case MatchSessionChangesEvents.Add:
-            matchSessions = [...state.matchSessions, matchSession];
-            break;
-
-          case MatchSessionChangesEvents.ChangeStatus:
-            const idx = state.matchSessions.findIndex(
-              (item) => item.id === matchSession.id
-            );
-            matchSessions = [...state.matchSessions];
-            matchSessions.splice(idx, 1, matchSession);
-            break;
-
-          default:
-            break;
-        }
+        const matchSessionIndex = state.matchSessions.findIndex(
+          ({ id }) => id === matchSession.id
+        );
+        const matchSessionsArray = [...state.matchSessions];
+        matchSessionsArray[matchSessionIndex] = matchSession;
 
         return {
           ...state,
-          matchSessionsLoading: false,
-          matchSessions,
+          matchSessions: matchSessionsArray,
         };
       });
     })

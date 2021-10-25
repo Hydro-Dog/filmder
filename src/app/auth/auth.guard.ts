@@ -22,7 +22,13 @@ export class AuthGuard implements CanActivate {
           this.router.url,
           this.router.url.includes('auth')
         );
-        if (!hasToken && !this.router.url.includes('auth')) {
+        // если нет токена и юзер пытается попасть на какую-то страницу
+        // помимо login или registration то редиректить его обратно
+        if (
+          !hasToken &&
+          (!this.router.url.includes('login') ||
+            !this.router.url.includes('registration'))
+        ) {
           console.log('here');
           this.router.navigate(['/auth']);
         }

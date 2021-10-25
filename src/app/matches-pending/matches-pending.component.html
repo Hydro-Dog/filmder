@@ -9,5 +9,6 @@
   <filmder-matches-table
     [matchSessionsListTypes]="matchSessionsListTypes.Pending"
     [matches]="selectPendingMatchSessions$ | async"
+    (matchDeclined)="matchDeclined($event)"
   ></filmder-matches-table>
 </ion-content>
