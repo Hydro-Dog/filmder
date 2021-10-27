@@ -40,8 +40,6 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
 
   @Output() continueMatch = new EventEmitter();
 
-  // @Output() leaveMatch = new EventEmitter();
-
   @Output() inviteAccepted = new EventEmitter();
 
   @Output() matchDeclined = new EventEmitter();

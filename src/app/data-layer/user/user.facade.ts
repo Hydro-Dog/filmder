@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { Actions } from '@datorama/akita-ng-effects';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 import {
   getUser,
   setCurrentMatchSessionSuccess,
   updateUser,
   updateUserSuccess,
 } from './user.actions';
+import { UserEffects } from './user.effects';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
@@ -21,11 +22,9 @@ export class UserFacade {
   constructor(
     private userQuery: UserQuery,
     private userService: UserService,
-    private actions: Actions
-  ) {
-    // this.selectUser$ = this.userQuery.selectUser$;
-    // this.selectError$ = this.userQuery.selectError$;
-  }
+    private actions: Actions,
+    private userEffects: UserEffects
+  ) {}
 
   getUser(userId: ID) {
     this.actions.dispatch(getUser({ userId }));
@@ -53,5 +52,7 @@ export class UserFacade {
 
   setCurrentMatchSessionSuccess(id: string) {
     this.actions.dispatch(setCurrentMatchSessionSuccess({ id }));
+
+    return of(true).pipe(delay(500));
   }
 }

@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import {
+  delay,
   filter,
   map,
   shareReplay,
   takeUntil,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
@@ -42,16 +44,21 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.continueMatch$
-      .pipe(withLatestFrom(this.currentUser$), takeUntil(this.destroy$))
-      .subscribe(([matchSession, currentUser]) => {
-        this.userFacade.updateUser({
-          ...currentUser,
-          currentMatchSession: matchSession.id.toString(),
-        });
+      .pipe(
+        withLatestFrom(this.currentUser$),
+        takeUntil(this.destroy$),
+        tap(([matchSession, currentUser]) => {
+          this.userFacade.updateUser({
+            ...currentUser,
+            currentMatchSession: matchSession.id.toString(),
+          });
+        }),
+        delay(300)
+      )
+      .subscribe(() => {
+        this.navController.navigateRoot('/tabs/tab2/current-match');
       });
-    this.currentUser$.subscribe((currentUser) =>
-      console.log('currentUser: ', currentUser)
-    );
+
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
   }

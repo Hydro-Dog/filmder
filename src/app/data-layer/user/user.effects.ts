@@ -6,6 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
+import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   getUser,
@@ -93,6 +94,7 @@ export class UserEffects {
         userLoading: false,
         user: { ...state.user, currentMatchSession: id },
       }));
-    })
+    }),
+    switchMap(() => of(true))
   );
 }

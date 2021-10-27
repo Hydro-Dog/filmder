@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { SlowBuffer } from 'buffer';
 import { Console } from 'console';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import {
   MatchSession,
@@ -44,7 +46,12 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
       accepted: true,
     });
 
-    this.userFacade.setCurrentMatchSessionSuccess(matchSession.id.toString());
+    this.userFacade
+      .setCurrentMatchSessionSuccess(matchSession.id.toString())
+      .subscribe(() => {
+        console.log('setCurrentMatchSessionSuccess');
+        this.navController.navigateRoot('/tabs/tab2/current-match');
+      });
   }
 
   matchDeclined(matchSession: MatchSession) {
