@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" (click)="navigateBack()"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <filmder-matches-table
+    [matchSessionsListTypes]="matchSessionsListTypes.Completed"
+    [matches]="selectCompletedMatchSessions$ | async"
+    (matchRemoved)="matchRemoved($event)"
+  ></filmder-matches-table>
+</ion-content>

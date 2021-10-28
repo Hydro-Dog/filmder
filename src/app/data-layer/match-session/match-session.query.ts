@@ -34,7 +34,9 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
    * Returns array of match sessions accepted by both participants
    */
   selectActiveMatchSessions$ = this.selectMatchSessions$.pipe(
-    map((items) => items.filter((item) => item.accepted && !item.declined))
+    map((items) =>
+      items.filter((item) => item.accepted && !item.declined && !item.completed)
+    )
   );
 
   /**
@@ -48,6 +50,18 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
           !item.accepted &&
           !item.declined &&
           item.host.id.toString() === user.id.toString()
+      );
+    })
+  );
+
+  completedMatchSessions$ = this.selectMatchSessions$.pipe(
+    withLatestFrom(this.userFacade.selectUser$),
+    map(([items, user]) => {
+      return items.filter(
+        (item) =>
+          (item.host.id.toString() === user.id.toString() ||
+            item.guest.id.toString() === user.id.toString()) &&
+          item.completed
       );
     })
   );

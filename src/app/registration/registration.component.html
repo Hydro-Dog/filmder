@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content>
   <div *ngIf="selectIsLogin$ | async; else registration" class="container">
-    <div class="d-flex d-middle m-b-20">Please confirm your email</div>
+    <div class="d-flex d-center m-b-20">Please confirm your email</div>
     <ion-button
       [routerLink]="['/login']"
       size="large"

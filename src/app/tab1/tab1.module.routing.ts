@@ -29,6 +29,13 @@ const routes: Routes = [
         (m) => m.MatchesInvitesModule
       ),
   },
+  {
+    path: 'completed',
+    loadChildren: () =>
+      import('../matches-completed/matches-completed.module').then(
+        (m) => m.MatchesCompletedModule
+      ),
+  },
 ];
 
 @NgModule({

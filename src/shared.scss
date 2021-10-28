@@ -3,18 +3,23 @@
   display: flex;
 }
 
-.d-middle {
-  display: flex;
+.d-center {
   justify-content: center;
 }
 
+.d-middle {
+  align-items: center;
+}
+
+.d-between {
+  justify-content: space-between;
+}
+
 .d-r-reverse {
-  display: flex;
   flex-direction: row-reverse;
 }
 
 .d-c-flex {
-  display: flex;
   flex-direction: column;
 }
 

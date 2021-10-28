@@ -22,6 +22,7 @@ export enum MatchSessionsListTypes {
   Pending,
   Invites,
   Active,
+  Completed,
 }
 
 @Component({
@@ -43,6 +44,8 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
   @Output() inviteAccepted = new EventEmitter();
 
   @Output() matchDeclined = new EventEmitter();
+
+  @Output() matchRemoved = new EventEmitter();
 
   @ViewChild(AlertComponentShared, { static: true })
   readonly alertExample: AlertComponentShared;
@@ -74,6 +77,9 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
         break;
       case MatchSessionsListTypes.Invites:
         displayMode = MatchDetailsDisplayMode.Accept;
+        break;
+      case MatchSessionsListTypes.Completed:
+        displayMode = MatchDetailsDisplayMode.Summary;
         break;
 
       default:

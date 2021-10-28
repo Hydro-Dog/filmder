@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import {
   Gesture,
   GestureController,
@@ -13,9 +14,11 @@ import {
   IonCard,
   Platform,
 } from '@ionic/angular';
-import { Subject, timer } from 'rxjs';
+import { of, Subject, timer } from 'rxjs';
 import {
+  catchError,
   filter,
+  first,
   map,
   shareReplay,
   switchMap,
@@ -62,10 +65,27 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     private userFacade: UserFacade,
     private matchSessionFacade: MatchSessionFacade,
     private gestureCtrl: GestureController,
-    private platform: Platform
+    private platform: Platform,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
+        console.log('NavigationEnd: ');
+        this.selectCurrentMatchSession$
+          .pipe(first(), withLatestFrom(this.userFacade.selectUser$))
+          .subscribe(([matchSession, currentUser]) => {
+            console.log('matchSession: ', matchSession);
+            if (matchSession.completed) {
+              this.userFacade.updateUser({
+                ...currentUser,
+                currentMatchSession: null,
+              });
+            }
+          });
+      }
+    });
     this.userFacade.selectUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
@@ -95,9 +115,11 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     this.matchSessionFacade.filmsMatchHappened$.subscribe(
       (filmsMatchHappened) => {
         console.log('filmsMatchHappened: ', filmsMatchHappened);
-        this.toastComponentShared.displayToast(
-          `Film: ${filmsMatchHappened.film.title} Source: ${filmsMatchHappened.source}`
-        );
+        const toastMessage =
+          filmsMatchHappened.source === 'self'
+            ? `Hey! ${filmsMatchHappened.film.title} was a match.`
+            : `Yay! Your partner also picked ${filmsMatchHappened.film.title}.`;
+        this.toastComponentShared.displayToast(toastMessage);
       }
     );
   }
@@ -107,38 +129,40 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async useTinderSwipe(card: ElementRef<any>) {
-    const gesture: Gesture = this.gestureCtrl.create(
-      {
-        el: card.nativeElement,
-        threshold: 15,
-        gestureName: 'swipe',
-        onStart: (ev) => {},
-        onMove: (ev) => {
-          card.nativeElement.style.transform = `translateX(${
-            ev.deltaX
-          }px) rotate(${ev.deltaX / 10}deg)`;
-          // this.setCardColor(ev.deltaX, card.nativeElement);
-        },
-        onEnd: (ev) => {
-          card.nativeElement.style.transition = '0.3s ease-out';
+    if (card) {
+      const gesture: Gesture = this.gestureCtrl.create(
+        {
+          el: card.nativeElement,
+          threshold: 15,
+          gestureName: 'swipe',
+          onStart: (ev) => {},
+          onMove: (ev) => {
+            card.nativeElement.style.transform = `translateX(${
+              ev.deltaX
+            }px) rotate(${ev.deltaX / 10}deg)`;
+            // this.setCardColor(ev.deltaX, card.nativeElement);
+          },
+          onEnd: (ev) => {
+            card.nativeElement.style.transition = '0.3s ease-out';
 
-          if (ev.deltaX > 150) {
-            this.hideCard(card, ev, 'right');
-            this.scheduleCardDisplaySteps(card);
-            this.swipe$.next('right');
-          } else if (ev.deltaX < -150) {
-            this.hideCard(card, ev, 'left');
-            this.scheduleCardDisplaySteps(card);
-            this.swipe$.next('left');
-          } else {
-            card.nativeElement.style.transform = '';
-          }
+            if (ev.deltaX > 150) {
+              this.hideCard(card, ev, 'right');
+              this.scheduleCardDisplaySteps(card);
+              this.swipe$.next('right');
+            } else if (ev.deltaX < -150) {
+              this.hideCard(card, ev, 'left');
+              this.scheduleCardDisplaySteps(card);
+              this.swipe$.next('left');
+            } else {
+              card.nativeElement.style.transform = '';
+            }
+          },
         },
-      },
-      true
-    );
+        true
+      );
 
-    gesture.enable(true);
+      gesture.enable(true);
+    }
   }
 
   scheduleCardDisplaySteps(card: ElementRef<any>) {

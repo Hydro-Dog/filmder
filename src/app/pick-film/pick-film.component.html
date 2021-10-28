@@ -1,7 +1,36 @@
-<ion-card style="height: 100wh">
-  <div>
-    {{ (selectCurrentMatchSession$ | async)?.matchedMoviesJSON.length }}
+<ion-header> </ion-header>
+<ion-content>
+  <div class="d-flex d-between">
+    <ion-button size="small" color="primary"><b>Details</b></ion-button>
+
+    <div class="d-flex d-middle d-center">
+      <ion-button size="small" color="primary"
+        ><ion-label><b>Matches</b></ion-label>
+        <ion-badge
+          *ngIf="
+            selectCurrentMatchSession$ | async as selectCurrentMatchSession
+          "
+          color="light"
+        >
+          {{ selectCurrentMatchSession.matchedMoviesJSON.length }}/{{
+            selectCurrentMatchSession.matchLimit
+          }}</ion-badge
+        ></ion-button
+      >
+    </div>
   </div>
-  <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
-  <filmder-toast></filmder-toast>
-</ion-card>
+
+  <ng-container
+    *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
+  >
+    Completed
+  </ng-container>
+
+  <ng-template #pickFilmScreen>
+    <ion-card style="height: 100wh">
+      <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
+    </ion-card>
+  </ng-template>
+
+  <filmder-toast [duration]="4000"></filmder-toast>
+</ion-content>

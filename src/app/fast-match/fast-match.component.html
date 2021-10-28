@@ -12,7 +12,7 @@
 <ion-content [fullscreen]="true">
   <div [ngSwitch]="currentScreen$ | async">
     <div class="m-t-40 d-flex" *ngSwitchCase="'create'">
-      <div class="w100 m-auto d-c-flex form-buttons-container">
+      <div class="w100 m-auto d-flex d-c-flex form-buttons-container">
         <ion-list>
           <form [formGroup]="fastMatchForm">
             <ion-item class="p-l-15">

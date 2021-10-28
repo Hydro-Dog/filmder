@@ -96,7 +96,7 @@
 
   <div
     [hidden]="viewMode === viewModes.Edit"
-    class="d-flex d-middle form-buttons-container"
+    class="d-flex d-center form-buttons-container"
   >
     <ion-button fill="outline">Change email</ion-button>
     <ion-button fill="outline">Change password</ion-button>
@@ -104,7 +104,7 @@
 
   <div
     [hidden]="viewMode !== viewModes.Edit"
-    class="d-flex d-middle complete-buttons-container"
+    class="d-flex d-center complete-buttons-container"
   >
     <ion-button
       (click)="setViewMode(viewModes.View)"

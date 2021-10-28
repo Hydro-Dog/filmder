@@ -11,9 +11,11 @@
     <ion-item routerLink="pending"
       >Pending Games {{(selectPendingMatchSessions$ | async).length}}</ion-item
     >
-
     <ion-item routerLink="invites"
       >Invites {{(guestedMatchSessions$ | async).length}}</ion-item
+    >
+    <ion-item routerLink="completed"
+      >Completed {{(selectCompletedMatchSessions$ | async).length}}</ion-item
     >
   </ion-list>
 </ion-content>

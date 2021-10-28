@@ -41,6 +41,9 @@ export class MatchSessionFacade {
   readonly selectPendingMatchSessions$: Observable<MatchSession[]> =
     this.matchSessionQuery.selectPendingMatchSessions$;
 
+  readonly selectCompletedMatchSessions$: Observable<MatchSession[]> =
+    this.matchSessionQuery.completedMatchSessions$;
+
   readonly socketMatchSessionSub = new Subscription();
   readonly filmsMatchHappened$ = new Subject<{
     film: Film;

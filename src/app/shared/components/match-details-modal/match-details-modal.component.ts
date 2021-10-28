@@ -5,6 +5,7 @@ export enum MatchDetailsDisplayMode {
   Info,
   Accept,
   Continue,
+  Summary,
 }
 
 export enum MatchDetailsModalActions {
