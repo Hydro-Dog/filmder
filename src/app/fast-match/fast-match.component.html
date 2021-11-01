@@ -10,9 +10,10 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div [ngSwitch]="currentScreen$ | async">
-    <div class="m-t-40 d-flex" *ngSwitchCase="'create'">
+  <div class="" [ngSwitch]="currentScreen$ | async">
+    <div class="create-content" *ngSwitchCase="'create'">
       <div class="w100 m-auto d-flex d-c-flex form-buttons-container">
+        <h3 class="p-b-20"><b>Fast match</b></h3>
         <ion-list>
           <form [formGroup]="fastMatchForm">
             <ion-item class="p-l-15">
@@ -53,7 +54,6 @@
             </ion-item>
           </form>
         </ion-list>
-        <!-- TODO: create straightforward validator for disabling the button -->
         <ion-button
           (click)="createGame()"
           [disabled]="(fastMatchForm.statusChanges | async) === 'INVALID'"

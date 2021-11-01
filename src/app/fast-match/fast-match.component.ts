@@ -6,6 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -51,12 +52,19 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     private gameModesFacade: GameModesFacade,
     private userFacade: UserFacade,
     private userQuery: UserQuery,
-    private matchSessionFacade: MatchSessionFacade
+    private matchSessionFacade: MatchSessionFacade,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
+
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
+        this.fastMatchForm.reset();
+      }
+    });
   }
 
   navigateBack() {

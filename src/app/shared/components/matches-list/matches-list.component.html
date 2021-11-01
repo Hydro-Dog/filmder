@@ -2,13 +2,18 @@
   <ion-item-sliding
     *ngFor="let matchSession of matches; trackBy: matchSessionId"
   >
-    <ion-item>
-      <ion-label>
-        Category {{ matchSession.category | startCase }} from
-        {{ matchSession.host.userName }}
+    <ion-item (click)="openDetailsModal(matchSession)">
+      <ion-label class="list-item">
+        Category <b>{{ matchSession.category | startCase }}</b> from
+        <b>{{ matchSession.host.userName }}</b>
       </ion-label>
-      <span *ngIf="matchSession.id === +activeMatchSessionId">(active)</span>
-      <div (click)="openDetailsModal(matchSession)">...</div>
+      <span *ngIf="matchSession.id === +activeMatchSessionId">
+        <ion-icon
+          color="success"
+          size="large"
+          name="radio-button-on-outline"
+        ></ion-icon>
+      </span>
     </ion-item>
     <ion-item-options>
       <ion-item-option color="primary">

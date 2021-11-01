@@ -31,7 +31,7 @@
           size="large"
           expand="block"
           fill="clear"
-          >Leave game</ion-button
+          >Leave session</ion-button
         >
       </ng-container>
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Accept">
@@ -52,29 +52,23 @@
       </ng-container>
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Info">
         <ion-button
-          (click)="closeModal(matchDetailsModalActions.Nothing)"
-          size="large"
-          expand="block"
-          fill="clear"
-          >Back</ion-button
-        >
-        <ion-button
           (click)="closeModal(matchDetailsModalActions.Decline)"
           size="large"
           expand="block"
           fill="clear"
-          >Leave</ion-button
+          >Leave session</ion-button
         >
       </ng-container>
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Summary">
-        <ion-button
-          (click)="closeModal(matchDetailsModalActions.Nothing)"
-          size="large"
-          expand="block"
-          fill="clear"
-          >Close</ion-button
-        >
       </ng-container>
+
+      <ion-button
+        (click)="closeModal(matchDetailsModalActions.Nothing)"
+        size="medium"
+        expand="block"
+        fill="outline"
+        >Close</ion-button
+      >
     </div>
   </div>
 </div>

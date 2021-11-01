@@ -23,9 +23,9 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.matchSessionFacade.selectPendingMatchSessions$;
   readonly guestedMatchSessions$ =
     this.matchSessionFacade.selectInvitesMatchSessions$;
-  readonly acceptedMatchSessions$ =
+  readonly activeMatchSessions$ =
     this.matchSessionFacade.selectActiveMatchSessions$;
-  readonly selectCompletedMatchSessions$ =
+  readonly completedMatchSessions$ =
     this.matchSessionFacade.selectCompletedMatchSessions$;
 
   readonly destroy$ = new Subject();

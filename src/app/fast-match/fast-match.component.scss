@@ -9,3 +9,16 @@
     align-items: center;
   }
 }
+
+.create-content {
+  height: 100vh;
+  display: flex;
+
+  .form-buttons-container {
+    align-items: center;
+  }
+
+  h3 {
+    text-align: center;
+  }
+}
