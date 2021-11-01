@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Film } from '@src/app/data-layer/film/film.models';
 
 export enum MatchDetailsDisplayMode {
   Info,
@@ -28,6 +29,7 @@ export class MatchDetailsModal {
   @Input() region: string;
   @Input() category: string;
   @Input() matchLimit: string;
+  @Input() matchedMovies: Film[];
   @Input() accepted: string;
   @Input() id: string;
 

@@ -32,19 +32,13 @@ export enum MatchSessionsListTypes {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatchesListComponentShared implements OnInit, OnDestroy {
-  @Input()
-  matches: MatchSession[] = [];
-  @Input()
-  matchSessionsListTypes: MatchSessionsListTypes;
-  @Input()
-  activeMatchSessionId: string;
+  @Input() matches: MatchSession[] = [];
+  @Input() matchSessionsListTypes: MatchSessionsListTypes;
+  @Input() activeMatchSessionId: string;
 
   @Output() continueMatch = new EventEmitter();
-
   @Output() inviteAccepted = new EventEmitter();
-
   @Output() matchDeclined = new EventEmitter();
-
   @Output() matchRemoved = new EventEmitter();
 
   @ViewChild(AlertComponentShared, { static: true })
@@ -98,6 +92,7 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
         matchLimit: matchSession.matchLimit,
         accepted: matchSession.accepted,
         id: matchSession.id,
+        matchedMovies: matchSession.matchedMoviesJSON.map((x) => JSON.parse(x)),
       },
     });
     modal.present();

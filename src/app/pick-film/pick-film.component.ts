@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -32,6 +33,7 @@ import { ToastComponentShared } from '../shared/components/toast/toast.component
 @Component({
   templateUrl: 'pick-film.component.html',
   styleUrls: ['pick-film.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(IonCard, { read: ElementRef }) card: ElementRef;
@@ -77,7 +79,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
           .pipe(first(), withLatestFrom(this.userFacade.selectUser$))
           .subscribe(([matchSession, currentUser]) => {
             console.log('matchSession: ', matchSession);
-            if (matchSession.completed) {
+            if (matchSession?.completed) {
               this.userFacade.updateUser({
                 ...currentUser,
                 currentMatchSession: null,
@@ -140,11 +142,11 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
             card.nativeElement.style.transform = `translateX(${
               ev.deltaX
             }px) rotate(${ev.deltaX / 10}deg)`;
-            // this.setCardColor(ev.deltaX, card.nativeElement);
+            this.setCardColor(ev.deltaX, card.nativeElement);
           },
           onEnd: (ev) => {
             card.nativeElement.style.transition = '0.3s ease-out';
-
+            card.nativeElement.style.border = '7px solid white';
             if (ev.deltaX > 150) {
               this.hideCard(card, ev, 'right');
               this.scheduleCardDisplaySteps(card);
@@ -195,35 +197,34 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // setCardColor(x, element) {
-  //   let color = '';
-  //   const abs = Math.abs(x);
-  //   const min = Math.trunc(Math.min(16 * 16 - abs, 16 * 16));
-  //   const hexCode = this.decimalToHex(min, 2);
+  setCardColor(x, element) {
+    let color = '';
+    const abs = Math.abs(x);
+    const min = Math.trunc(Math.min(16 * 16 - abs, 16 * 16));
+    const hexCode = this.decimalToHex(min, 2);
 
-  //   if (x < 0) {
-  //     console.log('color +: ', color);
-  //     color = '#FF' + hexCode + hexCode;
-  //   } else {
-  //     color = '#' + hexCode + 'FF' + hexCode;
-  //   }
+    if (x < 0) {
+      color = '#FF' + hexCode + hexCode;
+    } else {
+      color = '#' + hexCode + 'FF' + hexCode;
+    }
 
-  //   element.style.background = color;
-  // }
+    element.style.border = '7px solid ' + color;
+  }
 
-  // decimalToHex(d, padding) {
-  //   let hex = Number(d).toString(16);
-  //   padding =
-  //     typeof padding === 'undefined' || padding === null
-  //       ? (padding = 2)
-  //       : padding;
+  decimalToHex(d, padding) {
+    let hex = Number(d).toString(16);
+    padding =
+      typeof padding === 'undefined' || padding === null
+        ? (padding = 2)
+        : padding;
 
-  //   while (hex.length < padding) {
-  //     hex = '0' + hex;
-  //   }
+    while (hex.length < padding) {
+      hex = '0' + hex;
+    }
 
-  //   return hex;
-  // }
+    return hex;
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

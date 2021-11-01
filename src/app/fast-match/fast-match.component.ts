@@ -93,8 +93,10 @@ export class FastMatchComponent implements OnInit, OnDestroy {
         () => {
           this.currentScreen$.next('success');
         },
-        () => {
-          this.currentScreen$.next('error');
+        ({ status }) => {
+          if (status === 418) {
+            this.currentScreen$.next('error');
+          }
         }
       );
   }

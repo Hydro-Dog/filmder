@@ -1,60 +1,80 @@
 <div class="d-flex">
-  <div class="m-auto">
-    <h3>Match Details</h3>
-    <div>host: {{ host }}</div>
-    <div>guest: {{ guest }}</div>
-    <div>region: {{ region }}</div>
-    <div>category: {{ category | startCase }}</div>
-    <div>matchLimit: {{ matchLimit }}</div>
-    <div>accepted: {{ accepted }}</div>
+  <div class="m-auto d-flex d-c-flex d-between modal-content">
+    <div>
+      <h3><b>Match Details</b></h3>
+      <div class="p-b-30" *ngIf="!matchedMovies.length">
+        {{ accepted ? "Invite accepted" : "Waiting for opponent" }}
+      </div>
+      <div class="p-b-10"><b>Host:</b> {{ host }}</div>
+      <div class="p-b-10"><b>Guest:</b> {{ guest }}</div>
+      <div class="p-b-10"><b>Category:</b> {{ category | startCase }}</div>
+      <div class="p-b-10"><b>Matches limit:</b> {{ matchLimit }}</div>
+      <div><b>Matched films</b></div>
+      <div>
+        <div *ngFor="let film of matchedMovies; let i = index">
+          <div>{{ i + 1 }}. {{ film.title }}</div>
+        </div>
+      </div>
+    </div>
 
-    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Continue">
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Continue)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Continue</ion-button
-      >
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Decline)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Leave game</ion-button
-      >
-    </ng-container>
-    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Accept">
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Accept)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Accept</ion-button
-      >
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Decline)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Decline</ion-button
-      >
-    </ng-container>
-    <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Info">
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Nothing)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Back</ion-button
-      >
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Decline)"
-        size="large"
-        expand="block"
-        fill="clear"
-        >Leave</ion-button
-      >
-    </ng-container>
+    <div class="p-b-40">
+      <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Continue">
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Continue)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Continue</ion-button
+        >
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Decline)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Leave game</ion-button
+        >
+      </ng-container>
+      <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Accept">
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Accept)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Accept</ion-button
+        >
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Decline)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Decline</ion-button
+        >
+      </ng-container>
+      <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Info">
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Nothing)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Back</ion-button
+        >
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Decline)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Leave</ion-button
+        >
+      </ng-container>
+      <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Summary">
+        <ion-button
+          (click)="closeModal(matchDetailsModalActions.Nothing)"
+          size="large"
+          expand="block"
+          fill="clear"
+          >Close</ion-button
+        >
+      </ng-container>
+    </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <div>
   <div class="container">
     <div class="background">
-      <div @fadeAnimation class="overview p-x-10" *ngIf="showOverview">
+      <div @fadeAnimation class="overview p-x-30" *ngIf="showOverview">
         <div>
           {{ film?.overview }}
         </div>
@@ -12,7 +12,7 @@
         ></ion-icon>
       </div>
 
-      <div @fadeAnimation class="title p-x-10" *ngIf="showOverview === false">
+      <div @fadeAnimation class="title p-x-30" *ngIf="showOverview === false">
         <div class="title-text">
           {{ film?.title }}
         </div>

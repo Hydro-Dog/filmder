@@ -6,16 +6,18 @@
   </ion-header>
   <ion-list>
     <ion-item routerLink="active"
-      >Active Games {{(acceptedMatchSessions$ | async).length}}</ion-item
+      >Active Sessions {{(acceptedMatchSessions$ | async).length}}</ion-item
+    >
+    <ion-item routerLink="completed"
+      >Completed Sessions {{(selectCompletedMatchSessions$ |
+      async).length}}</ion-item
     >
     <ion-item routerLink="pending"
-      >Pending Games {{(selectPendingMatchSessions$ | async).length}}</ion-item
+      >Waiting for acceptance {{(selectPendingMatchSessions$ |
+      async).length}}</ion-item
     >
     <ion-item routerLink="invites"
       >Invites {{(guestedMatchSessions$ | async).length}}</ion-item
-    >
-    <ion-item routerLink="completed"
-      >Completed {{(selectCompletedMatchSessions$ | async).length}}</ion-item
     >
   </ion-list>
 </ion-content>
