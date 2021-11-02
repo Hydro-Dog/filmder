@@ -17,6 +17,7 @@ import {
   MatchDetailsModal,
   MatchDetailsModalActions,
 } from '../match-details-modal/match-details-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export enum MatchSessionsListTypes {
   Pending,

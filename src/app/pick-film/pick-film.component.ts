@@ -7,6 +7,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   Gesture,
@@ -28,6 +29,7 @@ import {
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
+import { ListOfMatchedFilmsModalComponent } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 
 @Component({
@@ -68,7 +70,8 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     private matchSessionFacade: MatchSessionFacade,
     private gestureCtrl: GestureController,
     private platform: Platform,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -124,6 +127,27 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toastComponentShared.displayToast(toastMessage);
       }
     );
+  }
+
+  openMatchedFilmsDialog(): void {
+    const dialogRef = this.dialog.open(ListOfMatchedFilmsModalComponent, {
+      width: '70vw',
+      height: '70vh',
+      data: {
+        matchSession$: this.selectCurrentMatchSession$.pipe(
+          map((matchSession) => ({
+            ...matchSession,
+            matchedMovies: matchSession.matchedMoviesJSON.map((filmJSON) =>
+              JSON.parse(filmJSON)
+            ),
+          }))
+        ),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
   }
 
   ngAfterViewInit(): void {

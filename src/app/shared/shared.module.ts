@@ -7,6 +7,7 @@ import { PickerComponentShared } from './components/picker/picker.component';
 import { ToastComponentShared } from './components/toast/toast.component';
 import { StarCasePipe } from './pipes/start-case.pipe';
 import { MatchDetailsModal } from './components/match-details-modal/match-details-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const components = [
   ToastComponentShared,
@@ -19,7 +20,7 @@ const components = [
 
 @NgModule({
   declarations: components,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, MatDialogModule],
   exports: components,
 })
 export class SharedModule {}
