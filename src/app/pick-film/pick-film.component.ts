@@ -134,14 +134,16 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       width: '70vw',
       height: '70vh',
       data: {
-        matchSession$: this.selectCurrentMatchSession$.pipe(
-          map((matchSession) => ({
-            ...matchSession,
-            matchedMovies: matchSession.matchedMoviesJSON.map((filmJSON) =>
-              JSON.parse(filmJSON)
-            ),
-          }))
-        ),
+        matchSession$: this.selectCurrentMatchSession$,
+        // matchSession$: this.selectCurrentMatchSession$.pipe(
+        //   map((matchSession) => ({
+        //     ...matchSession,
+        //     matchSession,
+        //     matchedMovies: matchSession.matchedMoviesJSON.map((filmJSON) =>
+        //       JSON.parse(filmJSON)
+        //     ),
+        //   }))
+        // ),
       },
     });
 

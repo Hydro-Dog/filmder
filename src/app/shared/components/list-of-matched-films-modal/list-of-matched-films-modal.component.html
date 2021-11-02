@@ -3,7 +3,7 @@
 
   <div
     class="film-container d-flex d-c-flex d-middle m-b-20"
-    *ngFor="let film of (data.matchSession$ | async)?.matchedMovies"
+    *ngFor="let film of (matchSessionSerialized$ | async)?.matchedMovies"
   >
     <h4>
       <b>
