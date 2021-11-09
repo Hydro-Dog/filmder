@@ -1,5 +1,5 @@
 <ion-header> </ion-header>
-<ion-content>
+<ion-content class="pick-film-container">
   <ng-container
     *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
   >
@@ -10,30 +10,34 @@
     <ion-card style="height: 100wh">
       <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
     </ion-card>
-    <div class="d-flex d-center">
-      <div class="d-flex d-middle d-center">
-        <ion-button
-          size="medium"
-          color="primary"
-          (click)="openMatchedFilmsDialog()"
-        >
-          <ng-container
-            *ngIf="
-              selectCurrentMatchSession$ | async as selectCurrentMatchSession
-            "
-          >
-            <ion-label>
-              <b>
-                {{ selectCurrentMatchSession.matchedMoviesJSON.length }}/{{
-                  selectCurrentMatchSession.matchLimit
-                }}
-              </b></ion-label
-            >
-          </ng-container>
-        </ion-button>
-      </div>
-    </div>
   </ng-template>
+
+  <div
+    *ngIf="!(selectCurrentMatchSession$ | async)?.completed"
+    class="matches-counter w100 d-flex d-center"
+  >
+    <div class="d-flex d-middle d-center">
+      <ion-button
+        size="large"
+        color="primary"
+        (click)="openMatchedFilmsDialog()"
+      >
+        <ng-container
+          *ngIf="
+            selectCurrentMatchSession$ | async as selectCurrentMatchSession
+          "
+        >
+          <ion-label>
+            <b>
+              {{ selectCurrentMatchSession.matchedMoviesJSON.length }}/{{
+                selectCurrentMatchSession.matchLimit
+              }}
+            </b></ion-label
+          >
+        </ng-container>
+      </ion-button>
+    </div>
+  </div>
 
   <filmder-toast [duration]="4000"></filmder-toast>
 </ion-content>

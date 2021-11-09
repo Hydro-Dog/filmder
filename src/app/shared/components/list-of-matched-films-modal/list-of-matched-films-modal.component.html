@@ -2,7 +2,7 @@
   <h2 class="ta-c fc-grey"><b> Matched films </b></h2>
 
   <div
-    class="film-container d-flex d-c-flex d-middle m-b-20"
+    class="film-container d-flex d-column d-middle m-b-20"
     *ngFor="let film of (matchSessionSerialized$ | async)?.matchedMovies"
   >
     <h4>

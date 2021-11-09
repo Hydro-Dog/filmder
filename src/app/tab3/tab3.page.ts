@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { forkJoin, of, Subject } from 'rxjs';
 import {
   takeUntil,
@@ -18,6 +19,7 @@ import {
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
+import { StorageFacade } from '../services/storage.service';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { ApiError } from '../shared/models/api-error';
 
@@ -35,10 +37,9 @@ enum ViewMode {
 export class Tab3Page implements OnInit, OnDestroy {
   @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
   viewMode = ViewMode.View;
-  viewModes = ViewMode;
   toastErrorMessage: string;
 
-  profileSettingsForm = new FormGroup({
+  readonly profileSettingsForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
       updateOn: 'blur',
@@ -54,18 +55,21 @@ export class Tab3Page implements OnInit, OnDestroy {
     }),
   });
 
-  userNameControl = this.profileSettingsForm.get('userName');
-  firstNameControl = this.profileSettingsForm.get('firstName');
-  lastNameControl = this.profileSettingsForm.get('lastName');
-  phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
+  readonly userNameControl = this.profileSettingsForm.get('userName');
+  readonly firstNameControl = this.profileSettingsForm.get('firstName');
+  readonly lastNameControl = this.profileSettingsForm.get('lastName');
+  readonly phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
+  readonly viewModes = ViewMode;
 
-  user$ = this.userQuery.selectUser$;
-  saveChanges$ = new Subject();
-  destroy$ = new Subject();
+  readonly user$ = this.userQuery.selectUser$;
+  readonly saveChanges$ = new Subject();
+  readonly destroy$ = new Subject();
 
   constructor(
     private userQuery: UserQuery,
     private userFacade: UserFacade,
+    private storageFacade: StorageFacade,
+    private router: Router,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -118,6 +122,11 @@ export class Tab3Page implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+
+  logOut() {
+    this.storageFacade.clearStorage();
+    this.router.navigate(['/auth']);
   }
 
   setViewMode(mode: ViewMode) {

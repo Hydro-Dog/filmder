@@ -1,5 +1,5 @@
 <div class="d-flex">
-  <div class="m-auto d-flex d-c-flex d-between modal-content">
+  <div class="m-auto d-flex d-column d-between modal-content">
     <div>
       <h3><b>Match Details</b></h3>
       <div class="p-b-30" *ngIf="!matchedMovies.length">
@@ -61,14 +61,6 @@
       </ng-container>
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Summary">
       </ng-container>
-
-      <!-- <ion-button
-        
-        size="medium"
-        expand="block"
-        fill="outline"
-        >Close</ion-button
-      > -->
 
       <ion-icon
         class="w100 d-flex d-center"
