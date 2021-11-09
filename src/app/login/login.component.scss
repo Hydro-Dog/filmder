@@ -1,0 +1,9 @@
+.password-container {
+  position: relative;
+
+  .password-icon {
+    position: absolute;
+    right: 1rem;
+    z-index: 100;
+  }
+}

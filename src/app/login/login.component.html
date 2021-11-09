@@ -6,40 +6,53 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form [formGroup]="loginForm" class="m-b-40">
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
-        position="floating"
-        >User name
-        {{
-          isControlInvalid("userName") ? getErrorMessage("userName") : ""
-        }}</ion-label
+  <div class="h100 d-flex">
+    <div class="m-auto w100">
+      <form [formGroup]="loginForm" class="m-b-40">
+        <ion-item lines="full">
+          <ion-label
+            [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
+            position="floating"
+            >User name
+            {{
+              isControlInvalid("userName") ? getErrorMessage("userName") : ""
+            }}</ion-label
+          >
+          <ion-input formControlName="userName" type="text"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label
+            [color]="isControlInvalid('password') ? 'danger' : 'dark'"
+            position="floating"
+            >Password
+            {{
+              isControlInvalid("password") ? getErrorMessage("password") : ""
+            }}</ion-label
+          >
+          <div class="d-flex w100 password-container">
+            <ion-input
+              [type]="shopPassword ? 'text' : 'password'"
+              formControlName="password"
+            ></ion-input>
+            <ion-icon
+              class="password-icon"
+              [name]="shopPassword ? 'eye-off-outline' : 'eye-outline'"
+              (click)="shopPassword = !shopPassword"
+            ></ion-icon>
+          </div>
+        </ion-item>
+      </form>
+      <ion-button
+        class="d-flex"
+        [disabled]="
+          loginForm.invalid || (userLoading$ | async) || (userLoading$ | async)
+        "
+        (click)="loginClicked()"
+        >Login</ion-button
       >
-      <ion-input formControlName="userName" type="text"></ion-input>
-    </ion-item>
-    <ion-item lines="full">
-      <ion-label
-        [color]="isControlInvalid('password') ? 'danger' : 'dark'"
-        position="floating"
-        >Password
-        {{
-          isControlInvalid("password") ? getErrorMessage("password") : ""
-        }}</ion-label
-      >
-      <ion-input type="text" formControlName="password"></ion-input>
-    </ion-item>
-  </form>
-  <ion-button
-    class="d-flex"
-    [disabled]="
-      loginForm.invalid || (userLoading$ | async) || (userLoading$ | async)
-    "
-    (click)="loginClicked()"
-    >Login</ion-button
-  >
+    </div>
+  </div>
 
-  {{ showError$ | async }}
   <div *ngIf="showError$ | async">Invalid Username or Password</div>
   <filmder-toast [position]="'bottom'"></filmder-toast>
 </ion-content>

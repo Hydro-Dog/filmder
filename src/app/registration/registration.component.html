@@ -6,16 +6,21 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div *ngIf="selectIsLogin$ | async; else registration" class="container">
-    <div class="d-flex d-center m-b-20">Please confirm your email</div>
-    <ion-button
-      [routerLink]="['/login']"
-      size="large"
-      expand="block"
-      fill="solid"
-      >Login</ion-button
-    >
+  <div class="h100 d-flex">
+    <div class="m-auto w100">
+      <div *ngIf="selectIsLogin$ | async; else registration" class="container">
+        <div class="d-flex d-center m-b-20">Please confirm your email</div>
+        <ion-button
+          [routerLink]="['/login']"
+          size="large"
+          expand="block"
+          fill="solid"
+          >Login</ion-button
+        >
+      </div>
+    </div>
   </div>
+
   <ng-template #registration>
     <form [formGroup]="registrationForm" class="m-b-40">
       <ion-item lines="full">

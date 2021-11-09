@@ -24,15 +24,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  ToastPosition = ToastPosition;
-  @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
-  loginErrorMessage = 'Invalid username or password';
-  passwordsMissMatch: boolean;
-  user$ = this.userQuery.selectUser$;
-  userLoading$ = this.authQuery.selectUserLoading$;
-  selectLoginError$ = this.authQuery.selectLoginError$;
-
-  loginForm = new FormGroup({
+  readonly toastPosition = ToastPosition;
+  @ViewChild(ToastComponentShared)
+  readonly toastComponentShared: ToastComponentShared;
+  readonly invalidCredentialsErrorMessage = 'Invalid username or password.';
+  readonly serverErrorMessage = 'Sorry, server error. Please, try again.';
+  readonly loginForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
     }),
@@ -40,12 +37,17 @@ export class LoginComponent implements OnInit {
       validators: Validators.required,
     }),
   });
+  readonly userNameControl = this.loginForm.get('userName');
+  readonly passwordControl = this.loginForm.get('password');
 
-  userNameControl = this.loginForm.get('userName');
-  passwordControl = this.loginForm.get('password');
+  readonly user$ = this.userQuery.selectUser$;
+  readonly userLoading$ = this.authQuery.selectUserLoading$;
+  readonly selectLoginError$ = this.authQuery.selectLoginError$;
+  readonly showError$ = new BehaviorSubject(false);
+  readonly destroy$ = new Subject();
 
-  showError$ = new BehaviorSubject(false);
-  destroy$ = new Subject();
+  shopPassword = false;
+  passwordsMissMatch: boolean;
 
   constructor(
     private navController: NavController,
@@ -67,9 +69,19 @@ export class LoginComponent implements OnInit {
         filter((x) => !!x),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => {
-        this.toastComponentShared.displayToast(this.loginErrorMessage);
-      });
+      .subscribe(
+        ({ error }) => {
+          const errorMessage =
+            error.status === 400
+              ? this.invalidCredentialsErrorMessage
+              : this.serverErrorMessage;
+
+          this.toastComponentShared.displayToast(errorMessage);
+        },
+        () => {
+          this.toastComponentShared.displayToast(this.serverErrorMessage);
+        }
+      );
   }
 
   loginClicked() {
