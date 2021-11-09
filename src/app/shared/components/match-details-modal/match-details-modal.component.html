@@ -62,13 +62,21 @@
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Summary">
       </ng-container>
 
-      <ion-button
-        (click)="closeModal(matchDetailsModalActions.Nothing)"
+      <!-- <ion-button
+        
         size="medium"
         expand="block"
         fill="outline"
         >Close</ion-button
-      >
+      > -->
+
+      <ion-icon
+        class="w100 d-flex d-center"
+        size="large"
+        (click)="closeModal(matchDetailsModalActions.Nothing)"
+        name="caret-down-circle"
+        color="primary"
+      ></ion-icon>
     </div>
   </div>
 </div>

@@ -8,12 +8,10 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { FilmFacade } from '../data-layer/film/film.facade';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { GameModesFacade } from '../data-layer/game-mode/game-mode.facade';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
 import { PickerComponentShared } from '../shared/components/picker/picker.component';
@@ -33,7 +31,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     gameMode: ['', Validators.required],
     matchLimit: [
       '',
-      [Validators.required, Validators.min(1), Validators.max(25)],
+      [Validators.required, Validators.min(1), Validators.max(5)],
     ],
     guestUsername: ['', Validators.required],
   });
@@ -48,7 +46,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   constructor(
     private navController: NavController,
     private fb: FormBuilder,
-    private filmFacade: FilmFacade,
     private gameModesFacade: GameModesFacade,
     private userFacade: UserFacade,
     private userQuery: UserQuery,
@@ -57,7 +54,6 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.filmFacade.getAvailableRegions();
     this.gameModesFacade.getGameModes();
 
     this.router.events.subscribe((e) => {

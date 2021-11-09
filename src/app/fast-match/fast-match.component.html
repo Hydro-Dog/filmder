@@ -19,10 +19,11 @@
             <ion-item class="p-l-15">
               <div class="m-r-10 fw-600">Category</div>
               <ion-select
+                class="w100"
                 formControlName="gameMode"
                 value="brown"
-                okText="Okay"
-                cancelText="Dismiss"
+                okText="Ok"
+                cancelText="Cancel"
               >
                 <ion-select-option
                   *ngFor="let gameMode of gameModes$ | async"
@@ -38,9 +39,9 @@
               <ion-input
                 type="number"
                 min="1"
-                max="25"
+                max="5"
                 formControlName="matchLimit"
-                placeholder="1-25"
+                placeholder="1-5"
               ></ion-input>
             </ion-item>
 
@@ -79,8 +80,8 @@
       <div class="created-successfully-container">
         <div class="created-successfully-content">
           <h2>Something went wrong</h2>
-          <div>Oops, some error occurred...</div>
-          <div>please try again</div>
+          <div>Third party API error</div>
+          <div>Please try again</div>
           <ion-button (click)="navigate('/tabs/tab2/create')"
             >Create</ion-button
           >
