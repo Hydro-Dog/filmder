@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Film } from '../film/film.models';
 import {
-  createMatchSession,
   deleteMatchSession,
   getCurrentMatchSession,
   getMatchSessionsByUserId,
+  resetStore,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
   socketFilmsMatchSuccess,
   swipe,
   updateMatchSession,
 } from './match-session.actions';
-import { MatchSessionEffects } from './match-session.effects';
 import {
   MatchSession,
   MatchSessionChangesEvents,
@@ -53,9 +51,12 @@ export class MatchSessionFacade {
   constructor(
     private actions: Actions,
     private matchSessionService: MatchSessionService,
-    private matchSessionQuery: MatchSessionQuery,
-    private matchSessionEffects: MatchSessionEffects
+    private matchSessionQuery: MatchSessionQuery
   ) {}
+
+  resetStore() {
+    this.actions.dispatch(resetStore());
+  }
 
   createMatchSession(matchSession: MatchSessionCO) {
     return this.matchSessionService.create(matchSession);

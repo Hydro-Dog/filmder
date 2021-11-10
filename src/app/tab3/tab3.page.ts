@@ -19,7 +19,6 @@ import {
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
-import { StorageFacade } from '../services/storage.service';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { ApiError } from '../shared/models/api-error';
 
@@ -68,7 +67,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   constructor(
     private userQuery: UserQuery,
     private userFacade: UserFacade,
-    private storageFacade: StorageFacade,
+    private authFacade: AuthFacade,
     private router: Router,
     private cd: ChangeDetectorRef
   ) {}
@@ -125,7 +124,8 @@ export class Tab3Page implements OnInit, OnDestroy {
   }
 
   logOut() {
-    this.storageFacade.clearStorage();
+    this.authFacade.logout();
+    this.userFacade.resetStore();
     this.router.navigate(['/auth']);
   }
 

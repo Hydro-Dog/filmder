@@ -5,26 +5,28 @@ import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import {
   getUser,
+  resetStore,
   setCurrentMatchSessionSuccess,
   updateUser,
-  updateUserSuccess,
 } from './user.actions';
-import { UserEffects } from './user.effects';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserFacade {
-  selectUser$: Observable<User> = this.userQuery.selectUser$;
-  selectError$: Observable<any> = this.userQuery.selectError$;
+  readonly selectUser$: Observable<User> = this.userQuery.selectUser$;
+  readonly selectError$: Observable<any> = this.userQuery.selectError$;
 
   constructor(
     private userQuery: UserQuery,
     private userService: UserService,
-    private actions: Actions,
-    private userEffects: UserEffects
+    private actions: Actions
   ) {}
+
+  resetStore() {
+    this.actions.dispatch(resetStore());
+  }
 
   getUser(userId: ID) {
     this.actions.dispatch(getUser({ userId }));

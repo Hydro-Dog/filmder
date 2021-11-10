@@ -45,20 +45,22 @@ export const setCurrentMatchSessionSuccess = createAction(
 );
 
 export const setActiveMatchSession = createAction(
-  '[Match Session] Set Active MatchSession',
+  '[User] Set Active MatchSession',
   props<{ matchSessionId: number }>()
 );
 
 export const setActiveMatchSessionSuccess = createAction(
-  '[Match Session] Set Active MatchSession Success',
+  '[User] Set Active MatchSession Success',
   props<{
     user: UserRO;
   }>()
 );
 
 export const setActiveMatchSessionError = createAction(
-  '[Match Session] Set Active MatchSession Error',
+  '[User] Set Active MatchSession Error',
   props<{
     error: any;
   }>()
 );
+
+export const resetStore = createAction('[User] Reset Store');

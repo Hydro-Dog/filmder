@@ -14,6 +14,8 @@ import {
   login,
   loginError,
   loginSuccess,
+  logout,
+  logoutSuccess,
   register,
   registerError,
   registerSuccess,
@@ -29,8 +31,33 @@ export class AuthEffects {
     private authService: AuthService,
     private authStore: AuthStore,
     private userStore: UserStore,
-    private storageService: StorageFacade
+    private storageFacade: StorageFacade
   ) {}
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(logout),
+        switchMap(() => {
+          return this.authService.logout().pipe(map(() => logoutSuccess()));
+        })
+      ),
+    { dispatch: true }
+  );
+
+  @Effect()
+  logoutSuccess$ = this.actions$.pipe(
+    ofType(logoutSuccess),
+    tap(() => {
+      console.log();
+      this.storageFacade.clearStorage();
+
+      return this.userStore.update((state) => ({
+        ...state,
+        user: null,
+      }));
+    })
+  );
 
   register$ = createEffect(
     () =>
@@ -92,15 +119,15 @@ export class AuthEffects {
   loginSuccess$ = this.actions$.pipe(
     ofType(loginSuccess),
     tap(({ user }) => {
-      this.storageService.setItem({
+      this.storageFacade.setItem({
         key: STORAGE_ITEMS.USER_ID,
         value: user.id,
       });
-      this.storageService.setItem({
+      this.storageFacade.setItem({
         key: STORAGE_ITEMS.ACCESS_TOKEN_KEY,
         value: user.accessToken,
       });
-      this.storageService.setItem({
+      this.storageFacade.setItem({
         key: STORAGE_ITEMS.REFRESH_TOKEN_KEY,
         value: user.refreshToken,
       });

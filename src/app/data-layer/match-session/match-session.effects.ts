@@ -6,18 +6,15 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { stat } from 'fs';
-import { throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
-  createMatchSession,
-  createMatchSessionSuccess,
   deleteMatchSession,
   deleteMatchSessionSuccess,
   getCurrentMatchSession,
   getCurrentMatchSessionSuccess,
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
+  resetStore,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
   socketFilmsMatchSuccess,
@@ -26,7 +23,6 @@ import {
   updateMatchSession,
   updateMatchSessionSuccess,
 } from './match-session.actions';
-import { MatchSessionChangesEvents } from './match-session.models';
 import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
 
@@ -202,6 +198,19 @@ export class MatchSessionEffects {
         currentMatchSessionLoading: false,
         currentMatchSession: { ...currentMatchSession, filmsSequence },
       }));
+    })
+  );
+
+  @Effect()
+  resetStore$ = this.actions$.pipe(
+    ofType(resetStore),
+    tap(() => {
+      return this.matchSessionStore.update((state) => {
+        return {
+          ...state,
+          matchSessions: [],
+        };
+      });
     })
   );
 

@@ -11,6 +11,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   getUser,
   getUserSuccess,
+  resetStore,
   setCurrentMatchSessionSuccess,
   updateUser,
   updateUserSuccess,
@@ -44,6 +45,18 @@ export class UserEffects {
     { dispatch: true }
   );
 
+  @Effect()
+  getUserSuccess$ = this.actions$.pipe(
+    ofType(getUserSuccess),
+    tap(({ user }) => {
+      return this.userStore.update((state) => ({
+        ...state,
+        userLoading: false,
+        user,
+      }));
+    })
+  );
+
   updateUser$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -59,18 +72,6 @@ export class UserEffects {
         })
       ),
     { dispatch: true }
-  );
-
-  @Effect()
-  getUserSuccess$ = this.actions$.pipe(
-    ofType(getUserSuccess),
-    tap(({ user }) => {
-      return this.userStore.update((state) => ({
-        ...state,
-        userLoading: false,
-        user,
-      }));
-    })
   );
 
   @Effect()
@@ -96,5 +97,18 @@ export class UserEffects {
       }));
     }),
     switchMap(() => of(true))
+  );
+
+  @Effect()
+  resetStore$ = this.actions$.pipe(
+    ofType(resetStore),
+    tap(() => {
+      return this.userStore.update((state) => {
+        return {
+          ...state,
+          user: null,
+        };
+      });
+    })
   );
 }

@@ -26,7 +26,10 @@ export class AuthInterceptor implements HttpInterceptor {
           const headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`,
           });
-          return req.url.includes('/api') ? req.clone({ headers }) : req;
+
+          return req.url.includes('/api') || req.url.includes('/logout')
+            ? req.clone({ headers })
+            : req;
         }
 
         return req;

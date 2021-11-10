@@ -92,6 +92,7 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
         category: matchSession.category,
         matchLimit: matchSession.matchLimit,
         accepted: matchSession.accepted,
+        completed: matchSession.completed,
         id: matchSession.id,
         matchedMovies: matchSession.matchedMoviesJSON.map((x) => JSON.parse(x)),
       },

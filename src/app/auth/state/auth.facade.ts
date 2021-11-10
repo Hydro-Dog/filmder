@@ -4,25 +4,28 @@ import { User } from '@src/app/data-layer/user/user.models';
 import { UserQuery } from '@src/app/data-layer/user/user.query';
 import { ApiError } from '@src/app/shared/models/api-error';
 import { Observable } from 'rxjs';
-import { login, register } from './auth.actions';
+import { login, logout, register } from './auth.actions';
 import { AuthQuery } from './auth.query';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {
-  selectIsLogin$: Observable<string>;
-  selectUser$: Observable<User>;
-  selectId$: Observable<number>;
-  selectError$: Observable<any>;
+  readonly selectIsLogin$: Observable<string>;
+  readonly selectUser$: Observable<User>;
+  readonly selectId$: Observable<number>;
+  readonly selectError$: Observable<any>;
 
   constructor(
     private authQuery: AuthQuery,
-    private authService: AuthService,
     private userQuery: UserQuery,
     private actions: Actions
   ) {
     this.selectIsLogin$ = this.authQuery.selectIsLogin$;
     this.selectError$ = this.userQuery.selectError$;
+  }
+
+  logout() {
+    this.actions.dispatch(logout());
   }
 
   login(userName: string, password: string) {
@@ -32,20 +35,4 @@ export class AuthFacade {
   register(user: User) {
     this.actions.dispatch(register({ user }));
   }
-
-  // checkEmailIsTaken(value: string) {
-  //   return this.authService.checkEmailIsTaken(value);
-  // }
-
-  // getByUsername(value: string) {
-  //   return this.authService.getByUsername(value);
-  // }
-
-  // checkUserNameIsTaken(value: string) {
-  //   return this.authService.checkUserNameIsTaken(value);
-  // }
-
-  // checkPhoneNumberIsTaken(value: string) {
-  //   return this.authService.checkPhoneNumberIsTaken(value);
-  // }
 }

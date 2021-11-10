@@ -123,6 +123,8 @@ export const swipeSuccess = createAction(
   }>()
 );
 
+export const resetStore = createAction('[Match Session] Reset Store');
+
 // sockets---------------------------------------------------
 
 export const socketAddMatchSessionSuccess = createAction(

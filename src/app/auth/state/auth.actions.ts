@@ -1,6 +1,17 @@
 import { createAction, props } from '@datorama/akita-ng-effects';
 import { User, UserRO } from '@src/app/data-layer/user/user.models';
 
+export const logout = createAction('[Auth] Log Out');
+
+export const logoutSuccess = createAction('[Auth] Log Out Success');
+
+export const logoutError = createAction(
+  '[Auth] Log Out Error',
+  props<{
+    error: any;
+  }>()
+);
+
 export const login = createAction(
   '[Auth] Login',
   props<{ userName: string; password: string }>()

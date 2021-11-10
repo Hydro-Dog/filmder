@@ -30,7 +30,8 @@ export class MatchDetailsModal {
   @Input() category: string;
   @Input() matchLimit: string;
   @Input() matchedMovies: Film[];
-  @Input() accepted: string;
+  @Input() accepted: boolean;
+  @Input() completed: boolean;
   @Input() id: string;
 
   readonly matchDetailsDisplayMode = MatchDetailsDisplayMode;
