@@ -14,6 +14,7 @@ import {
   GestureController,
   GestureDetail,
   IonCard,
+  ModalController,
   Platform,
 } from '@ionic/angular';
 import { of, Subject, timer } from 'rxjs';
@@ -62,7 +63,14 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       shareReplay({ refCount: true, bufferSize: 1 })
     );
 
+  readonly matchedMovies$ = this.selectCurrentMatchSession$.pipe(
+    map((matchSession) =>
+      matchSession.matchedMoviesJSON.map((x) => JSON.parse(x))
+    )
+  );
+
   readonly swipe$ = new Subject<'left' | 'right'>();
+  readonly openMatchedFilmsDialog$ = new Subject();
   readonly destroy$ = new Subject();
 
   constructor(
@@ -71,7 +79,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     private gestureCtrl: GestureController,
     private platform: Platform,
     private router: Router,
-    private dialog: MatDialog
+    public modalController: ModalController
   ) {}
 
   ngOnInit(): void {
@@ -127,29 +135,24 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toastComponentShared.displayToast(toastMessage);
       }
     );
-  }
 
-  openMatchedFilmsDialog(): void {
-    const dialogRef = this.dialog.open(ListOfMatchedFilmsModalComponent, {
-      width: '70vw',
-      height: '70vh',
-      data: {
-        matchSession$: this.selectCurrentMatchSession$,
-        // matchSession$: this.selectCurrentMatchSession$.pipe(
-        //   map((matchSession) => ({
-        //     ...matchSession,
-        //     matchSession,
-        //     matchedMovies: matchSession.matchedMoviesJSON.map((filmJSON) =>
-        //       JSON.parse(filmJSON)
-        //     ),
-        //   }))
-        // ),
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    this.openMatchedFilmsDialog$
+      .pipe(
+        withLatestFrom(this.selectCurrentMatchSession$),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(async ([_, matchSession]) => {
+        const modal = await this.modalController.create({
+          component: ListOfMatchedFilmsModalComponent,
+          swipeToClose: true,
+          componentProps: {
+            matchedMovies: matchSession.matchedMoviesJSON.map((x) =>
+              JSON.parse(x)
+            ),
+          },
+        });
+        modal.present();
+      });
   }
 
   ngAfterViewInit(): void {

@@ -1,6 +1,10 @@
-.film-container {
-  border-radius: 5px;
-  box-shadow: 0 10px 15px 5px rgba(0, 0, 0, 0.2);
+.films-container {
+  height: 85vh;
+  overflow: scroll;
+}
+
+.film {
+  width: 90%;
 }
 
 .film-poster {

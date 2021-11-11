@@ -1,9 +1,21 @@
-<ion-header> </ion-header>
 <ion-content class="pick-film-container">
   <ng-container
     *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
   >
-    Completed
+    <div class="d-flex d-center">
+      <ion-chip color="danger">
+        <ion-icon name="ribbon-outline"></ion-icon>
+        <ion-label>Yay! Session completed</ion-label>
+      </ion-chip>
+    </div>
+    <filmder-matched-films [matchedMovies]="matchedMovies$ | async">
+    </filmder-matched-films>
+
+    <ion-fab class="exit-fab">
+      <ion-fab-button>
+        <ion-icon name="close" routerLink="/tabs/tab2"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   </ng-container>
 
   <ng-template #pickFilmScreen>
@@ -20,7 +32,7 @@
       <ion-button
         size="large"
         color="primary"
-        (click)="openMatchedFilmsDialog()"
+        (click)="openMatchedFilmsDialog$.next()"
       >
         <ng-container
           *ngIf="

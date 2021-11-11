@@ -1,18 +1,27 @@
 <div>
-  <h2 class="ta-c fc-grey"><b> Matched films </b></h2>
-
-  <div
-    class="film-container d-flex d-column d-middle m-b-20"
-    *ngFor="let film of (matchSessionSerialized$ | async)?.matchedMovies"
-  >
-    <h4>
-      <b>
-        {{ film.title }}
-      </b>
-    </h4>
-    <img
-      class="film-poster"
-      [src]="'https://image.tmdb.org/t/p/original' + film.poster_path"
-    />
+  <h2 class="ta-c fc-grey m-b-10"><b> Matched films </b></h2>
+  <div class="films-container d-column d-flex d-middle p-t-10">
+    <div
+      class="film d-flex d-column d-middle m-b-20"
+      *ngFor="let film of matchedMovies"
+    >
+      <h4>
+        <b>
+          {{ film.title }}
+        </b>
+      </h4>
+      <img
+        class="film-poster"
+        [src]="'https://image.tmdb.org/t/p/original' + film.poster_path"
+      />
+    </div>
   </div>
+
+  <ion-icon
+    class="w100 d-flex d-center"
+    size="large"
+    (click)="closeModal()"
+    name="caret-down-circle"
+    color="primary"
+  ></ion-icon>
 </div>
