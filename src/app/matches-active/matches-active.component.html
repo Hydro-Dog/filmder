@@ -13,4 +13,7 @@
     (matchDeclined)="matchDeclined($event)"
     (continueMatch)="continueMatch$.next($event)"
   ></filmder-matches-table>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content> </ion-refresher-content>
+  </ion-refresher>
 </ion-content>

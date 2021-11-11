@@ -35,5 +35,13 @@ export class MatchesCompletedComponent {
     this.navController.navigateBack('/tabs/tab1');
   }
 
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+      console.log('done');
+      $event.target.complete();
+    });
+  }
+
   matchRemoved(matchSession: MatchSession) {}
 }

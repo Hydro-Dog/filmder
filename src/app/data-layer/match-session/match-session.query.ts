@@ -66,6 +66,8 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
     })
   );
 
+  selectMatchSessionsLoading$ = this.select('matchSessionsLoading');
+
   selectError$ = this.select('error');
 
   constructor(

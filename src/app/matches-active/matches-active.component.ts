@@ -31,6 +31,8 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly activeMatchSessionId$ = this.currentUser$.pipe(
     map((user) => user.currentMatchSession)
   );
+  readonly matchesLoading$ =
+    this.matchSessionFacade.selectMatchSessionsLoading$;
 
   readonly continueMatch$ = new Subject<MatchSession>();
   readonly destroy$ = new Subject();
@@ -74,15 +76,13 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  // async continueMatch(matchSession: MatchSession) {
-  //   console.log('continueMatch');
-  //   const user = await this.currentUser$.toPromise();
-  //   console.log('user: ', user);
-  //   this.userFacade.updateUser({
-  //     ...user,
-  //     currentMatchSession: matchSession.id.toString(),
-  //   });
-  // }
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+      console.log('done');
+      $event.target.complete();
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

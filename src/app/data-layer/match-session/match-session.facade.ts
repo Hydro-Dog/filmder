@@ -13,6 +13,7 @@ import {
   swipe,
   updateMatchSession,
 } from './match-session.actions';
+import { MatchSessionEffects } from './match-session.effects';
 import {
   MatchSession,
   MatchSessionChangesEvents,
@@ -24,6 +25,9 @@ import { MatchSessionService } from './match-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionFacade {
+  readonly selectMatchSessionsLoading$: Observable<boolean> =
+    this.matchSessionQuery.selectMatchSessionsLoading$;
+
   readonly selectCurrentMatchSession$: Observable<MatchSession> =
     this.matchSessionQuery.selectCurrentMatchSession$;
 
@@ -51,7 +55,8 @@ export class MatchSessionFacade {
   constructor(
     private actions: Actions,
     private matchSessionService: MatchSessionService,
-    private matchSessionQuery: MatchSessionQuery
+    private matchSessionQuery: MatchSessionQuery,
+    private matchSessionEffects: MatchSessionEffects
   ) {}
 
   resetStore() {
@@ -72,6 +77,8 @@ export class MatchSessionFacade {
 
   getMatchSessionsByUserId(userId: number) {
     this.actions.dispatch(getMatchSessionsByUserId({ userId }));
+
+    return this.matchSessionEffects.getMatchSessionsByUserIdSuccess$;
   }
 
   getCurrentMatchSession(matchSessionId: string) {

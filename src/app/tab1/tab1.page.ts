@@ -40,6 +40,14 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.matchSessionFacade.getMatchSessionsByUserId(id);
   }
 
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+      console.log('done');
+      $event.target.complete();
+    });
+  }
+
   ngOnDestroy(): void {
     this.matchSessionFacade.stopListenForNewMatches();
     this.destroy$.next();

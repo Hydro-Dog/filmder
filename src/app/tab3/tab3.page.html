@@ -125,5 +125,8 @@
   <ion-button (click)="logOut()" class="complete-button" expand="round"
     >Log out</ion-button
   >
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content> </ion-refresher-content>
+  </ion-refresher>
   <filmder-toast></filmder-toast>
 </ion-content>

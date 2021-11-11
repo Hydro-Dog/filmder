@@ -41,4 +41,12 @@ export class MatchesPendingComponent {
       declined: true,
     });
   }
+
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+      console.log('done');
+      $event.target.complete();
+    });
+  }
 }

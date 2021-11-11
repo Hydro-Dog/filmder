@@ -1,9 +1,4 @@
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
   <ion-list>
     <ion-item routerLink="active">
       <div class="w100 d-flex d-between">
@@ -46,4 +41,7 @@
       </div>
     </ion-item>
   </ion-list>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content> </ion-refresher-content>
+  </ion-refresher>
 </ion-content>

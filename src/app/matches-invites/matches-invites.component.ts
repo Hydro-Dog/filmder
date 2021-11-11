@@ -61,6 +61,14 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
     });
   }
 
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+      console.log('done');
+      $event.target.complete();
+    });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
   }

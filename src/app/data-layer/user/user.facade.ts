@@ -9,6 +9,7 @@ import {
   setCurrentMatchSessionSuccess,
   updateUser,
 } from './user.actions';
+import { UserEffects } from './user.effects';
 import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
@@ -21,6 +22,7 @@ export class UserFacade {
   constructor(
     private userQuery: UserQuery,
     private userService: UserService,
+    private userEffects: UserEffects,
     private actions: Actions
   ) {}
 
@@ -30,6 +32,8 @@ export class UserFacade {
 
   getUser(userId: ID) {
     this.actions.dispatch(getUser({ userId }));
+
+    return this.userEffects.getUserSuccess$;
   }
 
   updateUser(user: Partial<User>) {

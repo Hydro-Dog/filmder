@@ -19,6 +19,7 @@ import {
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { UserQuery } from '../data-layer/user/user.query';
+import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 import { ApiError } from '../shared/models/api-error';
 
@@ -68,6 +69,7 @@ export class Tab3Page implements OnInit, OnDestroy {
     private userQuery: UserQuery,
     private userFacade: UserFacade,
     private authFacade: AuthFacade,
+    private storageFacade: StorageFacade,
     private router: Router,
     private cd: ChangeDetectorRef
   ) {}
@@ -148,6 +150,13 @@ export class Tab3Page implements OnInit, OnDestroy {
 
   saveChanges() {
     this.saveChanges$.next();
+  }
+
+  async doRefresh($event) {
+    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
+    this.userFacade.getUser(id).subscribe(() => {
+      $event.target.complete();
+    });
   }
 
   ngOnDestroy(): void {
