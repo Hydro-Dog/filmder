@@ -34,14 +34,9 @@
         <b class="fc-grey">Matches limit: </b>
         <span class="fc-black">{{ matchLimit }}</span>
       </div>
-      <ng-container *ngIf="accepted">
-        <h2 class="ta-c">
-          <b>Matched films: {{ matchedMovies.length }}</b>
-        </h2>
-      </ng-container>
     </div>
 
-    <div class="p-b-40">
+    <div class="bottom-buttons-container">
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Continue">
         <ion-button
           (click)="closeModal(matchDetailsModalActions.Continue)"
@@ -84,15 +79,19 @@
         >
       </ng-container>
       <ng-container *ngIf="displayMode === matchDetailsDisplayMode.Summary">
+        <filmder-matched-films [matchedMovies]="matchedMovies">
+        </filmder-matched-films>
       </ng-container>
 
-      <ion-icon
-        class="w100 d-flex d-center"
-        size="large"
-        (click)="closeModal(matchDetailsModalActions.Nothing)"
-        name="caret-down-circle"
-        color="primary"
-      ></ion-icon>
+      <div class="w100 d-flex d-center">
+        <ion-fab-button class="close-icon">
+          <ion-icon
+            size="large"
+            (click)="closeModal(matchDetailsModalActions.Nothing)"
+            name="chevron-down-circle-outline"
+          ></ion-icon>
+        </ion-fab-button>
+      </div>
     </div>
   </div>
 </div>

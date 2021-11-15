@@ -1,3 +1,13 @@
 .modal-content {
   height: 100vh;
+  overflow: scroll;
+}
+
+.close-icon {
+  position: absolute;
+  bottom: 2rem;
+}
+
+.bottom-buttons-container {
+  padding-bottom: 95px;
 }

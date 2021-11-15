@@ -1,8 +1,9 @@
 <ion-content class="pick-film-container">
+  {{ (selectCurrentMatchSession$ | async)?.completed }}
   <ng-container
     *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
   >
-    <div class="d-flex d-center">
+    <div class="p-t-30 d-flex d-center">
       <ion-chip color="danger">
         <ion-icon name="ribbon-outline"></ion-icon>
         <ion-label>Yay! Session completed</ion-label>

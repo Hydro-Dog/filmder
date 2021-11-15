@@ -8,12 +8,16 @@ import { ToastComponentShared } from './components/toast/toast.component';
 import { StarCasePipe } from './pipes/start-case.pipe';
 import { MatchDetailsModal } from './components/match-details-modal/match-details-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ListOfMatchedFilmsModalComponentShared } from './components/list-of-matched-films-modal/list-of-matched-films-modal.component';
+import { MatchHappenedModal } from './components/match-happend-modal/match-happend-modal.component';
 
 const components = [
   ToastComponentShared,
   AlertComponentShared,
   PickerComponentShared,
   MatchesListComponentShared,
+  ListOfMatchedFilmsModalComponentShared,
+  MatchHappenedModal,
   MatchDetailsModal,
   StarCasePipe,
 ];

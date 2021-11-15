@@ -30,7 +30,8 @@ import {
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
-import { ListOfMatchedFilmsModalComponent } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
+import { ListOfMatchedFilmsModalComponentShared } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
+import { MatchHappenedModal } from '../shared/components/match-happend-modal/match-happend-modal.component';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 
 @Component({
@@ -126,13 +127,22 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.matchSessionFacade.filmsMatchHappened$.subscribe(
-      (filmsMatchHappened) => {
+      async (filmsMatchHappened) => {
         console.log('filmsMatchHappened: ', filmsMatchHappened);
-        const toastMessage =
-          filmsMatchHappened.source === 'self'
-            ? `Hey! ${filmsMatchHappened.film.title} was a match.`
-            : `Yay! Your partner also picked ${filmsMatchHappened.film.title}.`;
-        this.toastComponentShared.displayToast(toastMessage);
+        const modal = await this.modalController.create({
+          component: MatchHappenedModal,
+          showBackdrop: false,
+          cssClass: ['match-happened-modal'],
+          animated: true,
+          componentProps: {
+            source: filmsMatchHappened.source,
+            film: filmsMatchHappened.film,
+          },
+        });
+        modal.present();
+        setTimeout(() => {
+          modal.dismiss();
+        }, 4000);
       }
     );
 
@@ -143,7 +153,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe(async ([_, matchSession]) => {
         const modal = await this.modalController.create({
-          component: ListOfMatchedFilmsModalComponent,
+          component: ListOfMatchedFilmsModalComponentShared,
           swipeToClose: true,
           componentProps: {
             matchedMovies: matchSession.matchedMoviesJSON.map((x) =>

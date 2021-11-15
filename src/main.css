@@ -1,0 +1,9 @@
+.match-happened-modal {
+  width: 250px;
+  height: 150px;
+  display: block;
+  top: calc(50% - 50px);
+  left: calc(50% - 125px);
+  border-radius: 0.75rem;
+  border: 3 px solid #fff;
+}

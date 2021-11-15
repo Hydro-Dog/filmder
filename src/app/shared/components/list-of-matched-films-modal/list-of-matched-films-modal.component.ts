@@ -14,7 +14,7 @@ export interface ListOfMatchedFilmsModalData {
   styleUrls: ['list-of-matched-films-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListOfMatchedFilmsModalComponent {
+export class ListOfMatchedFilmsModalComponentShared {
   @Input() matchedMovies: Film[];
 
   constructor(private modalController: ModalController) {}

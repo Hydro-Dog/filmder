@@ -1,6 +1,8 @@
 <div>
-  <h2 class="ta-c fc-grey m-b-10"><b> Matched films </b></h2>
-  <div class="films-container d-column d-flex d-middle p-t-10">
+  <h2 class="ta-c fc-grey m-b-10">
+    <b> Matched films: {{ matchedMovies.length }} </b>
+  </h2>
+  <div class="d-column d-flex d-middle p-t-10">
     <div
       class="film d-flex d-column d-middle m-b-20"
       *ngFor="let film of matchedMovies"
@@ -16,12 +18,4 @@
       />
     </div>
   </div>
-
-  <ion-icon
-    class="w100 d-flex d-center"
-    size="large"
-    (click)="closeModal()"
-    name="caret-down-circle"
-    color="primary"
-  ></ion-icon>
 </div>
