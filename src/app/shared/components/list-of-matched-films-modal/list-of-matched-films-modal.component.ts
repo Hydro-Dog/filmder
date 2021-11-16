@@ -9,12 +9,12 @@ export interface ListOfMatchedFilmsModalData {
 }
 
 @Component({
-  selector: 'filmder-matched-films',
+  selector: 'filmder-matched-films-summary',
   templateUrl: 'list-of-matched-films-modal.component.html',
   styleUrls: ['list-of-matched-films-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListOfMatchedFilmsModalComponentShared {
+export class MatchedFilmsSummaryModalShared {
   @Input() matchedMovies: Film[];
 
   constructor(private modalController: ModalController) {}

@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
-import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
+import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
 
 @Component({
   templateUrl: 'matches-completed.component.html',
@@ -38,10 +37,11 @@ export class MatchesCompletedComponent {
   async doRefresh($event) {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
-      console.log('done');
       $event.target.complete();
     });
   }
 
-  matchRemoved(matchSession: MatchSession) {}
+  matchRemoved(matchSessionId: number) {
+    this.matchSessionFacade.deleteMatchSession(matchSessionId);
+  }
 }

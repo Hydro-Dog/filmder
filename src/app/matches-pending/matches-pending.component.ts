@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
-import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
+import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
 
 @Component({
   templateUrl: 'matches-pending.component.html',

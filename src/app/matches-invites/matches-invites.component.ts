@@ -12,7 +12,7 @@ import {
 import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
-import { MatchSessionsListTypes } from '../shared/components/matches-list/matches-list.component';
+import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
 
 @Component({
   templateUrl: 'matches-invites.component.html',

@@ -6,7 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   deleteMatchSession,
   deleteMatchSessionSuccess,
@@ -78,17 +78,41 @@ export class MatchSessionEffects {
     () =>
       this.actions$.pipe(
         ofType(deleteMatchSession),
-        switchMap(({ id }) => {
+        switchMap(({ matchSessionId }) => {
           this.matchSessionStore.update((state) => ({
             ...state,
             matchSessionsLoading: true,
           }));
           return this.matchSessionService
-            .delete(id)
-            .pipe(map((matchSession) => deleteMatchSessionSuccess({ id })));
+            .delete(matchSessionId)
+            .pipe(
+              map((matchSessionId) =>
+                deleteMatchSessionSuccess({ matchSessionId })
+              )
+            );
         })
       ),
     { dispatch: true }
+  );
+
+  @Effect()
+  deleteMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(deleteMatchSessionSuccess),
+    tap(({ matchSessionId }) => {
+      return this.matchSessionStore.update((state) => {
+        const idx = state.matchSessions.findIndex(
+          (item) => +item.id === +matchSessionId
+        );
+
+        const matchSessions = [...state.matchSessions];
+        matchSessions.splice(idx, 1);
+        return {
+          ...state,
+          matchSessionsLoading: false,
+          matchSessions,
+        };
+      });
+    })
   );
 
   getMatchSessionsByUserId$ = createEffect(
@@ -154,11 +178,17 @@ export class MatchSessionEffects {
       const filmsSequence = currentMatchSession.filmsSequenceJson.map(
         (filmJson) => JSON.parse(filmJson)
       );
-      console.timeEnd('filmJson------');
       return this.matchSessionStore.update((state) => ({
         ...state,
         matchSessionsLoading: false,
         currentMatchSession: { ...currentMatchSession, filmsSequence },
+      }));
+    }),
+    catchError(() => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        matchSessionsLoading: false,
+        currentMatchSession: null,
       }));
     })
   );
@@ -264,5 +294,4 @@ export class MatchSessionEffects {
       });
     })
   );
-  socketFilmsMatchSuccess;
 }

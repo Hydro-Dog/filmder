@@ -10,9 +10,13 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+  {{ showApiMessage$ | async }}
   <div class="" [ngSwitch]="currentScreen$ | async">
     <div class="create-content" *ngSwitchCase="'create'">
-      <div class="w100 m-auto d-flex d-column form-buttons-container">
+      <div
+        *ngIf="!(showSpinner$ | async); else showSpinnerTemplate"
+        class="w100 m-auto d-flex d-column form-buttons-container"
+      >
         <h3 class="p-b-20"><b>Fast match</b></h3>
         <ion-list>
           <form [formGroup]="fastMatchForm">
@@ -79,7 +83,7 @@
     <div *ngSwitchCase="'error'">
       <div class="created-successfully-container">
         <div class="created-successfully-content">
-          <h2>Something went wrong</h2>
+          <h2>Sorry</h2>
           <div>Third party API error</div>
           <div>Please try again</div>
           <ion-button (click)="navigate('/tabs/tab2/create')"
@@ -93,4 +97,13 @@
   <filmder-picker></filmder-picker>
 </ion-content>
 
-<ng-template #createdSuccessfullyScreen> </ng-template>
+<ng-template #showSpinnerTemplate>
+  <div class="h100 w100 d-flex d-column d-middle">
+    <div class="m-auto d-flex d-column d-middle">
+      <ion-spinner name="crescent"></ion-spinner>
+      <div *ngIf="showApiMessage$ | async">
+        Oops. "Looks like problems with third party API...
+      </div>
+    </div>
+  </div>
+</ng-template>

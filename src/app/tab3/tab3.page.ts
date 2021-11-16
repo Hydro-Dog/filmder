@@ -15,6 +15,7 @@ import {
   catchError,
   tap,
   withLatestFrom,
+  shareReplay,
 } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
@@ -61,7 +62,9 @@ export class Tab3Page implements OnInit, OnDestroy {
   readonly phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
   readonly viewModes = ViewMode;
 
-  readonly user$ = this.userQuery.selectUser$;
+  readonly user$ = this.userQuery.selectUser$.pipe(
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
   readonly saveChanges$ = new Subject();
   readonly destroy$ = new Subject();
 

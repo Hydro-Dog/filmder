@@ -71,8 +71,8 @@ export class MatchSessionFacade {
     this.actions.dispatch(updateMatchSession({ matchSession }));
   }
 
-  deleteMatchSession(id: string) {
-    this.actions.dispatch(deleteMatchSession({ id }));
+  deleteMatchSession(matchSessionId: number) {
+    this.actions.dispatch(deleteMatchSession({ matchSessionId }));
   }
 
   getMatchSessionsByUserId(userId: number) {

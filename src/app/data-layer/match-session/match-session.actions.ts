@@ -26,13 +26,13 @@ export const createMatchSessionError = createAction(
 
 export const deleteMatchSession = createAction(
   '[Match Session] Delete',
-  props<{ id: string }>()
+  props<{ matchSessionId: number }>()
 );
 
 export const deleteMatchSessionSuccess = createAction(
   '[Match Session] Delete Success',
   props<{
-    id: string;
+    matchSessionId: number;
   }>()
 );
 

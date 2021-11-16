@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 
 @Component({
@@ -13,9 +14,19 @@ export class Tab2Page {
     map(({ currentMatchSession }) => currentMatchSession)
   );
 
+  readonly selectCurrentMatchSession$ =
+    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
   get hasActiveMatches() {
     return this.currentMatchSession$;
   }
 
-  constructor(private userFacade: UserFacade) {}
+  constructor(
+    private userFacade: UserFacade,
+    private matchSessionFacade: MatchSessionFacade
+  ) {
+    this.selectCurrentMatchSession$.subscribe((x) => console.log('x: ', x));
+  }
 }

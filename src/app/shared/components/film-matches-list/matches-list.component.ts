@@ -116,6 +116,10 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
     });
   }
 
+  delete(matchSessionId: number) {
+    this.matchRemoved.emit(matchSessionId);
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
   }

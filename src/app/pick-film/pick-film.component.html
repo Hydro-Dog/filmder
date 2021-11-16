@@ -1,5 +1,4 @@
 <ion-content class="pick-film-container">
-  {{ (selectCurrentMatchSession$ | async)?.completed }}
   <ng-container
     *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
   >
@@ -9,8 +8,8 @@
         <ion-label>Yay! Session completed</ion-label>
       </ion-chip>
     </div>
-    <filmder-matched-films [matchedMovies]="matchedMovies$ | async">
-    </filmder-matched-films>
+    <filmder-matched-films-summary [matchedMovies]="matchedMovies$ | async">
+    </filmder-matched-films-summary>
 
     <ion-fab class="exit-fab">
       <ion-fab-button>

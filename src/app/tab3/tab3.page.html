@@ -25,6 +25,10 @@
       <ion-label class="fw-600"> Phone </ion-label>
       <ion-label> {{phoneNumberControl.value}} </ion-label>
     </ion-item>
+    <ion-item>
+      <ion-label class="fw-600"> Email </ion-label>
+      <ion-label> {{(user$ | async)?.email}} </ion-label>
+    </ion-item>
   </div>
 
   <ng-template #editForm>
@@ -90,6 +94,10 @@
         </div>
 
         <ion-input type="text" formControlName="phoneNumber"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="fc-grey fw-600"> Email </ion-label>
+        <ion-label>{{(user$ | async).email}}</ion-label>
       </ion-item>
     </form>
   </ng-template>

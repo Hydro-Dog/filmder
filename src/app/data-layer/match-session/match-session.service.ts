@@ -35,10 +35,16 @@ export class MatchSessionService {
     );
   }
 
-  delete(id: string): Observable<string> {
-    return this.http.delete<string>(
-      `${environment.apiUrl}/api/matchsession/${id}`
+  delete(matchSessionId: number): Observable<number> {
+    return this.http.request<number>(
+      'delete',
+      `${environment.apiUrl}/api/matchsession`,
+      { body: { matchSessionId } }
     );
+
+    // return this.http.delete<number>(`${environment.apiUrl}/api/matchsession`,  {
+    //   body: matchSessionId,
+    // });
   }
 
   getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
