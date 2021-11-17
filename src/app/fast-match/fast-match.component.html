@@ -101,9 +101,7 @@
   <div class="h100 w100 d-flex d-column d-middle">
     <div class="m-auto d-flex d-column d-middle">
       <ion-spinner name="crescent"></ion-spinner>
-      <div *ngIf="showApiMessage$ | async">
-        Oops. "Looks like problems with third party API...
-      </div>
+      <div *ngIf="showApiMessage$ | async">Waiting for third party API...</div>
     </div>
   </div>
 </ng-template>
