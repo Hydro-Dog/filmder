@@ -38,7 +38,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     gameMode: ['', Validators.required],
     matchLimit: [
       '',
-      [Validators.required, Validators.min(1), Validators.max(5)],
+      [Validators.required, Validators.min(1), Validators.max(10)],
     ],
     guestUsername: ['', Validators.required],
   });
