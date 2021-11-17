@@ -69,6 +69,8 @@ export class MatchSessionFacade {
 
   updateMatchSession(matchSession: MatchSession) {
     this.actions.dispatch(updateMatchSession({ matchSession }));
+
+    return this.matchSessionEffects.updateMatchSessionSuccess$;
   }
 
   deleteMatchSession(matchSessionId: number) {

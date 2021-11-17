@@ -6,6 +6,7 @@ import {
   filter,
   map,
   shareReplay,
+  switchMap,
   takeUntil,
   tap,
   withLatestFrom,
@@ -28,6 +29,7 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     filter((x) => !!x),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
+
   readonly activeMatchSessionId$ = this.currentUser$.pipe(
     map((user) => user.currentMatchSession)
   );
@@ -35,6 +37,7 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     this.matchSessionFacade.selectMatchSessionsLoading$;
 
   readonly continueMatch$ = new Subject<MatchSession>();
+  readonly matchDeclined$ = new Subject<MatchSession>();
   readonly destroy$ = new Subject();
 
   constructor(
@@ -63,18 +66,39 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
 
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
+
+    this.matchDeclined$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((matchSession) => {
+          return this.matchSessionFacade.updateMatchSession({
+            ...matchSession,
+            declined: true,
+          });
+        }),
+        withLatestFrom(this.currentUser$)
+      )
+      .subscribe(([res, currentUser]) => {
+        console.log(res.matchSession.id, currentUser.currentMatchSession);
+        if (+res.matchSession.id === +currentUser.currentMatchSession) {
+          this.userFacade.updateUser({
+            ...currentUser,
+            currentMatchSession: '',
+          });
+        }
+      });
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
   }
 
-  matchDeclined(matchSession: MatchSession) {
-    this.matchSessionFacade.updateMatchSession({
-      ...matchSession,
-      declined: true,
-    });
-  }
+  // matchDeclined(matchSession: MatchSession) {
+  //   this.matchSessionFacade.updateMatchSession({
+  //     ...matchSession,
+  //     declined: true,
+  //   });
+  // }
 
   async doRefresh($event) {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);

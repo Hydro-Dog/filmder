@@ -9,7 +9,7 @@
   <filmder-matches-table
     [matchSessionsListTypes]="matchSessionsListTypes.Invites"
     [matches]="selectGuestedMatchSessions$ | async"
-    (inviteAccepted)="inviteAccepted($event)"
+    (inviteAccepted)="inviteAccepted$.next($event)"
     (matchDeclined)="matchDeclined($event)"
   ></filmder-matches-table>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">

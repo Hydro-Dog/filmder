@@ -10,7 +10,7 @@
     [matchSessionsListTypes]="matchSessionsListTypes.Active"
     [matches]="selectActiveMatchSessions$ | async"
     [activeMatchSessionId]="activeMatchSessionId$ | async"
-    (matchDeclined)="matchDeclined($event)"
+    (matchDeclined)="matchDeclined$.next($event)"
     (continueMatch)="continueMatch$.next($event)"
   ></filmder-matches-table>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">

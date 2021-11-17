@@ -108,7 +108,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
                 matchLimit: this.fastMatchForm.value.matchLimit,
                 guestId: guestUser.id as number,
               })
-              .pipe(tap(console.log), delay(1000), retry(10));
+              .pipe(retry(10));
           }
         })
       )
