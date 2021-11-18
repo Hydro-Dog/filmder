@@ -1,13 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Film } from '@src/app/data-layer/film/film.models';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  stagger,
-} from '@angular/animations';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -24,6 +17,7 @@ export const fadeAnimation = trigger('fadeAnimation', [
 })
 export class FilmCardShared {
   @Input() film: Film;
+  @Input() showSpinner = false;
   showOverview = false;
 
   setShowOverview(val: boolean) {

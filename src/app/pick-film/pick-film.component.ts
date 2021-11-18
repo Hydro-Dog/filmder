@@ -7,19 +7,16 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   Gesture,
   GestureController,
   GestureDetail,
-  IonCard,
   ModalController,
   Platform,
 } from '@ionic/angular';
-import { of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, Subject, timer } from 'rxjs';
 import {
-  catchError,
   filter,
   first,
   map,
@@ -31,6 +28,7 @@ import {
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { MatchedFilmsSummaryModalShared } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
+import { MatchDetailsModalActions } from '../shared/components/match-details-modal/match-details-modal.component';
 import { MatchHappenedModal } from '../shared/components/match-happend-modal/match-happend-modal.component';
 import { ToastComponentShared } from '../shared/components/toast/toast.component';
 
@@ -40,8 +38,10 @@ import { ToastComponentShared } from '../shared/components/toast/toast.component
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(IonCard, { read: ElementRef }) card: ElementRef;
+  @ViewChild('pickCard', { read: ElementRef }) card: ElementRef;
   @ViewChild(ToastComponentShared) toastComponentShared: ToastComponentShared;
+
+  readonly matchDetailsModalActions = MatchDetailsModalActions;
 
   readonly selectFilms$ = this.userFacade.selectUser$;
 
@@ -52,9 +52,13 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       withLatestFrom(this.userFacade.selectUser$),
       map(([matchSession, selectUser]) => {
         if (selectUser.id === matchSession.host.id) {
-          return matchSession.filmsSequence[matchSession.hostCurrentFilmIndex];
+          this.showSpinner$.next(false);
+          return matchSession?.filmsSequence[matchSession.hostCurrentFilmIndex];
         } else {
-          return matchSession.filmsSequence[matchSession.guestCurrentFilmIndex];
+          this.showSpinner$.next(false);
+          return matchSession?.filmsSequence[
+            matchSession.guestCurrentFilmIndex
+          ];
         }
       })
     );
@@ -73,6 +77,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly swipe$ = new Subject<'left' | 'right'>();
   readonly openMatchedFilmsDialog$ = new Subject();
   readonly destroy$ = new Subject();
+  readonly showSpinner$ = new BehaviorSubject(false);
 
   constructor(
     private userFacade: UserFacade,
@@ -88,26 +93,14 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
       if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
         this.selectCurrentMatchSession$
           .pipe(first(), withLatestFrom(this.userFacade.selectUser$))
-          .subscribe(([matchSession, currentUser]) => {
-            if (matchSession?.completed) {
-              this.userFacade.updateUser({
-                ...currentUser,
-                currentMatchSession: '',
-              });
-              this.matchSessionFacade.resetStore();
-            }
+          .subscribe(([_, currentUser]) => {
+            this.userFacade.updateUser({
+              ...currentUser,
+              currentMatchSession: '',
+            });
           });
       }
     });
-    this.userFacade.selectUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => {
-        if (user) {
-          this.matchSessionFacade.getCurrentMatchSession(
-            user.currentMatchSession
-          );
-        }
-      });
 
     this.swipe$
       .pipe(
@@ -140,7 +133,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
         modal.present();
         setTimeout(() => {
           modal.dismiss();
-        }, 4000);
+        }, 3000);
       }
     );
 
@@ -154,6 +147,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
           component: MatchedFilmsSummaryModalShared,
           swipeToClose: true,
           componentProps: {
+            closeButton: true,
             matchedMovies: matchSession.matchedMoviesJSON.map((x) =>
               JSON.parse(x)
             ),
@@ -182,11 +176,13 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
             this.setCardColor(ev.deltaX, card.nativeElement);
           },
           onEnd: (ev) => {
+            this.showSpinner$.next(true);
             card.nativeElement.style.transition = '0.3s ease-out';
             card.nativeElement.style.border = '7px solid white';
             if (ev.deltaX > 150) {
               this.hideCard(card, ev, 'right');
               this.scheduleCardDisplaySteps(card);
+
               this.swipe$.next('right');
             } else if (ev.deltaX < -150) {
               this.hideCard(card, ev, 'left');

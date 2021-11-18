@@ -5,9 +5,7 @@
 }
 
 .complete-buttons-container {
-  position: absolute;
-  bottom: 8%;
-  width: 100%;
+  padding-top: 1rem;
 
   .complete-button {
     width: 40%;
@@ -16,4 +14,10 @@
 
 .form-label {
   width: 50%;
+}
+
+.log-out-button {
+  position: absolute;
+  bottom: 5rem;
+  right: 0.5rem;
 }

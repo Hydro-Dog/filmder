@@ -1,11 +1,13 @@
 <ion-content [fullscreen]="true">
   <div class="d-flex d-r-reverse">
-    <ion-fab-button
+    <ion-button
+      [disabled]="viewMode === viewModes.Edit"
       (click)="setViewMode(viewModes.Edit)"
       size="small"
-      [disabled]="viewMode === viewModes.Edit"
-      ><ion-icon name="pencil-outline"></ion-icon>
-    </ion-fab-button>
+      fill="outline"
+      class="complete-button"
+      >edit</ion-button
+    >
   </div>
 
   <div *ngIf="viewMode === viewModes.View; else editForm">
@@ -93,7 +95,11 @@
           </div>
         </div>
 
-        <ion-input type="text" formControlName="phoneNumber"></ion-input>
+        <ion-input
+          type="text"
+          formControlName="phoneNumber"
+          maxlength="11"
+        ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label class="fc-grey fw-600"> Email </ion-label>
@@ -103,36 +109,21 @@
   </ng-template>
 
   <div
-    [hidden]="viewMode === viewModes.Edit"
-    class="d-flex d-center form-buttons-container"
-  >
-    <ion-button fill="outline">Change email</ion-button>
-    <ion-button fill="outline">Change password</ion-button>
-  </div>
-
-  <div
     [hidden]="viewMode !== viewModes.Edit"
     class="d-flex d-center complete-buttons-container"
   >
-    <ion-button
-      (click)="setViewMode(viewModes.View)"
-      class="complete-button"
-      expand="round"
-      fill="outline"
+    <ion-button (click)="cancelClicked()" class="complete-button" fill="outline"
       >Cancel</ion-button
     >
     <ion-button
       [disabled]="profileSettingsForm.invalid"
       (click)="saveChanges()"
       class="complete-button"
-      expand="round"
       >Save</ion-button
     >
   </div>
 
-  <ion-button (click)="logOut()" class="complete-button" expand="round"
-    >Log out</ion-button
-  >
+  <ion-button (click)="logOut()" class="log-out-button">Log out</ion-button>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content> </ion-refresher-content>
   </ion-refresher>

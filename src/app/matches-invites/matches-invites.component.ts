@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { SlowBuffer } from 'buffer';
-import { Console } from 'console';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   delay,
   filter,
@@ -12,11 +10,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import {
-  MatchSession,
-  MatchSessionSocketEvents,
-} from '../data-layer/match-session/match-session.models';
-import { MatchSessionService } from '../data-layer/match-session/match-session.service';
+import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
@@ -26,7 +20,7 @@ import { MatchSessionsListTypes } from '../shared/components/film-matches-list/m
 })
 export class MatchesInvitesComponent implements OnInit, OnDestroy {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectGuestedMatchSessions$ =
+  readonly selectInvitesMatchSessions$ =
     this.matchSessionFacade.selectInvitesMatchSessions$;
   readonly currentUser$ = this.userFacade.selectUser$.pipe(
     filter((x) => !!x),
@@ -59,31 +53,18 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
         withLatestFrom(this.currentUser$)
       )
       .subscribe(([res, currentUser]) => {
+        this.navController.navigateRoot('/tabs/tab2/current-match');
         this.userFacade.updateUser({
           ...currentUser,
           currentMatchSession: res.matchSession.id.toString(),
         });
+        this.matchSessionFacade.setCurrentMatchSession(res.matchSession);
       });
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
   }
-
-  // inviteAccepted(matchSession: MatchSession) {
-  //   this.matchSessionFacade.updateMatchSession({
-  //     ...matchSession,
-  //     accepted: true,
-  //   });
-
-  //   // this.userFacade
-  //   //   .setCurrentMatchSessionSuccess(matchSession.id.toString())
-  //   //   .subscribe(() => {
-  //   //     console.log('setCurrentMatchSessionSuccess');
-  //   //     this.navController.navigateRoot('/tabs/tab2/current-match');
-  //   //   });
-  // }
-
   matchDeclined(matchSession: MatchSession) {
     this.matchSessionFacade.updateMatchSession({
       ...matchSession,
@@ -94,7 +75,6 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
   async doRefresh($event) {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
-      console.log('done');
       $event.target.complete();
     });
   }

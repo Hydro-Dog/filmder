@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 
 @Component({
   selector: 'app-tabs',
@@ -7,7 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage {
-  constructor(private router: Router) {}
+  readonly selectInvitesMatchSessions$ =
+    this.matchSessionFacade.selectInvitesMatchSessions$;
+
+  constructor(
+    private router: Router,
+    private matchSessionFacade: MatchSessionFacade
+  ) {}
 
   getSegmentValue() {
     if (this.router.url.includes('tab1')) return 'tab1';

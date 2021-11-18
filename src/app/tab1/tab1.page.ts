@@ -5,10 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { MatchSessionSocketEvents } from '../data-layer/match-session/match-session.models';
-import { MatchSessionService } from '../data-layer/match-session/match-session.service';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 
 @Component({
@@ -43,7 +40,6 @@ export class Tab1Page implements OnInit, OnDestroy {
   async doRefresh($event) {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
-      console.log('done');
       $event.target.complete();
     });
   }

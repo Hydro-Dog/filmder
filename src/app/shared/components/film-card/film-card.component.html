@@ -1,11 +1,19 @@
 <div>
-  <div class="container">
+  <div *ngIf="showSpinner">
+    <ion-spinner
+      *ngIf="showSpinner"
+      class="d-flex m-auto m-t-30"
+      name="bubbles"
+    ></ion-spinner>
+  </div>
+  <div *ngIf="!showSpinner" class="container">
     <div class="background">
       <div @fadeAnimation class="overview p-x-30" *ngIf="showOverview">
-        <div>
+        <div class="overview-text">
           {{ film?.overview }}
         </div>
         <ion-icon
+          class="overview-button"
           size="large"
           name="chevron-down-circle"
           (click)="setShowOverview(false)"
@@ -17,15 +25,14 @@
           {{ film?.title }}
         </div>
         <ion-icon
+          class="overview-button"
           size="large"
           name="chevron-up-circle"
           (click)="setShowOverview(true)"
         ></ion-icon>
       </div>
     </div>
-    <img
-      [src]="'https://image.tmdb.org/t/p/original' + film?.poster_path"
-      alt=""
-    />
+
+    <img [src]="'https://image.tmdb.org/t/p/original' + film?.poster_path" />
   </div>
 </div>

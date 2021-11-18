@@ -7,6 +7,7 @@ import {
   getCurrentMatchSession,
   getMatchSessionsByUserId,
   resetStore,
+  setCurrentMatchSessionSuccess,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
   socketFilmsMatchSuccess,
@@ -73,6 +74,10 @@ export class MatchSessionFacade {
     return this.matchSessionEffects.updateMatchSessionSuccess$;
   }
 
+  setCurrentMatchSession(matchSession: MatchSession) {
+    this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
+  }
+
   deleteMatchSession(matchSessionId: number) {
     this.actions.dispatch(deleteMatchSession({ matchSessionId }));
   }
@@ -97,8 +102,6 @@ export class MatchSessionFacade {
   listenForServer() {
     this.socketMatchSessionSub.add(
       this.matchSessionService.listenForServer$.subscribe(({ message }) => {
-        console.log('socket says: ', message);
-
         switch (message.event) {
           case MatchSessionChangesEvents.Add:
             this.actions.dispatch(
@@ -109,7 +112,6 @@ export class MatchSessionFacade {
 
             break;
           case MatchSessionChangesEvents.ChangeStatus:
-            console.log('message: ', message);
             this.actions.dispatch(
               socketChangeMatchSessionSuccess({
                 matchSession: message.payload,

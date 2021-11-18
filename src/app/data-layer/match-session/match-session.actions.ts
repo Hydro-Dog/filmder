@@ -5,6 +5,13 @@ import {
   MatchSessionCO,
 } from './match-session.models';
 
+export const setCurrentMatchSessionSuccess = createAction(
+  '[Match Session] Set Current Match Session Success',
+  props<{
+    matchSession: MatchSession;
+  }>()
+);
+
 export const createMatchSession = createAction(
   '[Match Session] Create',
   props<{ matchSession: MatchSessionCO }>()

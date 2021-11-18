@@ -10,7 +10,6 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  {{ showApiMessage$ | async }}
   <div class="" [ngSwitch]="currentScreen$ | async">
     <div class="create-content" *ngSwitchCase="'create'">
       <div

@@ -11,13 +11,12 @@ import {
 import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSession } from '../../../data-layer/match-session/match-session.models';
-import { AlertConfirm, AlertComponentShared } from '../alert/alert.component';
+import { AlertComponentShared } from '../alert/alert.component';
 import {
   MatchDetailsDisplayMode,
   MatchDetailsModal,
   MatchDetailsModalActions,
 } from '../match-details-modal/match-details-modal.component';
-import { MatDialog } from '@angular/material/dialog';
 
 export enum MatchSessionsListTypes {
   Pending,

@@ -16,7 +16,9 @@
       </span>
     </ion-item>
     <ion-item-options side="end">
-      <ion-item-option (click)="delete(matchSession.id)"
+      <ion-item-option
+        *ngIf="matchSession.completed"
+        (click)="delete(matchSession.id)"
         >Delete</ion-item-option
       >
     </ion-item-options>

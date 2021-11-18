@@ -16,6 +16,7 @@ export interface ListOfMatchedFilmsModalData {
 })
 export class MatchedFilmsSummaryModalShared {
   @Input() matchedMovies: Film[];
+  @Input() closeButton = false;
 
   constructor(private modalController: ModalController) {}
 

@@ -25,6 +25,14 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.userFacade.selectUser$.subscribe((user) => {
+      if (user?.currentMatchSession) {
+        this.matchSessionFacade.getCurrentMatchSession(
+          user.currentMatchSession
+        );
+      }
+    });
+
     from(this.storageFacade.createStorage())
       .pipe(
         first(),

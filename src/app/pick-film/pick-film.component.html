@@ -19,9 +19,12 @@
   </ng-container>
 
   <ng-template #pickFilmScreen>
-    <ion-card style="height: 100wh">
-      <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
-    </ion-card>
+    <div class="pick-card" #pickCard style="height: 100wh">
+      <filmder-film-card
+        [showSpinner]="showSpinner$ | async"
+        [film]="currentFilm$ | async"
+      ></filmder-film-card>
+    </div>
   </ng-template>
 
   <div

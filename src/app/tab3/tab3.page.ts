@@ -67,6 +67,12 @@ export class Tab3Page implements OnInit, OnDestroy {
   );
   readonly saveChanges$ = new Subject();
   readonly destroy$ = new Subject();
+  initialFormValues: {
+    userName: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+  };
 
   constructor(
     private userQuery: UserQuery,
@@ -81,6 +87,7 @@ export class Tab3Page implements OnInit, OnDestroy {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
         const { userName, firstName, lastName, phoneNumber } = user;
+        this.initialFormValues = { userName, firstName, lastName, phoneNumber };
 
         this.profileSettingsForm.patchValue(
           {
@@ -117,6 +124,7 @@ export class Tab3Page implements OnInit, OnDestroy {
                 this.toastComponentShared.displayToast(errorMessages[0]);
               } else {
                 const updatedUser = this.profileSettingsForm.value;
+                this.initialFormValues = { ...this.profileSettingsForm.value };
                 this.userFacade.updateUser({ ...currentUser, ...updatedUser });
                 this.setViewMode(this.viewModes.View);
               }
@@ -153,6 +161,12 @@ export class Tab3Page implements OnInit, OnDestroy {
 
   saveChanges() {
     this.saveChanges$.next();
+    this.viewMode = ViewMode.View;
+  }
+
+  cancelClicked() {
+    this.setViewMode(ViewMode.View);
+    this.profileSettingsForm.patchValue(this.initialFormValues);
   }
 
   async doRefresh($event) {

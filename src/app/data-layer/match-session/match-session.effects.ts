@@ -15,6 +15,7 @@ import {
   getMatchSessionsByUserId,
   getMatchSessionsByUserIdSuccess,
   resetStore,
+  setCurrentMatchSessionSuccess,
   socketAddMatchSessionSuccess,
   socketChangeMatchSessionSuccess,
   socketFilmsMatchSuccess,
@@ -34,6 +35,24 @@ export class MatchSessionEffects {
     private matchSessionService: MatchSessionService,
     private matchSessionStore: MatchSessionStore
   ) {}
+
+  @Effect()
+  setCurrentMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(setCurrentMatchSessionSuccess),
+    tap(({ matchSession }) => {
+      return this.matchSessionStore.update((state) => {
+        const filmsSequence = matchSession.filmsSequenceJson.map((filmJson) =>
+          JSON.parse(filmJson)
+        );
+
+        return {
+          ...state,
+          matchSessionsLoading: false,
+          currentMatchSession: { ...matchSession, filmsSequence },
+        };
+      });
+    })
+  );
 
   updateMatchSession$ = createEffect(
     () =>
@@ -239,6 +258,7 @@ export class MatchSessionEffects {
         return {
           ...state,
           matchSessions: [],
+          currentMatchSession: null,
         };
       });
     })

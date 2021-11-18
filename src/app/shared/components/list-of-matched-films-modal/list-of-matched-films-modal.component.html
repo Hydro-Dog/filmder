@@ -1,4 +1,4 @@
-<div>
+<div class="modal-container">
   <h2 class="ta-c fc-grey m-b-10">
     <b> Matched films: {{ matchedMovies.length }} </b>
   </h2>
@@ -17,5 +17,14 @@
         [src]="'https://image.tmdb.org/t/p/original' + film.poster_path"
       />
     </div>
+  </div>
+  <div *ngIf="closeButton" class="close-icon-container w100 d-flex d-center">
+    <ion-fab-button>
+      <ion-icon
+        size="large"
+        (click)="closeModal()"
+        name="chevron-down-circle-outline"
+      ></ion-icon>
+    </ion-fab-button>
   </div>
 </div>

@@ -49,7 +49,6 @@ export class AuthEffects {
   logoutSuccess$ = this.actions$.pipe(
     ofType(logoutSuccess),
     tap(() => {
-      console.log();
       this.storageFacade.clearStorage();
 
       return this.userStore.update((state) => ({

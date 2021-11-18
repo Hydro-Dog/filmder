@@ -14,7 +14,6 @@ import {
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
-import { User } from '../data-layer/user/user.models';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
 
@@ -30,9 +29,11 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
-  readonly activeMatchSessionId$ = this.currentUser$.pipe(
-    map((user) => user.currentMatchSession)
-  );
+  readonly activeMatchSessionId$ =
+    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+      filter(Boolean),
+      map(({ id }) => id.toString())
+    );
   readonly matchesLoading$ =
     this.matchSessionFacade.selectMatchSessionsLoading$;
 
@@ -79,7 +80,6 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
         withLatestFrom(this.currentUser$)
       )
       .subscribe(([res, currentUser]) => {
-        console.log(res.matchSession.id, currentUser.currentMatchSession);
         if (+res.matchSession.id === +currentUser.currentMatchSession) {
           this.userFacade.updateUser({
             ...currentUser,
@@ -93,17 +93,9 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     this.navController.navigateBack('/tabs/tab1');
   }
 
-  // matchDeclined(matchSession: MatchSession) {
-  //   this.matchSessionFacade.updateMatchSession({
-  //     ...matchSession,
-  //     declined: true,
-  //   });
-  // }
-
   async doRefresh($event) {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
-      console.log('done');
       $event.target.complete();
     });
   }

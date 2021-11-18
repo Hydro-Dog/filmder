@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
       this.storageService.getItem(STORAGE_ITEMS.ACCESS_TOKEN_KEY)
     ).pipe(
       map((token) => {
-        console.log('token: ', token);
         return !!token;
       }),
       tap((hasToken) => {
@@ -25,7 +24,6 @@ export class AuthGuard implements CanActivate {
             this.router.url.includes('registration')
           ) {
           } else {
-            console.log('here');
             this.router.navigate(['/auth']);
           }
         }
