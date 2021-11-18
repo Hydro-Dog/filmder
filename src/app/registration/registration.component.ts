@@ -12,9 +12,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
+import { UserFacade } from '../data-layer/user/user.facade';
 import { User } from '../data-layer/user/user.models';
 import { AsyncValidatorsService } from '../services/async-validators.service';
 
@@ -26,21 +28,17 @@ import { AsyncValidatorsService } from '../services/async-validators.service';
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
   passwordsMissMatch: boolean;
-  showConfirmationScreen: boolean;
+  registerSentSuccessfully$ = new BehaviorSubject(false);
 
   registrationForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [
-        this.asyncValidatorsService.checkUserNameIsTakenRegStep.bind(this),
-      ],
+      asyncValidators: [this.checkUserNameIsTakenRegStep.bind(this)],
       updateOn: 'blur',
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
-      asyncValidators: [
-        this.asyncValidatorsService.checkEmailIsTakenValidator.bind(this),
-      ],
+      asyncValidators: [this.checkEmailIsTakenValidator.bind(this)],
       updateOn: 'blur',
     }),
     firstName: new FormControl('', {
@@ -68,22 +66,49 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   lastNameControl = this.registrationForm.controls.lastName;
   passwordControl = this.registrationForm.controls.password;
   passwordConfirmControl = this.registrationForm.controls.passwordConfirm;
+  shopPassword = false;
+  shopPasswordConfirm = false;
 
-  selectIdLoading$ = this.authQuery.selectIdLoading$;
-  selectIsLogin$ = this.authQuery.selectIsLogin$;
+  readonly registerClicked$ = new Subject();
   destroy$ = new Subject();
+  showSpinner$ = new BehaviorSubject(false);
 
   constructor(
     private navController: NavController,
     private authFacade: AuthFacade,
-    private authQuery: AuthQuery,
-    private asyncValidatorsService: AsyncValidatorsService
+    private userFacade: UserFacade
   ) {}
 
   ngOnInit() {
     this.registrationForm.controls['passwordConfirm'].setValidators(
       this.matchPasswordsValidator.bind(this)
     );
+
+    this.registerClicked$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => {
+          this.showSpinner$.next(true);
+          const user: User = {
+            userName: this.userNameControl.value,
+            email: this.emailControl.value,
+            firstName: this.firstNameControl.value,
+            lastName: this.lastNameControl.value,
+            password: this.passwordControl.value,
+            currentMatchSession: null,
+          };
+          return this.authFacade.register(user);
+        })
+      )
+      .subscribe(
+        (res) => {
+          this.registerSentSuccessfully$.next(true);
+          this.showSpinner$.next(false);
+        },
+        (err) => {
+          this.showSpinner$.next(false);
+        }
+      );
   }
 
   ngOnDestroy() {
@@ -158,5 +183,27 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     if (controlName === 'passwordConfirm') {
       return '(Different Passwords)';
     }
+  }
+
+  checkEmailIsTakenValidator(control: AbstractControl) {
+    console.log('THIS: ', this);
+    return this.userFacade.checkEmailIsTaken(control.value).pipe(
+      map(() => {
+        return null;
+      }),
+      catchError(() => of({ isTaken: true }))
+    );
+  }
+
+  checkUserNameIsTakenRegStep(control: AbstractControl) {
+    return this.userFacade.getByUsername(control.value).pipe(
+      switchMap((user) => {
+        console.log('user: ', user);
+        if (user) {
+          return of({ isTaken: true });
+        }
+        return of(null);
+      })
+    );
   }
 }

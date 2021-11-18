@@ -18,7 +18,8 @@ export class AuthFacade {
   constructor(
     private authQuery: AuthQuery,
     private userQuery: UserQuery,
-    private actions: Actions
+    private actions: Actions,
+    private authService: AuthService
   ) {
     this.selectIsLogin$ = this.authQuery.selectIsLogin$;
     this.selectError$ = this.userQuery.selectError$;
@@ -33,6 +34,6 @@ export class AuthFacade {
   }
 
   register(user: User) {
-    this.actions.dispatch(register({ user }));
+    return this.authService.registerUser(user);
   }
 }

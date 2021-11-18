@@ -45,7 +45,13 @@ export class UserFacade {
   }
 
   getByUsername(value: string) {
-    return this.userService.getByUsername(value).pipe(map((val) => val.user));
+    console.log('getByUsername: ', value);
+    return this.userService.getByUsername(value).pipe(
+      map((val) => {
+        console.log('val: ', val, val.user);
+        return val.user;
+      })
+    );
   }
 
   checkUserNameIsTaken(value: string) {

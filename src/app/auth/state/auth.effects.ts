@@ -58,23 +58,23 @@ export class AuthEffects {
     })
   );
 
-  register$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(register),
-        switchMap(({ user }) => {
-          this.authStore.update((state) => ({
-            ...state,
-            idLoading: true,
-          }));
+  // register$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(register),
+  //       switchMap(({ user }) => {
+  //         this.authStore.update((state) => ({
+  //           ...state,
+  //           idLoading: true,
+  //         }));
 
-          return this.authService
-            .registerUser(user)
-            .pipe(map((id) => registerSuccess(id)));
-        })
-      ),
-    { dispatch: true }
-  );
+  //         return this.authService
+  //           .registerUser(user)
+  //           .pipe(map((id) => registerSuccess(id)));
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
   login$ = createEffect(
     () =>
@@ -95,24 +95,24 @@ export class AuthEffects {
     { dispatch: true }
   );
 
-  @Effect()
-  registerSuccess$ = this.actions$.pipe(
-    ofType(registerSuccess),
-    map((x) => x.id),
-    tap((id) => {
-      return this.authStore.update((state) => ({
-        ...state,
-        id,
-        idLoading: false,
-      }));
-    })
-  );
+  // @Effect()
+  // registerSuccess$ = this.actions$.pipe(
+  //   ofType(registerSuccess),
+  //   map((x) => x.id),
+  //   tap((id) => {
+  //     return this.authStore.update((state) => ({
+  //       ...state,
+  //       id,
+  //       idLoading: false,
+  //     }));
+  //   })
+  // );
 
-  @Effect()
-  registerError$ = this.actions$.pipe(
-    ofType(registerError),
-    tap((error) => this.authStore.update((state) => ({ ...state, error })))
-  );
+  // @Effect()
+  // registerError$ = this.actions$.pipe(
+  //   ofType(registerError),
+  //   tap((error) => this.authStore.update((state) => ({ ...state, error })))
+  // );
 
   @Effect()
   loginSuccess$ = this.actions$.pipe(
