@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
+import { FirebaseAnalyticsService } from '../analytics/analytics.service';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
@@ -19,7 +20,8 @@ export class MatchesPendingComponent {
   constructor(
     private matchSessionFacade: MatchSessionFacade,
     private storageFacade: StorageFacade,
-    private navController: NavController
+    private navController: NavController,
+    private firebaseAnalyticsService: FirebaseAnalyticsService
   ) {}
 
   async ngOnInit() {
@@ -39,6 +41,10 @@ export class MatchesPendingComponent {
     this.matchSessionFacade.updateMatchSession({
       ...matchSession,
       declined: true,
+    });
+
+    this.firebaseAnalyticsService.logEvent('invite_declined', {
+      matchId: matchSession.id.toString(),
     });
   }
 

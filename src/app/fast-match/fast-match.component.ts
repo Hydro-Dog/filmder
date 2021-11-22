@@ -17,6 +17,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { FirebaseAnalyticsService } from '../analytics/analytics.service';
 import { GameModesFacade } from '../data-layer/game-mode/game-mode.facade';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
@@ -61,7 +62,8 @@ export class FastMatchComponent implements OnInit, OnDestroy {
     private userFacade: UserFacade,
     private userQuery: UserQuery,
     private matchSessionFacade: MatchSessionFacade,
-    private router: Router
+    private router: Router,
+    private firebaseAnalyticsService: FirebaseAnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -113,12 +115,20 @@ export class FastMatchComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        () => {
+        (matchSession) => {
           this.showSpinner$.next(false);
           this.currentScreen$.next('success');
+
+          this.firebaseAnalyticsService.logEvent('match_created', {
+            success: 'true',
+            matchId: matchSession.id.toString(),
+          });
         },
         ({ status }) => {
           this.showSpinner$.next(false);
+          this.firebaseAnalyticsService.logEvent('match_created', {
+            success: 'false',
+          });
           if (status === 418) {
             this.currentScreen$.next('error');
           }

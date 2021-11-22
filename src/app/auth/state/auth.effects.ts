@@ -6,6 +6,7 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
+import { FirebaseAnalyticsService } from '@src/app/analytics/analytics.service';
 import { UserStore } from '@src/app/data-layer/user/user.store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -16,9 +17,6 @@ import {
   loginSuccess,
   logout,
   logoutSuccess,
-  register,
-  registerError,
-  registerSuccess,
 } from './auth.actions';
 import { AuthService } from './auth.service';
 import { AuthStore } from './auth.store';
@@ -31,7 +29,8 @@ export class AuthEffects {
     private authService: AuthService,
     private authStore: AuthStore,
     private userStore: UserStore,
-    private storageFacade: StorageFacade
+    private storageFacade: StorageFacade,
+    private firebaseAnalyticsService: FirebaseAnalyticsService
   ) {}
 
   logout$ = createEffect(
@@ -58,24 +57,6 @@ export class AuthEffects {
     })
   );
 
-  // register$ = createEffect(
-  //   () =>
-  //     this.actions$.pipe(
-  //       ofType(register),
-  //       switchMap(({ user }) => {
-  //         this.authStore.update((state) => ({
-  //           ...state,
-  //           idLoading: true,
-  //         }));
-
-  //         return this.authService
-  //           .registerUser(user)
-  //           .pipe(map((id) => registerSuccess(id)));
-  //       })
-  //     ),
-  //   { dispatch: true }
-  // );
-
   login$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -83,7 +64,6 @@ export class AuthEffects {
         switchMap(({ userName, password }) => {
           this.authStore.update((state) => ({
             ...state,
-            userLoading: true,
           }));
 
           return this.authService.login(userName, password).pipe(
@@ -94,25 +74,6 @@ export class AuthEffects {
       ),
     { dispatch: true }
   );
-
-  // @Effect()
-  // registerSuccess$ = this.actions$.pipe(
-  //   ofType(registerSuccess),
-  //   map((x) => x.id),
-  //   tap((id) => {
-  //     return this.authStore.update((state) => ({
-  //       ...state,
-  //       id,
-  //       idLoading: false,
-  //     }));
-  //   })
-  // );
-
-  // @Effect()
-  // registerError$ = this.actions$.pipe(
-  //   ofType(registerError),
-  //   tap((error) => this.authStore.update((state) => ({ ...state, error })))
-  // );
 
   @Effect()
   loginSuccess$ = this.actions$.pipe(
@@ -132,12 +93,16 @@ export class AuthEffects {
       });
     }),
     map((x) => x.user),
+    tap((user) => {
+      this.firebaseAnalyticsService.setUser(user.id.toString());
+      this.firebaseAnalyticsService.logEvent('login', { method: 'username' });
+    }),
     tap((user) =>
       this.userStore.update((state) => {
         return {
           ...state,
-          user,
           userLoading: false,
+          user,
         };
       })
     )

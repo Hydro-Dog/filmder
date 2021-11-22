@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -23,7 +24,7 @@ import {
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   readonly toastPosition = ToastPosition;
   @ViewChild(ToastComponentShared)
   readonly toastComponentShared: ToastComponentShared;
@@ -39,9 +40,7 @@ export class LoginComponent implements OnInit {
   });
   readonly userNameControl = this.loginForm.get('userName');
   readonly passwordControl = this.loginForm.get('password');
-
   readonly user$ = this.userQuery.selectUser$;
-  readonly userLoading$ = this.authQuery.selectUserLoading$;
   readonly selectLoginError$ = this.authQuery.selectLoginError$;
   readonly showError$ = new BehaviorSubject(false);
   readonly destroy$ = new Subject();
@@ -89,6 +88,7 @@ export class LoginComponent implements OnInit {
       this.userNameControl.value,
       this.passwordControl.value
     );
+    this.loginForm.reset();
   }
 
   navigateBack() {
@@ -107,5 +107,9 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.controls[controlName].hasError('required')) {
       return '(Field required)';
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 }

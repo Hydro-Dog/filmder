@@ -5,6 +5,15 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:4000',
+  firebaseConfig: {
+    apiKey: 'AIzaSyDmDEyG0bzdepSZqmeHvM1I2wEVWPEvV84',
+    authDomain: 'filmder-aace1.firebaseapp.com',
+    projectId: 'filmder-aace1',
+    storageBucket: 'filmder-aace1.appspot.com',
+    messagingSenderId: '818532842793',
+    appId: '1:818532842793:web:379655b3af52e9b638cb38',
+    measurementId: 'G-34LHLBKSCE',
+  },
   // apiUrl: 'https://53ce-95-174-98-230.ngrok.io',
 };
 

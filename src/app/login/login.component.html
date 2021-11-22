@@ -42,11 +42,10 @@
           </div>
         </ion-item>
       </form>
+
       <ion-button
         class="d-flex"
-        [disabled]="
-          loginForm.invalid || (userLoading$ | async) || (userLoading$ | async)
-        "
+        [disabled]="loginForm.invalid"
         (click)="loginClicked()"
         >Login</ion-button
       >
