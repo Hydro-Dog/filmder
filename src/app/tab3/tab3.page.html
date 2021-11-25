@@ -24,10 +24,6 @@
       <ion-label> {{lastNameControl.value}} </ion-label>
     </ion-item>
     <ion-item>
-      <ion-label class="fw-600"> Phone </ion-label>
-      <ion-label> {{phoneNumberControl.value}} </ion-label>
-    </ion-item>
-    <ion-item>
       <ion-label class="fw-600"> Email </ion-label>
       <ion-label> {{(user$ | async)?.email}} </ion-label>
     </ion-item>
@@ -80,26 +76,6 @@
         </div>
 
         <ion-input type="text" formControlName="lastName"></ion-input>
-      </ion-item>
-      <ion-item>
-        <div class="d-flex d-column form-label">
-          <ion-label
-            [color]="isControlInvalid('phoneNumber') ? 'danger' : 'medium'"
-            class="form-label fw-600"
-          >
-            Phone
-          </ion-label>
-          <div>
-            {{ isControlInvalid("phoneNumber") ? getErrorMessage("phoneNumber")
-            : "" }}
-          </div>
-        </div>
-
-        <ion-input
-          type="text"
-          formControlName="phoneNumber"
-          maxlength="11"
-        ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label class="fc-grey fw-600"> Email </ion-label>

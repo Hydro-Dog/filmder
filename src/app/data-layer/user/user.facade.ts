@@ -45,10 +45,8 @@ export class UserFacade {
   }
 
   getByUsername(value: string) {
-    console.log('getByUsername: ', value);
     return this.userService.getByUsername(value).pipe(
       map((val) => {
-        console.log('val: ', val, val.user);
         return val.user;
       })
     );
@@ -56,10 +54,6 @@ export class UserFacade {
 
   checkUserNameIsTaken(value: string) {
     return this.userService.checkUserNameIsTaken(value);
-  }
-
-  checkPhoneNumberIsTaken(value: string) {
-    return this.userService.checkPhoneNumberIsTaken(value);
   }
 
   setCurrentMatchSessionSuccess(id: string) {

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4000',
+  // apiUrl: 'http://localhost:4000',
+  apiUrl: 'https://filmderapp.herokuapp.com',
   firebaseConfig: {
     apiKey: 'AIzaSyDmDEyG0bzdepSZqmeHvM1I2wEVWPEvV84',
     authDomain: 'filmder-aace1.firebaseapp.com',

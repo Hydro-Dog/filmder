@@ -18,21 +18,21 @@
           <ion-label>Waiting for acceptance</ion-label>
         </ion-chip>
       </div>
-      <div class="ta-c p-b-10">
+      <div ngSwitch="host" class="ta-c p-b-10">
         <b class="fc-grey">Created by: </b>
-        <span class="fc-black">{{ host }}</span>
+        <span class="fc-grey">{{ host }}</span>
       </div>
-      <div class="ta-c p-b-10">
+      <div ngSwitch="guest" class="ta-c p-b-10">
         <b class="fc-grey">Invited: </b>
-        <span class="fc-black">{{ guest }}</span>
+        <span class="fc-grey">{{ guest }}</span>
       </div>
       <div class="ta-c p-b-10">
         <b class="fc-grey">Category: </b>
-        <span class="fc-black">{{ category | startCase }}</span>
+        <span class="fc-grey">{{ category | startCase }}</span>
       </div>
       <div class="fc-grey ta-c p-b-40">
         <b class="fc-grey">Matches limit: </b>
-        <span class="fc-black">{{ matchLimit }}</span>
+        <span class="fc-grey">{{ matchLimit }}</span>
       </div>
     </div>
 

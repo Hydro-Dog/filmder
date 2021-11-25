@@ -161,7 +161,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectCurrentMatchSession$
       .pipe(takeUntil(this.destroy$))
       .subscribe((currentMatchSession) => {
-        if (currentMatchSession.completed) {
+        if (currentMatchSession?.completed) {
           this.firebaseAnalyticsService.logEvent('match_completed', {
             matchId: currentMatchSession.id.toString(),
           });

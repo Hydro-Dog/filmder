@@ -52,10 +52,4 @@ export class UserService {
       params,
     });
   }
-
-  checkPhoneNumberIsTaken(phoneNumber: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/api/users/checkPhoneNumber`, {
-      phoneNumber,
-    });
-  }
 }

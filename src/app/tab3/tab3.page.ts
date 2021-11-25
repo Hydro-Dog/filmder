@@ -51,15 +51,12 @@ export class Tab3Page implements OnInit, OnDestroy {
     lastName: new FormControl('', {
       validators: [Validators.required],
     }),
-    phoneNumber: new FormControl('', {
-      updateOn: 'blur',
-    }),
   });
 
   readonly userNameControl = this.profileSettingsForm.get('userName');
   readonly firstNameControl = this.profileSettingsForm.get('firstName');
   readonly lastNameControl = this.profileSettingsForm.get('lastName');
-  readonly phoneNumberControl = this.profileSettingsForm.get('phoneNumber');
+
   readonly viewModes = ViewMode;
 
   readonly user$ = this.userQuery.selectUser$.pipe(
@@ -71,7 +68,6 @@ export class Tab3Page implements OnInit, OnDestroy {
     userName: string;
     firstName: string;
     lastName: string;
-    phoneNumber: string;
   };
 
   constructor(
@@ -86,15 +82,14 @@ export class Tab3Page implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        const { userName, firstName, lastName, phoneNumber } = user;
-        this.initialFormValues = { userName, firstName, lastName, phoneNumber };
+        const { userName, firstName, lastName } = user;
+        this.initialFormValues = { userName, firstName, lastName };
 
         this.profileSettingsForm.patchValue(
           {
             userName,
             firstName,
             lastName,
-            phoneNumber,
           },
           { emitEvent: false, onlySelf: true }
         );
@@ -110,9 +105,6 @@ export class Tab3Page implements OnInit, OnDestroy {
           return forkJoin([
             this.userFacade
               .checkUserNameIsTaken(this.userNameControl.value)
-              .pipe(catchError((e) => of(e))),
-            this.userFacade
-              .checkPhoneNumberIsTaken(this.phoneNumberControl.value)
               .pipe(catchError((e) => of(e))),
           ]).pipe(
             withLatestFrom(this.userFacade.selectUser$),

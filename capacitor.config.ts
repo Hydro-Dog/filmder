@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.filmder.ionic',
-  appName: 'filmder',
+  appName: 'Filmder',
   webDir: 'www',
   bundledWebRuntime: false,
 };

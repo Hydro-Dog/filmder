@@ -27,13 +27,4 @@ export class AsyncValidatorsService {
       })
     );
   }
-
-  checkPhoneNumberIsTakenValidator(control: AbstractControl) {
-    return this.userFacade.checkPhoneNumberIsTaken(control.value).pipe(
-      map(() => {
-        return null;
-      }),
-      catchError(() => of({ isTaken: true }))
-    );
-  }
 }

@@ -84,8 +84,8 @@ export class MatchesListComponentShared implements OnInit, OnDestroy {
       swipeToClose: true,
       componentProps: {
         displayMode,
-        host: matchSession.host.userName,
-        guest: matchSession.guest.userName,
+        host: matchSession.host?.userName,
+        guest: matchSession.guest?.userName,
         region: matchSession.region,
         category: matchSession.category,
         matchLimit: matchSession.matchLimit,

@@ -43,7 +43,7 @@ export class MatchesPendingComponent {
       declined: true,
     });
 
-    this.firebaseAnalyticsService.logEvent('invite_declined', {
+    this.firebaseAnalyticsService.logEvent('match_declined', {
       matchId: matchSession.id.toString(),
     });
   }

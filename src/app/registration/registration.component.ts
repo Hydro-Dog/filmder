@@ -186,7 +186,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   checkEmailIsTakenValidator(control: AbstractControl) {
-    console.log('THIS: ', this);
     return this.userFacade.checkEmailIsTaken(control.value).pipe(
       map(() => {
         return null;
@@ -198,7 +197,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   checkUserNameIsTakenRegStep(control: AbstractControl) {
     return this.userFacade.getByUsername(control.value).pipe(
       switchMap((user) => {
-        console.log('user: ', user);
         if (user) {
           return of({ isTaken: true });
         }
