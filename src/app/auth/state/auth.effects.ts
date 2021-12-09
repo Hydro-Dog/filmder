@@ -6,7 +6,6 @@ import {
   ofType,
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
-import { FirebaseAnalyticsService } from '@src/app/analytics/analytics.service';
 import { UserStore } from '@src/app/data-layer/user/user.store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -29,8 +28,7 @@ export class AuthEffects {
     private authService: AuthService,
     private authStore: AuthStore,
     private userStore: UserStore,
-    private storageFacade: StorageFacade,
-    private firebaseAnalyticsService: FirebaseAnalyticsService
+    private storageFacade: StorageFacade
   ) {}
 
   logout$ = createEffect(
@@ -93,10 +91,7 @@ export class AuthEffects {
       });
     }),
     map((x) => x.user),
-    tap((user) => {
-      this.firebaseAnalyticsService.setUser(user.id.toString());
-      this.firebaseAnalyticsService.logEvent('login', { method: 'username' });
-    }),
+    tap((user) => {}),
     tap((user) =>
       this.userStore.update((state) => {
         return {

@@ -25,7 +25,6 @@ import {
   takeUntil,
   withLatestFrom,
 } from 'rxjs/operators';
-import { FirebaseAnalyticsService } from '../analytics/analytics.service';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { MatchedFilmsSummaryModalShared } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
@@ -86,8 +85,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     private gestureCtrl: GestureController,
     private platform: Platform,
     private router: Router,
-    public modalController: ModalController,
-    private firebaseAnalyticsService: FirebaseAnalyticsService
+    public modalController: ModalController
   ) {}
 
   ngOnInit(): void {
@@ -160,13 +158,7 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.selectCurrentMatchSession$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((currentMatchSession) => {
-        if (currentMatchSession?.completed) {
-          this.firebaseAnalyticsService.logEvent('match_completed', {
-            matchId: currentMatchSession.id.toString(),
-          });
-        }
-      });
+      .subscribe((currentMatchSession) => {});
   }
 
   ngAfterViewInit(): void {

@@ -1,0 +1,28 @@
+<div class="container">
+  <ion-button [routerLink]="['/login']" size="large" expand="block" fill="solid"
+    >Login</ion-button
+  >
+  <ion-button
+    [routerLink]="['/registration']"
+    size="large"
+    expand="block"
+    fill="clear"
+    >Registration</ion-button
+  >
+  <div class="d-flex d-middle d-center p-t-20">
+    <ion-icon
+      class="p-r-10"
+      size="large"
+      name="logo-google"
+      color="medium"
+      (click)="googleSignIn()"
+    ></ion-icon>
+    <ion-icon
+      class="p-l-10"
+      size="large"
+      name="logo-vk"
+      color="medium"
+      (click)="goExternal('vkontakte')"
+    ></ion-icon>
+  </div>
+</div>

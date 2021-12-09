@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthComponent } from './auth.component';
+import { StartScreenComponent } from './start-screen.component';
 
 const routes = [
   {
     path: '',
-    component: AuthComponent,
+    component: StartScreenComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class AuthRoutingModule {}
+export class StartScreenRoutingModule {}

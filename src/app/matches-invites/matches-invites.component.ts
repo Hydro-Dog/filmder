@@ -9,7 +9,6 @@ import {
   takeUntil,
   withLatestFrom,
 } from 'rxjs/operators';
-import { FirebaseAnalyticsService } from '../analytics/analytics.service';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 import { MatchSession } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
@@ -35,8 +34,7 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
     private matchSessionFacade: MatchSessionFacade,
     private userFacade: UserFacade,
     private storageFacade: StorageFacade,
-    private navController: NavController,
-    private firebaseAnalyticsService: FirebaseAnalyticsService
+    private navController: NavController
   ) {}
 
   async ngOnInit() {
@@ -61,10 +59,6 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
           currentMatchSession: res.matchSession.id.toString(),
         });
         this.matchSessionFacade.setCurrentMatchSession(res.matchSession);
-
-        this.firebaseAnalyticsService.logEvent('invite_accepted', {
-          matchId: res.matchSession.id.toString(),
-        });
       });
   }
 
@@ -76,10 +70,6 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
     this.matchSessionFacade.updateMatchSession({
       ...matchSession,
       declined: true,
-    });
-
-    this.firebaseAnalyticsService.logEvent('invite_declined', {
-      matchId: matchSession.id.toString(),
     });
   }
 

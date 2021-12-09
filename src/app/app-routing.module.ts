@@ -10,8 +10,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+    path: 'start-screen',
+    loadChildren: () =>
+      import('./start-screen/start-screen.module').then(
+        (m) => m.StartScreenModule
+      ),
   },
   {
     path: 'login',

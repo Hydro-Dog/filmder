@@ -4,8 +4,13 @@
 
 export const environment = {
   production: false,
-  // apiUrl: 'http://localhost:4000',
-  apiUrl: 'https://filmderapp.herokuapp.com',
+  apiUrl: 'http://localhost:4000',
+  // apiUrl: 'https://filmderapp.herokuapp.com',
+  GOOGLE_CLIENT_ID:
+    '605145599598-au908pgrhia5a3mout5e77vtf2hvfh3s.apps.googleusercontent.com',
+  GOOGLE_CLIENT_SECRET: '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',
+  VKONTAKTE_CLIENT_ID: '8021066',
+  VKONTAKTE_CLIENT_SECRET: '1Gb0Sw053LByl2lxckVy',
   firebaseConfig: {
     apiKey: 'AIzaSyDmDEyG0bzdepSZqmeHvM1I2wEVWPEvV84',
     authDomain: 'filmder-aace1.firebaseapp.com',
