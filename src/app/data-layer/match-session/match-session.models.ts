@@ -1,6 +1,6 @@
 import { ID } from '@datorama/akita';
 import { Film } from '../film/film.models';
-import { User } from '../user/user.models';
+import { UserEntity } from '../user/user.models';
 
 //CO - create object
 export interface MatchSessionCO {
@@ -15,8 +15,8 @@ export interface MatchSession {
   category: string;
   filmsSequenceJson: string[];
   filmsSequence: Film[];
-  host: User;
-  guest: User;
+  host: UserEntity;
+  guest: UserEntity;
   lang: string;
   hostCurrentFilmIndex: number;
   guestCurrentFilmIndex: number;

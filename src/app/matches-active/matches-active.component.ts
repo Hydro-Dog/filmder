@@ -22,12 +22,12 @@ import { MatchSessionsListTypes } from '../shared/components/film-matches-list/m
 })
 export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectActiveMatchSessions$ =
-    this.matchSessionFacade.selectActiveMatchSessions$;
-  readonly currentUser$ = this.userFacade.selectUser$.pipe(
-    filter((x) => !!x),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+  // readonly selectActiveMatchSessions$ =
+  //   this.matchSessionFacade.selectActiveMatchSessions$;
+  // readonly currentUser$ = this.userFacade.selectUser$.pipe(
+  //   filter((x) => !!x),
+  //   shareReplay({ refCount: true, bufferSize: 1 })
+  // );
 
   readonly activeMatchSessionId$ =
     this.matchSessionFacade.selectCurrentMatchSession$.pipe(
@@ -49,44 +49,44 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.continueMatch$
-      .pipe(
-        withLatestFrom(this.currentUser$),
-        takeUntil(this.destroy$),
-        tap(([matchSession, currentUser]) => {
-          this.userFacade.updateUser({
-            ...currentUser,
-            currentMatchSession: matchSession.id.toString(),
-          });
-        }),
-        delay(300)
-      )
-      .subscribe(() => {
-        this.navController.navigateRoot('/tabs/tab2/current-match');
-      });
+    // this.continueMatch$
+    //   .pipe(
+    //     withLatestFrom(this.currentUser$),
+    //     takeUntil(this.destroy$),
+    //     tap(([matchSession, currentUser]) => {
+    //       this.userFacade.updateUser({
+    //         ...currentUser,
+    //         currentMatchSession: matchSession.id.toString(),
+    //       });
+    //     }),
+    //     delay(300)
+    //   )
+    //   .subscribe(() => {
+    //     this.navController.navigateRoot('/tabs/tab2/current-match');
+    //   });
 
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
 
-    this.matchDeclined$
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((matchSession) => {
-          return this.matchSessionFacade.updateMatchSession({
-            ...matchSession,
-            declined: true,
-          });
-        }),
-        withLatestFrom(this.currentUser$)
-      )
-      .subscribe(([res, currentUser]) => {
-        if (+res.matchSession.id === +currentUser.currentMatchSession) {
-          this.userFacade.updateUser({
-            ...currentUser,
-            currentMatchSession: '',
-          });
-        }
-      });
+    // this.matchDeclined$
+    //   .pipe(
+    //     takeUntil(this.destroy$),
+    //     switchMap((matchSession) => {
+    //       return this.matchSessionFacade.updateMatchSession({
+    //         ...matchSession,
+    //         declined: true,
+    //       });
+    //     }),
+    //     withLatestFrom(this.currentUser$)
+    //   )
+    //   .subscribe(([res, currentUser]) => {
+    //     if (+res.matchSession.id === +currentUser.currentMatchSession) {
+    //       this.userFacade.updateUser({
+    //         ...currentUser,
+    //         currentMatchSession: '',
+    //       });
+    //     }
+    //   });
   }
 
   navigateBack() {

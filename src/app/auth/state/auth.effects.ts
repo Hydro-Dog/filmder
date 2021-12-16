@@ -50,7 +50,7 @@ export class AuthEffects {
 
       return this.userStore.update((state) => ({
         ...state,
-        user: null,
+        currentUser: null,
       }));
     })
   );
@@ -59,12 +59,12 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(login),
-        switchMap(({ userName, password }) => {
+        switchMap(({ email, password }) => {
           this.authStore.update((state) => ({
             ...state,
           }));
 
-          return this.authService.login(userName, password).pipe(
+          return this.authService.login(email, password).pipe(
             map((user) => loginSuccess({ user })),
             catchError((error) => of(loginError({ error })))
           );
@@ -96,8 +96,8 @@ export class AuthEffects {
       this.userStore.update((state) => {
         return {
           ...state,
-          userLoading: false,
-          user,
+          currentUserLoading: false,
+          currentUser: user,
         };
       })
     )

@@ -20,12 +20,12 @@ import { MatchSessionsListTypes } from '../shared/components/film-matches-list/m
 })
 export class MatchesInvitesComponent implements OnInit, OnDestroy {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectInvitesMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions$;
-  readonly currentUser$ = this.userFacade.selectUser$.pipe(
-    filter((x) => !!x),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+  // readonly selectInvitesMatchSessions$ =
+  //   this.matchSessionFacade.selectInvitesMatchSessions$;
+  // readonly currentUser$ = this.userFacade.selectUser$.pipe(
+  //   filter((x) => !!x),
+  //   shareReplay({ refCount: true, bufferSize: 1 })
+  // );
 
   readonly inviteAccepted$ = new Subject<MatchSession>();
   readonly destroy$ = new Subject();
@@ -41,25 +41,25 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
     const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
     this.matchSessionFacade.getMatchSessionsByUserId(id);
 
-    this.inviteAccepted$
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((matchSession) => {
-          return this.matchSessionFacade.updateMatchSession({
-            ...matchSession,
-            accepted: true,
-          });
-        }),
-        withLatestFrom(this.currentUser$)
-      )
-      .subscribe(([res, currentUser]) => {
-        this.navController.navigateRoot('/tabs/tab2/current-match');
-        this.userFacade.updateUser({
-          ...currentUser,
-          currentMatchSession: res.matchSession.id.toString(),
-        });
-        this.matchSessionFacade.setCurrentMatchSession(res.matchSession);
-      });
+    // this.inviteAccepted$
+    //   .pipe(
+    //     takeUntil(this.destroy$),
+    //     switchMap((matchSession) => {
+    //       return this.matchSessionFacade.updateMatchSession({
+    //         ...matchSession,
+    //         accepted: true,
+    //       });
+    //     }),
+    //     withLatestFrom(this.currentUser$)
+    //   )
+    //   .subscribe(([res, currentUser]) => {
+    //     this.navController.navigateRoot('/tabs/tab2/current-match');
+    //     this.userFacade.updateUser({
+    //       ...currentUser,
+    //       currentMatchSession: res.matchSession.id.toString(),
+    //     });
+    //     this.matchSessionFacade.setCurrentMatchSession(res.matchSession);
+    //   });
   }
 
   navigateBack() {

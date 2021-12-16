@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "255441888155",
+    "project_id": "filmder-4849e",
+    "storage_bucket": "filmder-4849e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255441888155:android:b08531a57da82e0670773e",
+        "android_client_info": {
+          "package_name": "com.filmder.ionic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255441888155-rfqbeoesoo2i91ocho4h80mq7cd8otbm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.filmder.ionic",
+            "certificate_hash": "333512835ab1758f6511f0b99627afab9b8e78d4"
+          }
+        },
+        {
+          "client_id": "594455133700-9mncrvto2cnnqg0tk1bfo0bf4pjp0598.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmCAbJNGXATV2DLiwMXbMPQTdQIK_GSZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594455133700-9mncrvto2cnnqg0tk1bfo0bf4pjp0598.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

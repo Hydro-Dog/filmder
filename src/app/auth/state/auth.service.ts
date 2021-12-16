@@ -2,25 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
-import { UserRO } from '@src/app/data-layer/user/user.models';
+import { UserEntity } from '@src/app/data-layer/user/user.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(private http: HttpClient) {}
 
   logout() {
-    return this.http.post<UserRO>(`${environment.apiUrl}/logout`, {});
+    return this.http.post<UserEntity>(`${environment.apiUrl}/logout`, {});
   }
 
-  login(userName: string, password: string): Observable<UserRO> {
-    return this.http.post<UserRO>(`${environment.apiUrl}/login`, {
-      userName,
+  login(email: string, password: string): Observable<UserEntity> {
+    return this.http.post<UserEntity>(`${environment.apiUrl}/login`, {
+      email,
       password,
     });
   }
 
-  refresh(refreshToken: string, headers: HttpHeaders): Observable<UserRO> {
-    return this.http.post<UserRO>(
+  refresh(refreshToken: string, headers: HttpHeaders): Observable<UserEntity> {
+    return this.http.post<UserEntity>(
       `${environment.apiUrl}/refresh`,
       {
         refreshToken,

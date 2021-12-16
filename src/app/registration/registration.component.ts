@@ -17,7 +17,7 @@ import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { AuthQuery } from '../auth/state/auth.query';
 import { UserFacade } from '../data-layer/user/user.facade';
-import { User } from '../data-layer/user/user.models';
+import { CreateUserDTO, UserEntity } from '../data-layer/user/user.models';
 import { AsyncValidatorsService } from '../services/async-validators.service';
 
 @Component({
@@ -33,12 +33,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm = new FormGroup({
     userName: new FormControl('', {
       validators: Validators.required,
-      asyncValidators: [this.checkUserNameIsTakenRegStep.bind(this)],
+      asyncValidators: [this.findByUsername.bind(this)],
       updateOn: 'blur',
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
-      asyncValidators: [this.checkEmailIsTakenValidator.bind(this)],
+      asyncValidators: [this.findByEmail.bind(this)],
       updateOn: 'blur',
     }),
     firstName: new FormControl('', {
@@ -89,23 +89,22 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         switchMap(() => {
           this.showSpinner$.next(true);
-          const user: User = {
-            userName: this.userNameControl.value,
+          const user: CreateUserDTO = {
+            username: this.userNameControl.value,
             email: this.emailControl.value,
             firstName: this.firstNameControl.value,
             lastName: this.lastNameControl.value,
             password: this.passwordControl.value,
-            currentMatchSession: null,
           };
           return this.authFacade.register(user);
         })
       )
       .subscribe(
-        (res) => {
+        () => {
           this.registerSentSuccessfully$.next(true);
           this.showSpinner$.next(false);
         },
-        (err) => {
+        () => {
           this.showSpinner$.next(false);
         }
       );
@@ -115,17 +114,16 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.destroy$.next();
   }
 
-  registerClicked() {
-    const user: User = {
-      userName: this.userNameControl.value,
-      email: this.emailControl.value,
-      firstName: this.firstNameControl.value,
-      lastName: this.lastNameControl.value,
-      password: this.passwordControl.value,
-      currentMatchSession: null,
-    };
-    this.authFacade.register(user);
-  }
+  // registerClicked() {
+  //   const user: CreateUserDTO = {
+  //     username: this.userNameControl.value,
+  //     email: this.emailControl.value,
+  //     firstName: this.firstNameControl.value,
+  //     lastName: this.lastNameControl.value,
+  //     password: this.passwordControl.value,
+  //   };
+  //   this.authFacade.register(user);
+  // }
 
   matchPasswordsValidator(control: AbstractControl): ValidationErrors {
     return control.value !== this.passwordControl.value
@@ -185,23 +183,43 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkEmailIsTakenValidator(control: AbstractControl) {
-    return this.userFacade.checkEmailIsTaken(control.value).pipe(
-      map(() => {
-        return null;
+  findByUsername(formControl: FormControl) {
+    const query = { username: formControl.value };
+    return this.userFacade.getUser(query).pipe(
+      switchMap(() => {
+        return of({ isTaken: true });
       }),
-      catchError(() => of({ isTaken: true }))
+      catchError(() => of())
     );
   }
 
-  checkUserNameIsTakenRegStep(control: AbstractControl) {
-    return this.userFacade.getByUsername(control.value).pipe(
-      switchMap((user) => {
-        if (user) {
-          return of({ isTaken: true });
-        }
-        return of(null);
-      })
+  findByEmail(formControl: FormControl) {
+    const query = { email: formControl.value };
+    return this.userFacade.getUser(query).pipe(
+      switchMap(() => {
+        return of({ isTaken: true });
+      }),
+      catchError(() => of())
     );
   }
+
+  // checkEmailIsTakenValidator(control: AbstractControl) {
+  //   return this.userFacade.checkEmailIsTaken(control.value).pipe(
+  //     map(() => {
+  //       return null;
+  //     }),
+  //     catchError(() => of({ isTaken: true }))
+  //   );
+  // }
+
+  // checkUserNameIsTakenRegStep(control: AbstractControl) {
+  //   return this.userFacade.getByUsername(control.value).pipe(
+  //     switchMap((user) => {
+  //       if (user) {
+  //         return of({ isTaken: true });
+  //       }
+  //       return of(null);
+  //     })
+  //   );
+  // }
 }

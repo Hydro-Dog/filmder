@@ -4,19 +4,21 @@ import { Actions } from '@datorama/akita-ng-effects';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import {
+  getCurrentUser,
   getUser,
   resetStore,
   setCurrentMatchSessionSuccess,
   updateUser,
 } from './user.actions';
 import { UserEffects } from './user.effects';
-import { User } from './user.models';
+import { UserEntity } from './user.models';
+// import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserFacade {
-  readonly selectUser$: Observable<User> = this.userQuery.selectUser$;
+  readonly selectUser$: Observable<UserEntity> = this.userQuery.selectUser$;
   readonly selectError$: Observable<any> = this.userQuery.selectError$;
 
   constructor(
@@ -26,39 +28,54 @@ export class UserFacade {
     private actions: Actions
   ) {}
 
-  resetStore() {
-    this.actions.dispatch(resetStore());
+  getUser(query: Partial<UserEntity>) {
+    return this.userService.getUser(query);
   }
 
-  getUser(userId: ID) {
-    this.actions.dispatch(getUser({ userId }));
+  getCurrentUser() {
+    console.log('getCurrentUser');
+    this.actions.dispatch(getCurrentUser());
 
-    return this.userEffects.getUserSuccess$;
+    return this.userEffects.getCurrentUser$;
   }
 
-  updateUser(user: Partial<User>) {
-    this.actions.dispatch(updateUser({ user }));
-  }
+  // resetStore() {
+  //   this.actions.dispatch(resetStore());
+  // }
 
-  checkEmailIsTaken(value: string) {
-    return this.userService.checkEmailIsTaken(value);
-  }
+  // getUser(userId: ID) {
+  //   this.actions.dispatch(getUser({ userId }));
 
-  getByUsername(value: string) {
-    return this.userService.getByUsername(value).pipe(
-      map((val) => {
-        return val.user;
-      })
-    );
-  }
+  //   return this.userEffects.getUserSuccess$;
+  // }
 
-  checkUserNameIsTaken(value: string) {
-    return this.userService.checkUserNameIsTaken(value);
-  }
+  // updateUser(user: Partial<User>) {
+  //   this.actions.dispatch(updateUser({ user }));
+  // }
 
-  setCurrentMatchSessionSuccess(id: string) {
-    this.actions.dispatch(setCurrentMatchSessionSuccess({ id }));
+  //  getUser(value: string) {
+  //   return this.userService.checkUserNameIsTaken(value);
+  // }
 
-    return of(true).pipe(delay(500));
-  }
+  // checkEmailIsTaken(value: string) {
+  //   return this.userService.checkEmailIsTaken(value);
+  // }
+
+  // getByUsername(value: string) {
+  //   return this.userService.getByUsername(value).pipe(
+  //     map((val) => {
+  //       return val.user;
+  //     })
+  //   );
+  // }
+
+  // checkUserNameIsTaken(value: string) {
+  //   return this.userService.checkUserNameIsTaken(value);
+  // }
+
+  // setCurrentMatchSessionSuccess(id: string) {
+  //   this.actions.dispatch(setCurrentMatchSessionSuccess({ id }));
+
+  //   return of(true).pipe(delay(500));
+  // }
 }

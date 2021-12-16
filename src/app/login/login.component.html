@@ -11,14 +11,14 @@
       <form [formGroup]="loginForm" class="m-b-40">
         <ion-item lines="full">
           <ion-label
-            [color]="isControlInvalid('userName') ? 'danger' : 'dark'"
+            [color]="isControlInvalid('email') ? 'danger' : 'dark'"
             position="floating"
-            >User name
+            >Email
             {{
-              isControlInvalid("userName") ? getErrorMessage("userName") : ""
+              isControlInvalid("email") ? getErrorMessage("email") : ""
             }}</ion-label
           >
-          <ion-input formControlName="userName" type="text"></ion-input>
+          <ion-input formControlName="email" type="text"></ion-input>
         </ion-item>
         <ion-item lines="full">
           <ion-label
@@ -52,6 +52,6 @@
     </div>
   </div>
 
-  <div *ngIf="showError$ | async">Invalid Username or Password</div>
+  <div *ngIf="showError$ | async">Invalid Email or Password</div>
   <filmder-toast [position]="'bottom'"></filmder-toast>
 </ion-content>

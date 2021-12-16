@@ -11,8 +11,8 @@ import { MatchSessionsListTypes } from '../shared/components/film-matches-list/m
 })
 export class MatchesPendingComponent {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectPendingMatchSessions$ =
-    this.matchSessionFacade.selectPendingMatchSessions$;
+  // readonly selectPendingMatchSessions$ =
+  //   this.matchSessionFacade.selectPendingMatchSessions$;
 
   readonly destroy$ = new Subject();
 

@@ -1,20 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { UserFacade } from '../data-layer/user/user.facade';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
 })
-export class TabsPage {
-  readonly selectInvitesMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions$;
+export class TabsPage implements OnInit {
+  // readonly selectInvitesMatchSessions$ =
+  //   this.matchSessionFacade.selectInvitesMatchSessions$;
 
-  constructor(
-    private router: Router,
-    private matchSessionFacade: MatchSessionFacade
-  ) {}
+  constructor(private router: Router, private userFacade: UserFacade) {}
+
+  ngOnInit(): void {
+    this.userFacade.getCurrentUser();
+  }
 
   getSegmentValue() {
     if (this.router.url.includes('tab1')) return 'tab1';

@@ -99,38 +99,38 @@ export class Tab3Page implements OnInit, OnDestroy {
       }
     });
 
-    this.saveChanges$
-      .pipe(
-        switchMap(() => {
-          return forkJoin([
-            this.userFacade
-              .checkUserNameIsTaken(this.userNameControl.value)
-              .pipe(catchError((e) => of(e))),
-          ]).pipe(
-            withLatestFrom(this.userFacade.selectUser$),
-            tap(([err, currentUser]) => {
-              const errorMessages = (err as ApiError[])
-                .filter((x) => x.error)
-                .map((x) => x.error.message);
-              if (errorMessages.length) {
-                this.toastComponentShared.displayToast(errorMessages[0]);
-              } else {
-                const updatedUser = this.profileSettingsForm.value;
-                this.initialFormValues = { ...this.profileSettingsForm.value };
-                this.userFacade.updateUser({ ...currentUser, ...updatedUser });
-                this.setViewMode(this.viewModes.View);
-              }
-            })
-          );
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
+    // this.saveChanges$
+    //   .pipe(
+    //     switchMap(() => {
+    //       return forkJoin([
+    //         this.userFacade
+    //           .checkUserNameIsTaken(this.userNameControl.value)
+    //           .pipe(catchError((e) => of(e))),
+    //       ]).pipe(
+    //         withLatestFrom(this.userFacade.selectUser$),
+    //         tap(([err, currentUser]) => {
+    //           const errorMessages = (err as ApiError[])
+    //             .filter((x) => x.error)
+    //             .map((x) => x.error.message);
+    //           if (errorMessages.length) {
+    //             this.toastComponentShared.displayToast(errorMessages[0]);
+    //           } else {
+    //             const updatedUser = this.profileSettingsForm.value;
+    //             this.initialFormValues = { ...this.profileSettingsForm.value };
+    //             this.userFacade.updateUser({ ...currentUser, ...updatedUser });
+    //             this.setViewMode(this.viewModes.View);
+    //           }
+    //         })
+    //       );
+    //     }),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe();
   }
 
   logOut() {
     this.authFacade.logout();
-    this.userFacade.resetStore();
+    // this.userFacade.resetStore();
     this.router.navigate(['/auth']);
   }
 

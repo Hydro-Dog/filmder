@@ -2,12 +2,12 @@
   <ion-segment scrollable [value]="getSegmentValue()">
     <ion-segment-button routerLink="/tabs/tab1" value="tab1">
       <ion-icon name="list-circle"></ion-icon>
-      <ion-badge
+      <!-- <ion-badge
         color="warning"
         class="counter"
         *ngIf="(selectInvitesMatchSessions$ | async).length"
         >{{(selectInvitesMatchSessions$ | async).length}}</ion-badge
-      >
+      > -->
     </ion-segment-button>
     <ion-segment-button routerLink="/tabs/tab2" value="tab2">
       <ion-icon name="film-outline"></ion-icon>

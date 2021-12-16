@@ -1,5 +1,5 @@
 import { createAction, props } from '@datorama/akita-ng-effects';
-import { User, UserRO } from '@src/app/data-layer/user/user.models';
+import { UserEntity } from '@src/app/data-layer/user/user.models';
 
 export const logout = createAction('[Auth] Log Out');
 
@@ -14,13 +14,13 @@ export const logoutError = createAction(
 
 export const login = createAction(
   '[Auth] Login',
-  props<{ userName: string; password: string }>()
+  props<{ email: string; password: string }>()
 );
 
 export const loginSuccess = createAction(
   '[Auth] Login Success',
   props<{
-    user: UserRO;
+    user: UserEntity;
   }>()
 );
 
@@ -33,7 +33,7 @@ export const loginError = createAction(
 
 export const register = createAction(
   '[Auth] Register',
-  props<{ user: User }>()
+  props<{ user: UserEntity }>()
 );
 
 export const registerSuccess = createAction(

@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { UserRO } from './user.models';
 
 export interface UserState {
-  user: UserRO | null;
+  currentUser: any | null;
   error: any;
-  userLoading: boolean;
+  currentUserLoading: boolean;
 }
 
 export function createInitialState(): UserState {
   return {
-    user: null,
+    currentUser: null,
     error: null,
-    userLoading: false,
+    currentUserLoading: false,
   };
 }
 

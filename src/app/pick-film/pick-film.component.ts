@@ -43,25 +43,25 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly matchDetailsModalActions = MatchDetailsModalActions;
 
-  readonly selectFilms$ = this.userFacade.selectUser$;
+  // readonly selectFilms$ = this.userFacade.selectUser$;
 
-  readonly currentFilm$ =
-    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
-      shareReplay({ refCount: true, bufferSize: 1 }),
-      filter((x) => !!x),
-      withLatestFrom(this.userFacade.selectUser$),
-      map(([matchSession, selectUser]) => {
-        if (selectUser.id === matchSession.host.id) {
-          this.showSpinner$.next(false);
-          return matchSession?.filmsSequence[matchSession.hostCurrentFilmIndex];
-        } else {
-          this.showSpinner$.next(false);
-          return matchSession?.filmsSequence[
-            matchSession.guestCurrentFilmIndex
-          ];
-        }
-      })
-    );
+  // readonly currentFilm$ =
+  //   this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+  //     shareReplay({ refCount: true, bufferSize: 1 }),
+  //     filter((x) => !!x),
+  //     withLatestFrom(this.userFacade.selectUser$),
+  //     map(([matchSession, selectUser]) => {
+  //       if (selectUser.id === matchSession.host.id) {
+  //         this.showSpinner$.next(false);
+  //         return matchSession?.filmsSequence[matchSession.hostCurrentFilmIndex];
+  //       } else {
+  //         this.showSpinner$.next(false);
+  //         return matchSession?.filmsSequence[
+  //           matchSession.guestCurrentFilmIndex
+  //         ];
+  //       }
+  //     })
+  //   );
 
   readonly selectCurrentMatchSession$ =
     this.matchSessionFacade.selectCurrentMatchSession$.pipe(
@@ -89,34 +89,34 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.router.events.subscribe((e) => {
-      if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
-        this.selectCurrentMatchSession$
-          .pipe(first(), withLatestFrom(this.userFacade.selectUser$))
-          .subscribe(([_, currentUser]) => {
-            this.userFacade.updateUser({
-              ...currentUser,
-              currentMatchSession: '',
-            });
-          });
-      }
-    });
+    // this.router.events.subscribe((e) => {
+    //   if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
+    //     this.selectCurrentMatchSession$
+    //       .pipe(first(), withLatestFrom(this.userFacade.selectUser$))
+    //       .subscribe(([_, currentUser]) => {
+    //         this.userFacade.updateUser({
+    //           ...currentUser,
+    //           currentMatchSession: '',
+    //         });
+    //       });
+    //   }
+    // });
 
-    this.swipe$
-      .pipe(
-        takeUntil(this.destroy$),
-        withLatestFrom(
-          this.matchSessionFacade.selectCurrentMatchSession$,
-          this.currentFilm$
-        )
-      )
-      .subscribe(([swipeDirection, currentMatchSession, currentFilm]) => {
-        this.matchSessionFacade.swipe(
-          currentMatchSession.id,
-          JSON.stringify(currentFilm),
-          swipeDirection
-        );
-      });
+    // this.swipe$
+    //   .pipe(
+    //     takeUntil(this.destroy$),
+    //     withLatestFrom(
+    //       this.matchSessionFacade.selectCurrentMatchSession$,
+    //       this.currentFilm$
+    //     )
+    //   )
+    //   .subscribe(([swipeDirection, currentMatchSession, currentFilm]) => {
+    //     this.matchSessionFacade.swipe(
+    //       currentMatchSession.id,
+    //       JSON.stringify(currentFilm),
+    //       swipeDirection
+    //     );
+    //   });
 
     this.matchSessionFacade.filmsMatchHappened$.subscribe(
       async (filmsMatchHappened) => {

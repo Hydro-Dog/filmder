@@ -1,13 +1,13 @@
 import { ID } from '@datorama/akita';
 import { createAction, props } from '@datorama/akita-ng-effects';
-import { User, UserRO } from './user.models';
+import { UserEntity } from './user.models';
 
-export const getUser = createAction('[User] Get User', props<{ userId: ID }>());
+export const getUser = createAction('[User] Get User');
 
 export const getUserSuccess = createAction(
   '[User] Get User Success',
   props<{
-    user: UserRO;
+    user: UserEntity;
   }>()
 );
 
@@ -18,15 +18,31 @@ export const getUserError = createAction(
   }>()
 );
 
+export const getCurrentUser = createAction('[User] Get Current User');
+
+export const getCurrentUserSuccess = createAction(
+  '[User] Get Current  User Success',
+  props<{
+    user: UserEntity;
+  }>()
+);
+
+export const getCurrentUserError = createAction(
+  '[User] Get Current User Error',
+  props<{
+    error: any;
+  }>()
+);
+
 export const updateUser = createAction(
   '[User] Update User',
-  props<{ user: Partial<User> }>()
+  props<{ user: Partial<UserEntity> }>()
 );
 
 export const updateUserSuccess = createAction(
   '[User] Update User Success',
   props<{
-    user: UserRO;
+    user: UserEntity;
   }>()
 );
 
@@ -52,7 +68,7 @@ export const setActiveMatchSession = createAction(
 export const setActiveMatchSessionSuccess = createAction(
   '[User] Set Active MatchSession Success',
   props<{
-    user: UserRO;
+    user: UserEntity;
   }>()
 );
 

@@ -10,8 +10,8 @@ import { MatchSessionsListTypes } from '../shared/components/film-matches-list/m
 })
 export class MatchesCompletedComponent {
   readonly matchSessionsListTypes = MatchSessionsListTypes;
-  readonly selectCompletedMatchSessions$ =
-    this.matchSessionFacade.selectCompletedMatchSessions$;
+  // readonly selectCompletedMatchSessions$ =
+  //   this.matchSessionFacade.selectCompletedMatchSessions$;
 
   readonly destroy$ = new Subject();
 

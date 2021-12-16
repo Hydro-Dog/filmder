@@ -9,6 +9,8 @@ import { ActionType } from '@datorama/akita-ng-entity-service';
 import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
+  getCurrentUser,
+  getCurrentUserSuccess,
   getUser,
   getUserSuccess,
   resetStore,
@@ -28,17 +30,17 @@ export class UserEffects {
     private userStore: UserStore
   ) {}
 
-  getUser$ = createEffect(
+  getCurrentUser$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(getUser),
-        switchMap(({ userId }) => {
+        ofType(getCurrentUser),
+        switchMap(() => {
           this.userStore.update((state) => ({
             ...state,
-            userLoading: true,
+            currentUserLoading: true,
           }));
           return this.userService
-            .getUser(userId)
+            .getCurrentUser()
             .pipe(map((user) => getUserSuccess({ user })));
         })
       ),
@@ -46,33 +48,45 @@ export class UserEffects {
   );
 
   @Effect()
-  getUserSuccess$ = this.actions$.pipe(
-    ofType(getUserSuccess),
+  getCurrentUserSuccess$ = this.actions$.pipe(
+    ofType(getCurrentUserSuccess),
     tap(({ user }) => {
       return this.userStore.update((state) => ({
         ...state,
-        userLoading: false,
-        user,
+        currentUserLoading: false,
+        currentUser: user,
       }));
     })
   );
 
-  updateUser$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(updateUser),
-        switchMap(({ user }) => {
-          this.userStore.update((state) => ({
-            ...state,
-            userLoading: true,
-          }));
-          return this.userService
-            .updateUser(user)
-            .pipe(map((user) => updateUserSuccess({ user })));
-        })
-      ),
-    { dispatch: true }
-  );
+  // @Effect()
+  // getUserSuccess$ = this.actions$.pipe(
+  //   ofType(getUserSuccess),
+  //   tap(({ user }) => {
+  //     return this.userStore.update((state) => ({
+  //       ...state,
+  //       userLoading: false,
+  //       user,
+  //     }));
+  //   })
+  // );
+
+  // updateUser$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(updateUser),
+  //       switchMap(({ user }) => {
+  //         this.userStore.update((state) => ({
+  //           ...state,
+  //           userLoading: true,
+  //         }));
+  //         return this.userService
+  //           .updateUser(user)
+  //           .pipe(map((user) => updateUserSuccess({ user })));
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
   @Effect()
   updateUserSuccess$ = this.actions$.pipe(
@@ -80,8 +94,8 @@ export class UserEffects {
     tap(({ user }) => {
       return this.userStore.update((state) => ({
         ...state,
-        userLoading: false,
-        user,
+        currentUserLoading: false,
+        currentUser: user,
       }));
     })
   );
@@ -92,8 +106,8 @@ export class UserEffects {
     tap(({ id }) => {
       return this.userStore.update((state) => ({
         ...state,
-        userLoading: false,
-        user: { ...state.user, currentMatchSession: id },
+        currentUserLoading: false,
+        currentUser: { ...state.currentUser, currentMatchSession: id },
       }));
     }),
     switchMap(() => of(true))
@@ -106,7 +120,7 @@ export class UserEffects {
       return this.userStore.update((state) => {
         return {
           ...state,
-          user: null,
+          currentUser: null,
         };
       });
     })

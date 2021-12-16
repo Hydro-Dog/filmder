@@ -16,14 +16,14 @@ import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 })
 export class Tab1Page implements OnInit, OnDestroy {
   readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
-  readonly selectPendingMatchSessions$ =
-    this.matchSessionFacade.selectPendingMatchSessions$;
-  readonly guestedMatchSessions$ =
-    this.matchSessionFacade.selectInvitesMatchSessions$;
-  readonly activeMatchSessions$ =
-    this.matchSessionFacade.selectActiveMatchSessions$;
-  readonly completedMatchSessions$ =
-    this.matchSessionFacade.selectCompletedMatchSessions$;
+  // readonly selectPendingMatchSessions$ =
+  //   this.matchSessionFacade.selectPendingMatchSessions$;
+  // readonly guestedMatchSessions$ =
+  //   this.matchSessionFacade.selectInvitesMatchSessions$;
+  // readonly activeMatchSessions$ =
+  //   this.matchSessionFacade.selectActiveMatchSessions$;
+  // readonly completedMatchSessions$ =
+  //   this.matchSessionFacade.selectCompletedMatchSessions$;
 
   readonly destroy$ = new Subject();
 

@@ -28,17 +28,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   readonly toastPosition = ToastPosition;
   @ViewChild(ToastComponentShared)
   readonly toastComponentShared: ToastComponentShared;
-  readonly invalidCredentialsErrorMessage = 'Invalid username or password.';
+  readonly invalidCredentialsErrorMessage = 'Invalid email or password.';
   readonly serverErrorMessage = 'Sorry, server error. Please, try again.';
   readonly loginForm = new FormGroup({
-    userName: new FormControl('', {
+    email: new FormControl('', {
       validators: Validators.required,
     }),
     password: new FormControl('', {
       validators: Validators.required,
     }),
   });
-  readonly userNameControl = this.loginForm.get('userName');
+  readonly emailControl = this.loginForm.get('email');
   readonly passwordControl = this.loginForm.get('password');
   readonly user$ = this.userQuery.selectUser$;
   readonly selectLoginError$ = this.authQuery.selectLoginError$;
@@ -84,10 +84,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   loginClicked() {
-    this.authFacade.login(
-      this.userNameControl.value,
-      this.passwordControl.value
-    );
+    this.authFacade.login(this.emailControl.value, this.passwordControl.value);
     this.loginForm.reset();
   }
 

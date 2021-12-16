@@ -83,48 +83,47 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   }
 
   createGame() {
-    this.userFacade
-      .getByUsername(this.fastMatchForm.value.guestUsername)
-      .pipe(
-        withLatestFrom(this.selectedUser$),
-        takeUntil(this.destroy$),
-        tap(() => {
-          this.showSpinner$.next(true);
-          setTimeout(() => {
-            this.showApiMessage$.next(true);
-          }, 3000);
-        }),
-        switchMap(([guestUser, selectedUser]) => {
-          if (!guestUser) {
-            this.toastComponentShared.displayToast(`Sorry, no such user`);
-          } else if (guestUser.id === selectedUser.id) {
-            this.toastComponentShared.displayToast(
-              `Sorry, you can't invite yourself`
-            );
-          } else {
-            return this.matchSessionFacade
-              .createMatchSession({
-                category: this.fastMatchForm.value.gameMode,
-                matchLimit: this.fastMatchForm.value.matchLimit,
-                guestId: guestUser.id as number,
-              })
-              .pipe(retry(10));
-          }
-        })
-      )
-      .subscribe(
-        (matchSession) => {
-          this.showSpinner$.next(false);
-          this.currentScreen$.next('success');
-        },
-        ({ status }) => {
-          this.showSpinner$.next(false);
-
-          if (status === 418) {
-            this.currentScreen$.next('error');
-          }
-        }
-      );
+    // this.userFacade
+    //   .getByUsername(this.fastMatchForm.value.guestUsername)
+    //   .pipe(
+    //     withLatestFrom(this.selectedUser$),
+    //     takeUntil(this.destroy$),
+    //     tap(() => {
+    //       this.showSpinner$.next(true);
+    //       setTimeout(() => {
+    //         this.showApiMessage$.next(true);
+    //       }, 3000);
+    //     }),
+    //     switchMap(([guestUser, selectedUser]) => {
+    //       if (!guestUser) {
+    //         this.toastComponentShared.displayToast(`Sorry, no such user`);
+    //       } else if (guestUser.id === selectedUser.id) {
+    //         this.toastComponentShared.displayToast(
+    //           `Sorry, you can't invite yourself`
+    //         );
+    //       } else {
+    //         return this.matchSessionFacade
+    //           .createMatchSession({
+    //             category: this.fastMatchForm.value.gameMode,
+    //             matchLimit: this.fastMatchForm.value.matchLimit,
+    //             guestId: guestUser.id as number,
+    //           })
+    //           .pipe(retry(10));
+    //       }
+    //     })
+    //   )
+    //   .subscribe(
+    //     (matchSession) => {
+    //       this.showSpinner$.next(false);
+    //       this.currentScreen$.next('success');
+    //     },
+    //     ({ status }) => {
+    //       this.showSpinner$.next(false);
+    //       if (status === 418) {
+    //         this.currentScreen$.next('error');
+    //       }
+    //     }
+    //   );
   }
 
   ngOnDestroy(): void {

@@ -18,17 +18,17 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Returns array of match sessions where the user is guest
    */
-  selectInvitesMatchSessions$ = this.selectMatchSessions$.pipe(
-    withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) =>
-      items.filter(
-        (item) =>
-          item.guest.id.toString() === user.id.toString() &&
-          !item.declined &&
-          !item.accepted
-      )
-    )
-  );
+  // selectInvitesMatchSessions$ = this.selectMatchSessions$.pipe(
+  //   withLatestFrom(this.userFacade.selectUser$),
+  //   map(([items, user]) =>
+  //     items.filter(
+  //       (item) =>
+  //         item.guest.id.toString() === user.id.toString() &&
+  //         !item.declined &&
+  //         !item.accepted
+  //     )
+  //   )
+  // );
 
   /**
    * Returns array of match sessions accepted by both participants
@@ -42,29 +42,29 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Match session that were not accepted yet or declined
    */
-  selectPendingMatchSessions$ = this.selectMatchSessions$.pipe(
-    withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) => {
-      return items.filter(
-        (item) =>
-          !item.accepted &&
-          !item.declined &&
-          item.host.id.toString() === user.id.toString()
-      );
-    })
-  );
+  // selectPendingMatchSessions$ = this.selectMatchSessions$.pipe(
+  //   withLatestFrom(this.userFacade.selectUser$),
+  //   map(([items, user]) => {
+  //     return items.filter(
+  //       (item) =>
+  //         !item.accepted &&
+  //         !item.declined &&
+  //         item.host.id.toString() === user.id.toString()
+  //     );
+  //   })
+  // );
 
-  completedMatchSessions$ = this.selectMatchSessions$.pipe(
-    withLatestFrom(this.userFacade.selectUser$),
-    map(([items, user]) => {
-      return items.filter(
-        (item) =>
-          (item.host.id.toString() === user.id.toString() ||
-            item.guest.id.toString() === user.id.toString()) &&
-          item.completed
-      );
-    })
-  );
+  // completedMatchSessions$ = this.selectMatchSessions$.pipe(
+  //   withLatestFrom(this.userFacade.selectUser$),
+  //   map(([items, user]) => {
+  //     return items.filter(
+  //       (item) =>
+  //         (item.host.id.toString() === user.id.toString() ||
+  //           item.guest.id.toString() === user.id.toString()) &&
+  //         item.completed
+  //     );
+  //   })
+  // );
 
   selectMatchSessionsLoading$ = this.select('matchSessionsLoading');
 
