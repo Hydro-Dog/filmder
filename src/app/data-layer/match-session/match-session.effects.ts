@@ -16,9 +16,9 @@ import {
   getMatchSessionsByUserIdSuccess,
   resetStore,
   setCurrentMatchSessionSuccess,
-  socketAddMatchSessionSuccess,
-  socketChangeMatchSessionSuccess,
-  socketFilmsMatchSuccess,
+  // socketAddMatchSessionSuccess,
+  // socketChangeMatchSessionSuccess,
+  // socketFilmsMatchSuccess,
   swipe,
   swipeSuccess,
   updateMatchSession,
@@ -266,52 +266,52 @@ export class MatchSessionEffects {
 
   // sockets -----------------------------------------------------
 
-  @Effect()
-  socketAddMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(socketAddMatchSessionSuccess),
-    tap(({ matchSession }) => {
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessions: [...state.matchSessions, matchSession],
-      }));
-    })
-  );
+  // @Effect()
+  // socketAddMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(socketAddMatchSessionSuccess),
+  //   tap(({ matchSession }) => {
+  //     return this.matchSessionStore.update((state) => ({
+  //       ...state,
+  //       matchSessions: [...state.matchSessions, matchSession],
+  //     }));
+  //   })
+  // );
 
-  @Effect()
-  socketChangeMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(socketChangeMatchSessionSuccess),
-    tap(({ matchSession }) => {
-      return this.matchSessionStore.update((state) => {
-        const matchSessionIndex = state.matchSessions.findIndex(
-          ({ id }) => id === matchSession.id
-        );
-        const matchSessionsArray = [...state.matchSessions];
-        matchSessionsArray[matchSessionIndex] = matchSession;
+  // @Effect()
+  // socketChangeMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(socketChangeMatchSessionSuccess),
+  //   tap(({ matchSession }) => {
+  //     return this.matchSessionStore.update((state) => {
+  //       const matchSessionIndex = state.matchSessions.findIndex(
+  //         ({ id }) => id === matchSession.id
+  //       );
+  //       const matchSessionsArray = [...state.matchSessions];
+  //       matchSessionsArray[matchSessionIndex] = matchSession;
 
-        return {
-          ...state,
-          matchSessions: matchSessionsArray,
-        };
-      });
-    })
-  );
+  //       return {
+  //         ...state,
+  //         matchSessions: matchSessionsArray,
+  //       };
+  //     });
+  //   })
+  // );
 
-  @Effect()
-  socketFilmsMatchSuccess$ = this.actions$.pipe(
-    ofType(socketFilmsMatchSuccess),
-    tap(({ filmJSON }) => {
-      return this.matchSessionStore.update((state) => {
-        return {
-          ...state,
-          currentMatchSession: {
-            ...state.currentMatchSession,
-            matchedMoviesJSON: [
-              ...state.currentMatchSession.matchedMoviesJSON,
-              filmJSON,
-            ],
-          },
-        };
-      });
-    })
-  );
+  // @Effect()
+  // socketFilmsMatchSuccess$ = this.actions$.pipe(
+  //   ofType(socketFilmsMatchSuccess),
+  //   tap(({ filmJSON }) => {
+  //     return this.matchSessionStore.update((state) => {
+  //       return {
+  //         ...state,
+  //         currentMatchSession: {
+  //           ...state.currentMatchSession,
+  //           matchedMoviesJSON: [
+  //             ...state.currentMatchSession.matchedMoviesJSON,
+  //             filmJSON,
+  //           ],
+  //         },
+  //       };
+  //     });
+  //   })
+  // );
 }

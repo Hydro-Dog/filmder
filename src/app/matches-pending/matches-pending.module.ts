@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../shared/shared.module';
 import { MatchesPendingRoutingModule } from './matches-pending.module.routing';
 import { MatchesPendingComponent } from './matches-pending.component';
+import { PendingMatchDetailsModal } from './pending-match-details/pending-match-details.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { MatchesPendingComponent } from './matches-pending.component';
     MatchesPendingRoutingModule,
     SharedModule,
   ],
-  declarations: [MatchesPendingComponent],
+  declarations: [MatchesPendingComponent, PendingMatchDetailsModal],
 })
 export class MatchesPendingModule {}

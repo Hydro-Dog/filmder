@@ -44,7 +44,7 @@ const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
     HttpClientModule,
     FormsModule,
     AkitaNgRouterStoreModule,
-    SocketIoModule.forRoot(config),
+    // SocketIoModule.forRoot(config),
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

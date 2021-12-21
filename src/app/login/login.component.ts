@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
   readonly emailControl = this.loginForm.get('email');
   readonly passwordControl = this.loginForm.get('password');
-  readonly user$ = this.userQuery.selectUser$;
+  readonly user$ = this.userQuery.selectCurrentUser$;
   readonly selectLoginError$ = this.authQuery.selectLoginError$;
   readonly showError$ = new BehaviorSubject(false);
   readonly destroy$ = new Subject();

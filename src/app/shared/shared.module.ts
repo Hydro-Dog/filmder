@@ -10,6 +10,7 @@ import { MatchDetailsModal } from './components/match-details-modal/match-detail
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatchedFilmsSummaryModalShared } from './components/list-of-matched-films-modal/list-of-matched-films-modal.component';
 import { MatchHappenedModal } from './components/match-happend-modal/match-happend-modal.component';
+import { MatchesListShared } from './components/matches-list/matches-list.component';
 
 const components = [
   ToastComponentShared,
@@ -20,6 +21,7 @@ const components = [
   MatchHappenedModal,
   MatchDetailsModal,
   StarCasePipe,
+  MatchesListShared,
 ];
 
 @NgModule({

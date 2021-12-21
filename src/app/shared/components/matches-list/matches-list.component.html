@@ -2,27 +2,18 @@
   <ion-item-sliding
     *ngFor="let matchSession of matches; trackBy: matchSessionId"
   >
-    <ion-item (click)="openDetailsModal(matchSession)">
+    <ion-item (click)="itemClicked.emit(matchSession)">
       <ion-label class="list-item">
         Category <b>{{ matchSession.category | startCase }}</b> from
         <b>{{ matchSession.host.username }}</b>
       </ion-label>
-      <span *ngIf="matchSession.id === +activeMatchSessionId">
-        <ion-icon
-          color="success"
-          size="large"
-          name="radio-button-on-outline"
-        ></ion-icon>
-      </span>
     </ion-item>
     <ion-item-options side="end">
       <ion-item-option
-        *ngIf="matchSession.completed"
-        (click)="delete(matchSession.id)"
+        *ngIf="allowDeletion"
+        (click)="itemDeleted.emit(matchSession)"
         >Delete</ion-item-option
       >
     </ion-item-options>
   </ion-item-sliding>
 </ion-list>
-
-<filmder-alert #alertExample></filmder-alert>

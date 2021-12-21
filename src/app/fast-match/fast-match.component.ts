@@ -44,7 +44,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   });
 
   readonly gameModes$ = this.gameModesFacade.selectGameModes$;
-  readonly selectedUser$ = this.userQuery.selectUser$;
+  readonly selectedUser$ = this.userQuery.selectCurrentUser$;
   readonly currentScreen$ = new BehaviorSubject<'create' | 'success' | 'error'>(
     'create'
   );

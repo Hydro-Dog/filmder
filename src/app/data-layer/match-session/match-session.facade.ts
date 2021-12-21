@@ -7,10 +7,10 @@ import {
   getCurrentMatchSession,
   getMatchSessionsByUserId,
   resetStore,
-  setCurrentMatchSessionSuccess,
-  socketAddMatchSessionSuccess,
-  socketChangeMatchSessionSuccess,
-  socketFilmsMatchSuccess,
+  // setCurrentMatchSessionSuccess,
+  // socketAddMatchSessionSuccess,
+  // socketChangeMatchSessionSuccess,
+  // socketFilmsMatchSuccess,
   swipe,
   updateMatchSession,
 } from './match-session.actions';
@@ -74,9 +74,9 @@ export class MatchSessionFacade {
     return this.matchSessionEffects.updateMatchSessionSuccess$;
   }
 
-  setCurrentMatchSession(matchSession: MatchSession) {
-    this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
-  }
+  // setCurrentMatchSession(matchSession: MatchSession) {
+  //   this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
+  // }
 
   deleteMatchSession(matchSessionId: number) {
     this.actions.dispatch(deleteMatchSession({ matchSessionId }));
@@ -92,52 +92,52 @@ export class MatchSessionFacade {
     this.actions.dispatch(getCurrentMatchSession({ matchSessionId }));
   }
 
-  registerNewListener(id: string) {
-    this.matchSessionService.msgToServer(
-      MatchSessionSocketEvents.RegisterNewListener,
-      { id }
-    );
-  }
+  // registerNewListener(id: string) {
+  //   this.matchSessionService.msgToServer(
+  //     MatchSessionSocketEvents.RegisterNewListener,
+  //     { id }
+  //   );
+  // }
 
-  listenForServer() {
-    this.socketMatchSessionSub.add(
-      this.matchSessionService.listenForServer$.subscribe(({ message }) => {
-        switch (message.event) {
-          case MatchSessionChangesEvents.Add:
-            this.actions.dispatch(
-              socketAddMatchSessionSuccess({
-                matchSession: message.payload,
-              })
-            );
+  // listenForServer() {
+  //   this.socketMatchSessionSub.add(
+  //     this.matchSessionService.listenForServer$.subscribe(({ message }) => {
+  //       switch (message.event) {
+  //         case MatchSessionChangesEvents.Add:
+  //           this.actions.dispatch(
+  //             socketAddMatchSessionSuccess({
+  //               matchSession: message.payload,
+  //             })
+  //           );
 
-            break;
-          case MatchSessionChangesEvents.ChangeStatus:
-            this.actions.dispatch(
-              socketChangeMatchSessionSuccess({
-                matchSession: message.payload,
-              })
-            );
-            break;
+  //           break;
+  //         case MatchSessionChangesEvents.ChangeStatus:
+  //           this.actions.dispatch(
+  //             socketChangeMatchSessionSuccess({
+  //               matchSession: message.payload,
+  //             })
+  //           );
+  //           break;
 
-          case MatchSessionChangesEvents.FilmsMatch:
-            this.actions.dispatch(
-              socketFilmsMatchSuccess({
-                filmJSON: message.payload.filmJSON,
-              })
-            );
+  //         case MatchSessionChangesEvents.FilmsMatch:
+  //           this.actions.dispatch(
+  //             socketFilmsMatchSuccess({
+  //               filmJSON: message.payload.filmJSON,
+  //             })
+  //           );
 
-            this.filmsMatchHappened$.next({
-              film: JSON.parse(message.payload.filmJSON),
-              source: message.payload.source,
-            });
-            break;
+  //           this.filmsMatchHappened$.next({
+  //             film: JSON.parse(message.payload.filmJSON),
+  //             source: message.payload.source,
+  //           });
+  //           break;
 
-          default:
-            break;
-        }
-      })
-    );
-  }
+  //         default:
+  //           break;
+  //       }
+  //     })
+  //   );
+  // }
 
   stopListenForNewMatches() {
     this.socketMatchSessionSub.unsubscribe();

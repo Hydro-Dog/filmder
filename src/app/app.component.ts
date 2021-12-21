@@ -15,30 +15,26 @@ export class AppComponent implements OnInit, OnDestroy {
   showStorageValue$ = new Subject<string>();
   destroy$ = new Subject();
   storageKey: string;
-  user$ = this.userQuery.selectUser$;
+  currentUser$ = this.userQuery.selectCurrentUser$;
 
   constructor(
     private storageFacade: StorageFacade,
     private userFacade: UserFacade,
-    private userQuery: UserQuery,
-    private matchSessionFacade: MatchSessionFacade
-  ) {}
+    private userQuery: UserQuery
+  ) // private matchSessionFacade: MatchSessionFacade
+  {}
 
   ngOnInit() {
-    // this.userFacade.selectUser$.subscribe((user) => {
-    //   if (user?.currentMatchSession) {
-    //     this.matchSessionFacade.getCurrentMatchSession(
-    //       user.currentMatchSession
-    //     );
-    //   }
-    // });
+    this.userFacade.selectCurrentUser$.subscribe((user) => {
+      console.log('STORE.currentUser: ', user);
+    });
 
     from(this.storageFacade.createStorage())
       .pipe(
         first(),
         switchMap(() =>
           combineLatest([
-            this.user$,
+            this.currentUser$,
             from(this.storageFacade.getItem(STORAGE_ITEMS.USER_ID)),
           ])
         ),
@@ -46,11 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe(([user, userId]) => {
         if (!user && userId) {
-          this.userFacade.getUser(userId);
+          this.userFacade.getCurrentUser();
         }
 
-        this.matchSessionFacade.registerNewListener(userId);
-        this.matchSessionFacade.listenForServer();
+        // this.matchSessionFacade.registerNewListener(userId);
+        // this.matchSessionFacade.listenForServer();
       });
   }
 

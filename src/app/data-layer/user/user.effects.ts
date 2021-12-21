@@ -11,12 +11,12 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   getCurrentUser,
   getCurrentUserSuccess,
-  getUser,
-  getUserSuccess,
-  resetStore,
-  setCurrentMatchSessionSuccess,
-  updateUser,
-  updateUserSuccess,
+  getCurrentUserMatchSessions,
+  getCurrentUserMatchSessionsSuccess,
+  resetCurrentUser,
+  // setCurrentMatchSessionSuccess,
+  updateCurrentUser,
+  updateCurrentUserSuccess,
 } from './user.actions';
 import { UserService } from './user.service';
 import { UserStore } from './user.store';
@@ -41,7 +41,7 @@ export class UserEffects {
           }));
           return this.userService
             .getCurrentUser()
-            .pipe(map((user) => getUserSuccess({ user })));
+            .pipe(map((user) => getCurrentUserSuccess({ user })));
         })
       ),
     { dispatch: true }
@@ -71,26 +71,26 @@ export class UserEffects {
   //   })
   // );
 
-  // updateUser$ = createEffect(
-  //   () =>
-  //     this.actions$.pipe(
-  //       ofType(updateUser),
-  //       switchMap(({ user }) => {
-  //         this.userStore.update((state) => ({
-  //           ...state,
-  //           userLoading: true,
-  //         }));
-  //         return this.userService
-  //           .updateUser(user)
-  //           .pipe(map((user) => updateUserSuccess({ user })));
-  //       })
-  //     ),
-  //   { dispatch: true }
-  // );
+  updateCurrentUser$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(updateCurrentUser),
+        switchMap(({ user }) => {
+          this.userStore.update((state) => ({
+            ...state,
+            userLoading: true,
+          }));
+          return this.userService
+            .updateCurrentUser(user)
+            .pipe(map((user) => updateCurrentUserSuccess({ user })));
+        })
+      ),
+    { dispatch: true }
+  );
 
   @Effect()
-  updateUserSuccess$ = this.actions$.pipe(
-    ofType(updateUserSuccess),
+  updateCurrentUserSuccess$ = this.actions$.pipe(
+    ofType(updateCurrentUserSuccess),
     tap(({ user }) => {
       return this.userStore.update((state) => ({
         ...state,
@@ -100,22 +100,55 @@ export class UserEffects {
     })
   );
 
-  @Effect()
-  setCurrentMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(setCurrentMatchSessionSuccess),
-    tap(({ id }) => {
-      return this.userStore.update((state) => ({
-        ...state,
-        currentUserLoading: false,
-        currentUser: { ...state.currentUser, currentMatchSession: id },
-      }));
-    }),
-    switchMap(() => of(true))
+  getCurrentUserMatchSessions$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(getCurrentUserMatchSessions),
+        switchMap(() => {
+          this.userStore.update((state) => ({
+            ...state,
+            currentUserMatchSessionsLoading: true,
+          }));
+          return this.userService
+            .getCurrentUserMatchSessions()
+            .pipe(
+              map((currentUserMatches) =>
+                getCurrentUserMatchSessionsSuccess({ currentUserMatches })
+              )
+            );
+        })
+      ),
+    { dispatch: true }
   );
 
   @Effect()
-  resetStore$ = this.actions$.pipe(
-    ofType(resetStore),
+  getCurrentUserMatchSessionsSuccess$ = this.actions$.pipe(
+    ofType(getCurrentUserMatchSessionsSuccess),
+    tap(({ currentUserMatches }) => {
+      return this.userStore.update((state) => ({
+        ...state,
+        currentUserMatchSessionsLoading: true,
+        currentUserMatches,
+      }));
+    })
+  );
+
+  // @Effect()
+  // setCurrentMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(setCurrentMatchSessionSuccess),
+  //   tap(({ id }) => {
+  //     return this.userStore.update((state) => ({
+  //       ...state,
+  //       currentUserLoading: false,
+  //       currentUser: { ...state.currentUser, currentMatchSession: id },
+  //     }));
+  //   }),
+  //   switchMap(() => of(true))
+  // );
+
+  @Effect()
+  resetUser$ = this.actions$.pipe(
+    ofType(resetCurrentUser),
     tap(() => {
       return this.userStore.update((state) => {
         return {

@@ -5,6 +5,10 @@ import { Observable } from 'rxjs/internal/Observable';
 // import { User, UserRO } from './user.models';
 import { ID } from '@datorama/akita';
 import { UserEntity } from './user.models';
+import {
+  GetMatchSessionDTO,
+  MatchSessionEntity,
+} from '../match-session/match-session.models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -21,15 +25,25 @@ export class UserService {
   //   });
   // }
 
-  // updateUser(payload: Partial<User>): Observable<UserRO> {
-  //   return this.http.put<UserRO>(`${environment.apiUrl}/api/users`, payload);
-  // }
-
   // checkUserNameIsTaken(userName: string): Observable<any> {
   //   return this.http.post(`${environment.apiUrl}/api/users/checkUserName`, {
   //     userName,
   //   });
   // }
+
+  getCurrentUser(): Observable<UserEntity> {
+    console.log('getCurrentUser api');
+    return this.http.get<UserEntity>(
+      `${environment.apiUrl}/api/currentuserprofile`
+    );
+  }
+
+  updateCurrentUser(payload: Partial<UserEntity>): Observable<UserEntity> {
+    return this.http.put<UserEntity>(
+      `${environment.apiUrl}/api/currentuserprofile`,
+      payload
+    );
+  }
 
   getUser(query: Partial<UserEntity>) {
     let params = new HttpParams({ fromObject: query });
@@ -37,9 +51,10 @@ export class UserService {
     return this.http.get(`${environment.apiUrl}/api/user`, { params });
   }
 
-  getCurrentUser(): Observable<UserEntity> {
-    console.log('getCurrentUser api');
-    return this.http.get<UserEntity>(`${environment.apiUrl}/api/currentuser`);
+  getCurrentUserMatchSessions(): Observable<MatchSessionEntity[]> {
+    return this.http.get<MatchSessionEntity[]>(
+      `${environment.apiUrl}/api/usermatchsessions`
+    );
   }
 
   // getByUsername(userName: string): Observable<any> {

@@ -134,23 +134,23 @@ export const resetStore = createAction('[Match Session] Reset Store');
 
 // sockets---------------------------------------------------
 
-export const socketAddMatchSessionSuccess = createAction(
-  '[Match Session] Socket Add Match Session Success',
-  props<{
-    matchSession: MatchSession;
-  }>()
-);
+// export const socketAddMatchSessionSuccess = createAction(
+//   '[Match Session] Socket Add Match Session Success',
+//   props<{
+//     matchSession: MatchSession;
+//   }>()
+// );
 
-export const socketChangeMatchSessionSuccess = createAction(
-  '[Match Session] Socket Changes Match Session Success',
-  props<{
-    matchSession: MatchSession;
-  }>()
-);
+// export const socketChangeMatchSessionSuccess = createAction(
+//   '[Match Session] Socket Changes Match Session Success',
+//   props<{
+//     matchSession: MatchSession;
+//   }>()
+// );
 
-export const socketFilmsMatchSuccess = createAction(
-  '[Match Session] Socket Films Match Success',
-  props<{
-    filmJSON: string;
-  }>()
-);
+// export const socketFilmsMatchSuccess = createAction(
+//   '[Match Session] Socket Films Match Success',
+//   props<{
+//     filmJSON: string;
+//   }>()
+// );

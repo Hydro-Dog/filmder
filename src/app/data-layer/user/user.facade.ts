@@ -1,25 +1,36 @@
 import { Injectable } from '@angular/core';
-import { ID } from '@datorama/akita';
 import { Actions } from '@datorama/akita-ng-effects';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   getCurrentUser,
-  getUser,
-  resetStore,
-  setCurrentMatchSessionSuccess,
-  updateUser,
+  getCurrentUserMatchSessions,
+  resetCurrentUser,
+  updateCurrentUser,
 } from './user.actions';
 import { UserEffects } from './user.effects';
 import { UserEntity } from './user.models';
-// import { User } from './user.models';
 import { UserQuery } from './user.query';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserFacade {
-  readonly selectUser$: Observable<UserEntity> = this.userQuery.selectUser$;
-  readonly selectError$: Observable<any> = this.userQuery.selectError$;
+  readonly selectCurrentUser$ = this.userQuery.selectCurrentUser$;
+
+  readonly selectError$ = this.userQuery.selectError$;
+
+  readonly currentUserMatches$ = this.userQuery.currentUserMatches$;
+
+  readonly selectInvitesMatchSessions$ =
+    this.userQuery.selectInvitesMatchSessions$;
+
+  readonly selectActiveMatchSessions$ =
+    this.userQuery.selectActiveMatchSessions$;
+
+  readonly selectPendingMatchSessions$ =
+    this.userQuery.selectPendingMatchSessions$;
+
+  readonly selectCompletedMatchSessions$ =
+    this.userQuery.completedMatchSessions$;
 
   constructor(
     private userQuery: UserQuery,
@@ -33,15 +44,26 @@ export class UserFacade {
   }
 
   getCurrentUser() {
-    console.log('getCurrentUser');
     this.actions.dispatch(getCurrentUser());
 
-    return this.userEffects.getCurrentUser$;
+    return this.userEffects.getCurrentUserSuccess$;
   }
 
-  // resetStore() {
-  //   this.actions.dispatch(resetStore());
-  // }
+  updateCurrentUser(user: Partial<UserEntity>) {
+    this.actions.dispatch(updateCurrentUser({ user }));
+
+    return this.userEffects.updateCurrentUserSuccess$;
+  }
+
+  resetCurrentUser() {
+    this.actions.dispatch(resetCurrentUser());
+  }
+
+  getCurrentUserMatchSessions() {
+    this.actions.dispatch(getCurrentUserMatchSessions());
+
+    return this.userEffects.getCurrentUserMatchSessionsSuccess$;
+  }
 
   // getUser(userId: ID) {
   //   this.actions.dispatch(getUser({ userId }));

@@ -7,19 +7,20 @@ import {
   MatchSessionCO,
   MatchSessionSocketEvents,
 } from './match-session.models';
-import { Socket } from 'ngx-socket-io';
+// import { Socket } from 'ngx-socket-io';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionService {
-  constructor(private http: HttpClient, private socket: Socket) {}
+  constructor(private http: HttpClient) // private socket: Socket
+  {}
 
-  listenForServer$: Observable<any> = this.socket.fromEvent(
-    MatchSessionSocketEvents.ServerMessage
-  );
+  // listenForServer$: Observable<any> = this.socket.fromEvent(
+  //   MatchSessionSocketEvents.ServerMessage
+  // );
 
-  msgToServer(event: string, message: any) {
-    this.socket.emit(event, message);
-  }
+  // msgToServer(event: string, message: any) {
+  //   this.socket.emit(event, message);
+  // }
 
   create(matchSession: MatchSessionCO): Observable<MatchSession> {
     return this.http.post<MatchSession>(

@@ -16,6 +16,8 @@ import {
   tap,
   withLatestFrom,
   shareReplay,
+  first,
+  filter,
 } from 'rxjs/operators';
 import { AuthFacade } from '../auth/state/auth.facade';
 import { UserFacade } from '../data-layer/user/user.facade';
@@ -41,7 +43,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   toastErrorMessage: string;
 
   readonly profileSettingsForm = new FormGroup({
-    userName: new FormControl('', {
+    username: new FormControl('', {
       validators: Validators.required,
       updateOn: 'blur',
     }),
@@ -53,85 +55,92 @@ export class Tab3Page implements OnInit, OnDestroy {
     }),
   });
 
-  readonly userNameControl = this.profileSettingsForm.get('userName');
+  readonly usernameControl = this.profileSettingsForm.get('username');
   readonly firstNameControl = this.profileSettingsForm.get('firstName');
   readonly lastNameControl = this.profileSettingsForm.get('lastName');
 
   readonly viewModes = ViewMode;
 
-  readonly user$ = this.userQuery.selectUser$.pipe(
+  readonly currentUser$ = this.userFacade.selectCurrentUser$.pipe(
     shareReplay({ refCount: true, bufferSize: 1 })
   );
   readonly saveChanges$ = new Subject();
   readonly destroy$ = new Subject();
   initialFormValues: {
-    userName: string;
+    username: string;
     firstName: string;
     lastName: string;
   };
 
+  readonly checkUsernameExists$ = this.userFacade
+    .getUser({ username: this.usernameControl.value })
+    .pipe(catchError((e) => of(false)));
+
   constructor(
-    private userQuery: UserQuery,
     private userFacade: UserFacade,
     private authFacade: AuthFacade,
-    private storageFacade: StorageFacade,
     private router: Router,
+    private storageService: StorageFacade,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      if (user) {
-        const { userName, firstName, lastName } = user;
-        this.initialFormValues = { userName, firstName, lastName };
+    this.currentUser$
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((user) => {
+        if (user) {
+          const { username, firstName, lastName } = user;
+          this.initialFormValues = { username, firstName, lastName };
 
-        this.profileSettingsForm.patchValue(
-          {
-            userName,
-            firstName,
-            lastName,
-          },
-          { emitEvent: false, onlySelf: true }
-        );
-        this.cd.detectChanges();
-      } else {
-        console.warn('user is null');
-      }
-    });
+          this.profileSettingsForm.patchValue(
+            {
+              username,
+              firstName,
+              lastName,
+            },
+            { emitEvent: false, onlySelf: true }
+          );
+          this.cd.detectChanges();
+        }
+      });
 
-    // this.saveChanges$
-    //   .pipe(
-    //     switchMap(() => {
-    //       return forkJoin([
-    //         this.userFacade
-    //           .checkUserNameIsTaken(this.userNameControl.value)
-    //           .pipe(catchError((e) => of(e))),
-    //       ]).pipe(
-    //         withLatestFrom(this.userFacade.selectUser$),
-    //         tap(([err, currentUser]) => {
-    //           const errorMessages = (err as ApiError[])
-    //             .filter((x) => x.error)
-    //             .map((x) => x.error.message);
-    //           if (errorMessages.length) {
-    //             this.toastComponentShared.displayToast(errorMessages[0]);
-    //           } else {
-    //             const updatedUser = this.profileSettingsForm.value;
-    //             this.initialFormValues = { ...this.profileSettingsForm.value };
-    //             this.userFacade.updateUser({ ...currentUser, ...updatedUser });
-    //             this.setViewMode(this.viewModes.View);
-    //           }
-    //         })
-    //       );
-    //     }),
-    //     takeUntil(this.destroy$)
-    //   )
-    //   .subscribe();
+    this.saveChanges$
+      .pipe(
+        switchMap(() => this.checkUsernameExistence()),
+        withLatestFrom(this.userFacade.selectCurrentUser$),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([err, currentUser]) => {
+        if (err && this.usernameControl.value !== currentUser.username) {
+          this.toastComponentShared.displayToast('Username already exists');
+        } else {
+          const updatedUser = this.profileSettingsForm.value;
+          this.initialFormValues = {
+            ...this.profileSettingsForm.value,
+          };
+          this.userFacade.updateCurrentUser({
+            ...currentUser,
+            ...updatedUser,
+          });
+          this.setViewMode(this.viewModes.View);
+        }
+      });
+  }
+
+  checkUsernameExistence() {
+    return this.userFacade
+      .getUser({ username: this.usernameControl.value })
+      .pipe(catchError((e) => of(false)));
   }
 
   logOut() {
     this.authFacade.logout();
-    // this.userFacade.resetStore();
-    this.router.navigate(['/auth']);
+    this.userFacade.resetCurrentUser();
+    this.storageService.clearStorage();
+    this.router.navigate(['/start-screen']);
   }
 
   setViewMode(mode: ViewMode) {
@@ -151,19 +160,13 @@ export class Tab3Page implements OnInit, OnDestroy {
     }
   }
 
-  saveChanges() {
-    this.saveChanges$.next();
-    this.viewMode = ViewMode.View;
-  }
-
   cancelClicked() {
     this.setViewMode(ViewMode.View);
     this.profileSettingsForm.patchValue(this.initialFormValues);
   }
 
-  async doRefresh($event) {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.userFacade.getUser(id).subscribe(() => {
+  doRefresh($event) {
+    this.userFacade.getCurrentUser().subscribe(() => {
       $event.target.complete();
     });
   }

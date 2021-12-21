@@ -1,0 +1,60 @@
+<div class="d-flex">
+  <div class="m-auto d-flex d-column d-between modal-content">
+    <div class="m-auto">
+      <h2 class="ta-c"><b>Summary Details</b></h2>
+      <div class="ta-c p-b-30">
+        <ion-chip color="warning">
+          <ion-icon name="hourglass-outline"></ion-icon>
+          <ion-label>Waiting for acceptance</ion-label>
+        </ion-chip>
+      </div>
+      <div ngSwitch="host" class="ta-c p-b-10">
+        <b class="fc-grey">Created by: </b>
+        <span class="fc-grey">{{ host }}</span>
+      </div>
+      <div ngSwitch="guest" class="ta-c p-b-10">
+        <b class="fc-grey">Invited: </b>
+        <span class="fc-grey">{{ guest }}</span>
+      </div>
+      <div class="ta-c p-b-10">
+        <b class="fc-grey">Category: </b>
+        <span class="fc-grey">{{ category | startCase }}</span>
+      </div>
+      <div class="fc-grey ta-c p-b-40">
+        <b class="fc-grey">Matches limit: </b>
+        <span class="fc-grey">{{ matchLimit }}</span>
+      </div>
+    </div>
+
+    <filmder-matched-films-summary
+      [matchedMovies]="matchedMovies"
+    ></filmder-matched-films-summary>
+
+    <div class="bottom-buttons-container">
+      <ion-button
+        (click)="acceptClicked()"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Accept</ion-button
+      >
+      <ion-button
+        (click)="declineClicked()"
+        size="large"
+        expand="block"
+        fill="clear"
+        >Decline</ion-button
+      >
+
+      <div class="w100 d-flex d-center">
+        <ion-fab-button class="close-icon">
+          <ion-icon
+            size="large"
+            (click)="closeModal()"
+            name="chevron-down-circle-outline"
+          ></ion-icon>
+        </ion-fab-button>
+      </div>
+    </div>
+  </div>
+</div>

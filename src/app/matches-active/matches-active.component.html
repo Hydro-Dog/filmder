@@ -6,13 +6,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <filmder-matches-table
-    [matchSessionsListTypes]="matchSessionsListTypes.Active"
-    [matches]="selectActiveMatchSessions$ | async"
-    [activeMatchSessionId]="activeMatchSessionId$ | async"
-    (matchDeclined)="matchDeclined$.next($event)"
-    (continueMatch)="continueMatch$.next($event)"
-  ></filmder-matches-table>
+  <filmder-matches-list
+    [matches]="activeMatchSessions$ | async"
+    (itemClicked)="matchClicked($event)"
+  >
+  </filmder-matches-list>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content> </ion-refresher-content>
   </ion-refresher>

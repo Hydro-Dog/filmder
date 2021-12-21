@@ -2,6 +2,40 @@ import { ID } from '@datorama/akita';
 import { Film } from '../film/film.models';
 import { UserEntity } from '../user/user.models';
 
+export enum MatchSessionStatus {
+  Pending = 0,
+  Accepted = 1,
+  Declined = 2,
+  Completed = 3,
+}
+
+export class GetMatchSessionDTO {
+  matchSessionId?: string;
+  userId?: string;
+}
+
+export class MatchSessionEntity {
+  id: string;
+  created: Date;
+  updated: Date;
+  category?: string;
+  filmsSequence: string[];
+  host: UserEntity;
+  guest: UserEntity;
+  filterParams: string;
+  matchedMovies?: string[];
+  matchLimit: number;
+  status: MatchSessionStatus;
+  hostCurrentFilmIndex?: number;
+  guestCurrentFilmIndex?: number;
+  hostLikedFilms?: string[];
+  guestLikedFilms?: string[];
+  hostLikedFilmIndex: number;
+  guestLikedFilmIndex: number;
+}
+
+//=========================================================================
+
 //CO - create object
 export interface MatchSessionCO {
   matchLimit: number;

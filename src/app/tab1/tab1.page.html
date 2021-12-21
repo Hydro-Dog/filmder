@@ -13,7 +13,7 @@
       <div class="w100 d-flex d-between">
         <span>Waiting for acceptance</span>
         <ion-badge color="medium"
-          >{{(selectPendingMatchSessions$ | async)?.length}}</ion-badge
+          >{{(pendingMatchSessions$ | async)?.length}}</ion-badge
         >
       </div>
     </ion-item>
@@ -22,11 +22,11 @@
       <div class="w100 d-flex d-between">
         <span>Invites</span>
         <ng-container
-          *ngIf="(guestedMatchSessions$ | async) as guestedMatchSessions"
+          *ngIf="(invitesMatchSessions$ | async) as invitesMatchSessions"
         >
           <ion-badge
-            [color]="guestedMatchSessions.length ? 'primary' : 'medium'"
-            >{{(guestedMatchSessions$ | async)?.length}}</ion-badge
+            [color]="invitesMatchSessions.length ? 'primary' : 'medium'"
+            >{{invitesMatchSessions?.length}}</ion-badge
           >
         </ng-container>
       </div>

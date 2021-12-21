@@ -14,9 +14,7 @@ export class TabsPage implements OnInit {
 
   constructor(private router: Router, private userFacade: UserFacade) {}
 
-  ngOnInit(): void {
-    this.userFacade.getCurrentUser();
-  }
+  ngOnInit(): void {}
 
   getSegmentValue() {
     if (this.router.url.includes('tab1')) return 'tab1';

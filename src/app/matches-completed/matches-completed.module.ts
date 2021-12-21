@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../shared/shared.module';
 import { MatchesCompletedRoutingModule } from './matches-completed.module.routing';
 import { MatchesCompletedComponent } from './matches-completed.component';
+import { CompletedMatchesDetailsModal } from './completed-matches-details/completed-matches-details.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { MatchesCompletedComponent } from './matches-completed.component';
     MatchesCompletedRoutingModule,
     SharedModule,
   ],
-  declarations: [MatchesCompletedComponent],
+  declarations: [MatchesCompletedComponent, CompletedMatchesDetailsModal],
 })
 export class MatchesCompletedModule {}

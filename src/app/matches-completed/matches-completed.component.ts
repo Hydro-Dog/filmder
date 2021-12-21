@@ -1,33 +1,31 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { MatchSessionEntity } from '../data-layer/match-session/match-session.models';
+import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
+import { MatchedFilmsSummaryModalShared } from '../shared/components/list-of-matched-films-modal/list-of-matched-films-modal.component';
+import { CompletedMatchesDetailsModal } from './completed-matches-details/completed-matches-details.component';
 
 @Component({
   templateUrl: 'matches-completed.component.html',
 })
 export class MatchesCompletedComponent {
-  readonly matchSessionsListTypes = MatchSessionsListTypes;
-  // readonly selectCompletedMatchSessions$ =
-  //   this.matchSessionFacade.selectCompletedMatchSessions$;
+  readonly completedMatchSessions$ =
+    this.userFacade.selectCompletedMatchSessions$;
 
   readonly destroy$ = new Subject();
 
   constructor(
-    private matchSessionFacade: MatchSessionFacade,
-    private storageFacade: StorageFacade,
-    private navController: NavController
+    private userFacade: UserFacade,
+    private navController: NavController,
+    private modalController: ModalController
   ) {}
 
   async ngOnInit() {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
+    this.userFacade.getCurrentUserMatchSessions();
   }
 
   navigateBack() {
@@ -35,13 +33,29 @@ export class MatchesCompletedComponent {
   }
 
   async doRefresh($event) {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }
 
-  matchRemoved(matchSessionId: number) {
-    this.matchSessionFacade.deleteMatchSession(matchSessionId);
+  async matchClicked(matchSession: MatchSessionEntity) {
+    console.log('matchClicked');
+
+    const modal = await this.modalController.create({
+      component: CompletedMatchesDetailsModal,
+      swipeToClose: true,
+      componentProps: {
+        host: matchSession.host?.username,
+        guest: matchSession.guest?.username,
+        category: matchSession.category,
+        matchLimit: matchSession.matchLimit,
+      },
+    });
+    modal.present();
+    modal.onDidDismiss().then((result) => {});
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 }

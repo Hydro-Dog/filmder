@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import {
   delay,
@@ -12,90 +12,59 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { MatchSession } from '../data-layer/match-session/match-session.models';
+import {
+  MatchSession,
+  MatchSessionEntity,
+} from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
+import { PendingMatchDetailsModal } from '../matches-pending/pending-match-details/pending-match-details.component';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
+import { MatchDetailsModalActions } from '../shared/components/match-details-modal/match-details-modal.component';
+import { ActiveMatchDetailsModal } from './active-match-details/active-match-details.component';
 
 @Component({
   templateUrl: 'matches-active.component.html',
 })
 export class MatchesActiveComponent implements OnInit, OnDestroy {
-  readonly matchSessionsListTypes = MatchSessionsListTypes;
-  // readonly selectActiveMatchSessions$ =
-  //   this.matchSessionFacade.selectActiveMatchSessions$;
-  // readonly currentUser$ = this.userFacade.selectUser$.pipe(
-  //   filter((x) => !!x),
-  //   shareReplay({ refCount: true, bufferSize: 1 })
-  // );
+  readonly activeMatchSessions$ = this.userFacade.selectActiveMatchSessions$;
 
-  readonly activeMatchSessionId$ =
-    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
-      filter(Boolean),
-      map(({ id }) => id.toString())
-    );
-  readonly matchesLoading$ =
-    this.matchSessionFacade.selectMatchSessionsLoading$;
-
-  readonly continueMatch$ = new Subject<MatchSession>();
-  readonly matchDeclined$ = new Subject<MatchSession>();
   readonly destroy$ = new Subject();
 
   constructor(
-    private matchSessionFacade: MatchSessionFacade,
+    private modalController: ModalController,
     private userFacade: UserFacade,
-    private storageFacade: StorageFacade,
     private navController: NavController
   ) {}
 
   async ngOnInit() {
-    // this.continueMatch$
-    //   .pipe(
-    //     withLatestFrom(this.currentUser$),
-    //     takeUntil(this.destroy$),
-    //     tap(([matchSession, currentUser]) => {
-    //       this.userFacade.updateUser({
-    //         ...currentUser,
-    //         currentMatchSession: matchSession.id.toString(),
-    //       });
-    //     }),
-    //     delay(300)
-    //   )
-    //   .subscribe(() => {
-    //     this.navController.navigateRoot('/tabs/tab2/current-match');
-    //   });
-
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id);
-
-    // this.matchDeclined$
-    //   .pipe(
-    //     takeUntil(this.destroy$),
-    //     switchMap((matchSession) => {
-    //       return this.matchSessionFacade.updateMatchSession({
-    //         ...matchSession,
-    //         declined: true,
-    //       });
-    //     }),
-    //     withLatestFrom(this.currentUser$)
-    //   )
-    //   .subscribe(([res, currentUser]) => {
-    //     if (+res.matchSession.id === +currentUser.currentMatchSession) {
-    //       this.userFacade.updateUser({
-    //         ...currentUser,
-    //         currentMatchSession: '',
-    //       });
-    //     }
-    //   });
+    this.userFacade.getCurrentUserMatchSessions();
   }
 
   navigateBack() {
     this.navController.navigateBack('/tabs/tab1');
   }
 
+  async matchClicked(matchSession: MatchSessionEntity) {
+    const modal = await this.modalController.create({
+      component: ActiveMatchDetailsModal,
+      swipeToClose: true,
+      componentProps: {
+        host: matchSession.host?.username,
+        guest: matchSession.guest?.username,
+        category: matchSession.category,
+        matchLimit: matchSession.matchLimit,
+      },
+    });
+    modal.present();
+    modal.onDidDismiss().then((result) => {
+      if (result.data === MatchDetailsModalActions.Leave) {
+      }
+    });
+  }
+
   async doRefresh($event) {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }

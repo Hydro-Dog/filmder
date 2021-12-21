@@ -15,7 +15,7 @@ export interface ListOfMatchedFilmsModalData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatchedFilmsSummaryModalShared {
-  @Input() matchedMovies: Film[];
+  @Input() matchedMovies: string[];
   @Input() closeButton = false;
 
   constructor(private modalController: ModalController) {}

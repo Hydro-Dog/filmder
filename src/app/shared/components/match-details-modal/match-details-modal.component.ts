@@ -17,6 +17,7 @@ export enum MatchDetailsModalActions {
   Nothing,
 }
 
+//deprecated
 @Component({
   templateUrl: 'match-details-modal.component.html',
   styleUrls: ['match-details-modal.component.scss'],

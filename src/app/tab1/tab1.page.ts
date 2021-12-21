@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 
 @Component({
@@ -15,37 +16,30 @@ import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tab1Page implements OnInit, OnDestroy {
-  readonly matchSessions$ = this.matchSessionFacade.selectMatchSessions$;
-  // readonly selectPendingMatchSessions$ =
-  //   this.matchSessionFacade.selectPendingMatchSessions$;
-  // readonly guestedMatchSessions$ =
-  //   this.matchSessionFacade.selectInvitesMatchSessions$;
-  // readonly activeMatchSessions$ =
-  //   this.matchSessionFacade.selectActiveMatchSessions$;
-  // readonly completedMatchSessions$ =
-  //   this.matchSessionFacade.selectCompletedMatchSessions$;
+  readonly invitesMatchSessions$ = this.userFacade.selectInvitesMatchSessions$;
+
+  readonly activeMatchSessions$ = this.userFacade.selectActiveMatchSessions$;
+
+  readonly pendingMatchSessions$ = this.userFacade.selectPendingMatchSessions$;
+
+  readonly completedMatchSessions$ =
+    this.userFacade.selectCompletedMatchSessions$;
 
   readonly destroy$ = new Subject();
 
-  constructor(
-    private storageFacade: StorageFacade,
-    private matchSessionFacade: MatchSessionFacade
-  ) {}
+  constructor(private userFacade: UserFacade) {}
 
-  async ngOnInit() {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id);
+  ngOnInit() {
+    this.userFacade.getCurrentUserMatchSessions();
   }
 
   async doRefresh($event) {
-    const id = await this.storageFacade.getItem(STORAGE_ITEMS.USER_ID);
-    this.matchSessionFacade.getMatchSessionsByUserId(id).subscribe(() => {
+    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }
 
   ngOnDestroy(): void {
-    this.matchSessionFacade.stopListenForNewMatches();
     this.destroy$.next();
   }
 }
