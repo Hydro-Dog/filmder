@@ -63,16 +63,16 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
   //     })
   //   );
 
-  readonly selectCurrentMatchSession$ =
-    this.matchSessionFacade.selectCurrentMatchSession$.pipe(
-      shareReplay({ refCount: true, bufferSize: 1 })
-    );
+  // readonly selectCurrentMatchSession$ =
+  //   this.matchSessionFacade.selectCurrentMatchSession$.pipe(
+  //     shareReplay({ refCount: true, bufferSize: 1 })
+  //   );
 
-  readonly matchedMovies$ = this.selectCurrentMatchSession$.pipe(
-    map((matchSession) =>
-      matchSession?.matchedMoviesJSON.map((x) => JSON.parse(x))
-    )
-  );
+  // readonly matchedMovies$ = this.selectCurrentMatchSession$.pipe(
+  //   map((matchSession) =>
+  //     matchSession?.matchedMoviesJSON.map((x) => JSON.parse(x))
+  //   )
+  // );
 
   readonly swipe$ = new Subject<'left' | 'right'>();
   readonly openMatchedFilmsDialog$ = new Subject();
@@ -101,7 +101,6 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     //       });
     //   }
     // });
-
     // this.swipe$
     //   .pipe(
     //     takeUntil(this.destroy$),
@@ -117,48 +116,45 @@ export class PickFilmComponent implements OnInit, AfterViewInit, OnDestroy {
     //       swipeDirection
     //     );
     //   });
-
-    this.matchSessionFacade.filmsMatchHappened$.subscribe(
-      async (filmsMatchHappened) => {
-        const modal = await this.modalController.create({
-          component: MatchHappenedModal,
-          showBackdrop: false,
-          cssClass: ['match-happened-modal'],
-          animated: true,
-          componentProps: {
-            source: filmsMatchHappened.source,
-            film: filmsMatchHappened.film,
-          },
-        });
-        modal.present();
-        setTimeout(() => {
-          modal.dismiss();
-        }, 3000);
-      }
-    );
-
-    this.openMatchedFilmsDialog$
-      .pipe(
-        withLatestFrom(this.selectCurrentMatchSession$),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(async ([_, matchSession]) => {
-        const modal = await this.modalController.create({
-          component: MatchedFilmsSummaryModalShared,
-          swipeToClose: true,
-          componentProps: {
-            closeButton: true,
-            matchedMovies: matchSession.matchedMoviesJSON.map((x) =>
-              JSON.parse(x)
-            ),
-          },
-        });
-        modal.present();
-      });
-
-    this.selectCurrentMatchSession$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((currentMatchSession) => {});
+    // this.matchSessionFacade.filmsMatchHappened$.subscribe(
+    //   async (filmsMatchHappened) => {
+    //     const modal = await this.modalController.create({
+    //       component: MatchHappenedModal,
+    //       showBackdrop: false,
+    //       cssClass: ['match-happened-modal'],
+    //       animated: true,
+    //       componentProps: {
+    //         source: filmsMatchHappened.source,
+    //         film: filmsMatchHappened.film,
+    //       },
+    //     });
+    //     modal.present();
+    //     setTimeout(() => {
+    //       modal.dismiss();
+    //     }, 3000);
+    //   }
+    // );
+    // this.openMatchedFilmsDialog$
+    //   .pipe(
+    //     withLatestFrom(this.selectCurrentMatchSession$),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe(async ([_, matchSession]) => {
+    //     const modal = await this.modalController.create({
+    //       component: MatchedFilmsSummaryModalShared,
+    //       swipeToClose: true,
+    //       componentProps: {
+    //         closeButton: true,
+    //         matchedMovies: matchSession.matchedMoviesJSON.map((x) =>
+    //           JSON.parse(x)
+    //         ),
+    //       },
+    //     });
+    //     modal.present();
+    //   });
+    // this.selectCurrentMatchSession$
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((currentMatchSession) => {});
   }
 
   ngAfterViewInit(): void {

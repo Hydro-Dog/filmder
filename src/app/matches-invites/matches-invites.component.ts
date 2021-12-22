@@ -13,10 +13,12 @@ import { MatchSessionFacade } from '../data-layer/match-session/match-session.fa
 import {
   MatchSession,
   MatchSessionEntity,
+  MatchSessionStatus,
 } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { StorageFacade, STORAGE_ITEMS } from '../services/storage.service';
 import { MatchSessionsListTypes } from '../shared/components/film-matches-list/matches-list.component';
+import { MatchDetailsModalActions } from '../shared/components/match-details-modal/match-details-modal.component';
 import { InvitesMatchesDetailsModal } from './invites-to-matches-details/invites-to-matches-details.component';
 
 @Component({
@@ -29,7 +31,8 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
   constructor(
     private userFacade: UserFacade,
     private navController: NavController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private matchSessionFacade: MatchSessionFacade
   ) {}
 
   async ngOnInit() {
@@ -60,7 +63,21 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
       },
     });
     modal.present();
-    modal.onDidDismiss().then((result) => {});
+    modal.onDidDismiss().then((result) => {
+      if (result.data === MatchSessionStatus.Accepted) {
+        this.matchSessionFacade.updateMatchSessionStatus({
+          matchSessionId: matchSession.id,
+          status: MatchSessionStatus.Accepted,
+        });
+      }
+
+      if (result.data === MatchSessionStatus.Declined) {
+        this.matchSessionFacade.updateMatchSessionStatus({
+          matchSessionId: matchSession.id,
+          status: MatchSessionStatus.Declined,
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {

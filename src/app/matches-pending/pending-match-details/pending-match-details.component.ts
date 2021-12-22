@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { MatchSessionStatus } from '@src/app/data-layer/match-session/match-session.models';
 import { MatchDetailsModalActions } from '@src/app/shared/components/match-details-modal/match-details-modal.component';
 
 @Component({
@@ -20,6 +21,6 @@ export class PendingMatchDetailsModal {
   }
 
   leaveSession() {
-    this.modalController.dismiss(MatchDetailsModalActions.Leave);
+    this.modalController.dismiss(MatchSessionStatus.Declined);
   }
 }

@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
-import { MatchSessionEntity } from '../data-layer/match-session/match-session.models';
+import {
+  MatchSessionEntity,
+  MatchSessionStatus,
+} from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { MatchDetailsModalActions } from '../shared/components/match-details-modal/match-details-modal.component';
 import { PendingMatchDetailsModal } from './pending-match-details/pending-match-details.component';
@@ -49,7 +52,11 @@ export class MatchesPendingComponent {
     });
     modal.present();
     modal.onDidDismiss().then((result) => {
-      if (result.data === MatchDetailsModalActions.Leave) {
+      if (result.data === MatchSessionStatus.Declined) {
+        this.matchSessionFacade.updateMatchSessionStatus({
+          matchSessionId: matchSession.id,
+          status: MatchSessionStatus.Declined,
+        });
       }
     });
   }

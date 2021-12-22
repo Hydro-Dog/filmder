@@ -5,14 +5,17 @@ import { Observable } from 'rxjs/internal/Observable';
 import {
   MatchSession,
   MatchSessionCO,
+  MatchSessionEntity,
   MatchSessionSocketEvents,
+  UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 // import { Socket } from 'ngx-socket-io';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionService {
-  constructor(private http: HttpClient) // private socket: Socket
-  {}
+  constructor(
+    private http: HttpClient // private socket: Socket
+  ) {}
 
   // listenForServer$: Observable<any> = this.socket.fromEvent(
   //   MatchSessionSocketEvents.ServerMessage
@@ -29,46 +32,55 @@ export class MatchSessionService {
     );
   }
 
-  update(matchSession: MatchSession): Observable<MatchSession> {
-    return this.http.put<MatchSession>(
-      `${environment.apiUrl}/api/matchsession/${matchSession.id}`,
-      matchSession
+  updateStatus(
+    data: UpdateMatchSessionStatusDTO
+  ): Observable<MatchSessionEntity> {
+    return this.http.post<MatchSessionEntity>(
+      `${environment.apiUrl}/api/matchsession/status`,
+      data
     );
   }
 
-  delete(matchSessionId: number): Observable<number> {
-    return this.http.request<number>(
-      'delete',
-      `${environment.apiUrl}/api/matchsession`,
-      { body: { matchSessionId } }
-    );
+  // update(matchSession: MatchSession): Observable<MatchSession> {
+  //   return this.http.put<MatchSession>(
+  //     `${environment.apiUrl}/api/matchsession/${matchSession.id}`,
+  //     matchSession
+  //   );
+  // }
 
-    // return this.http.delete<number>(`${environment.apiUrl}/api/matchsession`,  {
-    //   body: matchSessionId,
-    // });
-  }
+  // delete(matchSessionId: number): Observable<number> {
+  //   return this.http.request<number>(
+  //     'delete',
+  //     `${environment.apiUrl}/api/matchsession`,
+  //     { body: { matchSessionId } }
+  //   );
 
-  getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
-    return this.http.get<MatchSession[]>(
-      `${environment.apiUrl}/api/matchsession/?userId=${userId}`
-    );
-  }
+  //   // return this.http.delete<number>(`${environment.apiUrl}/api/matchsession`,  {
+  //   //   body: matchSessionId,
+  //   // });
+  // }
 
-  getMatchSessionById(id: string): Observable<MatchSession> {
-    return this.http.get<MatchSession>(
-      `${environment.apiUrl}/api/matchsession/?matchSessionId=${id}`
-    );
-  }
+  // getMatchSessionsByUserId(userId: number): Observable<MatchSession[]> {
+  //   return this.http.get<MatchSession[]>(
+  //     `${environment.apiUrl}/api/matchsession/?userId=${userId}`
+  //   );
+  // }
 
-  swipe(
-    matchSessionId: number,
-    filmJSON: string,
-    swipeDirection: 'left' | 'right'
-  ): Observable<MatchSession> {
-    return this.http.post<MatchSession>(`${environment.apiUrl}/api/swipefilm`, {
-      matchSessionId,
-      filmJSON,
-      swipeDirection,
-    });
-  }
+  // getMatchSessionById(id: string): Observable<MatchSession> {
+  //   return this.http.get<MatchSession>(
+  //     `${environment.apiUrl}/api/matchsession/?matchSessionId=${id}`
+  //   );
+  // }
+
+  // swipe(
+  //   matchSessionId: number,
+  //   filmJSON: string,
+  //   swipeDirection: 'left' | 'right'
+  // ): Observable<MatchSession> {
+  //   return this.http.post<MatchSession>(`${environment.apiUrl}/api/swipefilm`, {
+  //     matchSessionId,
+  //     filmJSON,
+  //     swipeDirection,
+  //   });
+  // }
 }

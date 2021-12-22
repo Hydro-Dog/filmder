@@ -7,23 +7,12 @@ import {
 } from '@datorama/akita-ng-effects';
 import { ActionType } from '@datorama/akita-ng-entity-service';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { UserStore } from '../user/user.store';
 import {
-  deleteMatchSession,
-  deleteMatchSessionSuccess,
-  getCurrentMatchSession,
-  getCurrentMatchSessionSuccess,
-  getMatchSessionsByUserId,
-  getMatchSessionsByUserIdSuccess,
-  resetStore,
-  setCurrentMatchSessionSuccess,
-  // socketAddMatchSessionSuccess,
-  // socketChangeMatchSessionSuccess,
-  // socketFilmsMatchSuccess,
-  swipe,
-  swipeSuccess,
-  updateMatchSession,
-  updateMatchSessionSuccess,
+  updateMatchSessionStatus,
+  updateMatchSessionStatusSuccess,
 } from './match-session.actions';
+
 import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
 
@@ -33,40 +22,21 @@ export class MatchSessionEffects {
   constructor(
     private actions$: Actions,
     private matchSessionService: MatchSessionService,
-    private matchSessionStore: MatchSessionStore
+    private matchSessionStore: MatchSessionStore,
+    private userStore: UserStore
   ) {}
 
-  @Effect()
-  setCurrentMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(setCurrentMatchSessionSuccess),
-    tap(({ matchSession }) => {
-      return this.matchSessionStore.update((state) => {
-        const filmsSequence = matchSession.filmsSequenceJson.map((filmJson) =>
-          JSON.parse(filmJson)
-        );
-
-        return {
-          ...state,
-          matchSessionsLoading: false,
-          currentMatchSession: { ...matchSession, filmsSequence },
-        };
-      });
-    })
-  );
-
-  updateMatchSession$ = createEffect(
+  updateMatchSessionStatus$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(updateMatchSession),
-        switchMap(({ matchSession }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            matchSessionsLoading: true,
-          }));
+        ofType(updateMatchSessionStatus),
+        switchMap(({ data }) => {
           return this.matchSessionService
-            .update(matchSession)
+            .updateStatus(data)
             .pipe(
-              map((matchSession) => updateMatchSessionSuccess({ matchSession }))
+              map((matchSession) =>
+                updateMatchSessionStatusSuccess({ matchSession })
+              )
             );
         })
       ),
@@ -74,195 +44,250 @@ export class MatchSessionEffects {
   );
 
   @Effect()
-  updateMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(updateMatchSessionSuccess),
+  updateMatchSessionStatusSuccess$ = this.actions$.pipe(
+    ofType(updateMatchSessionStatusSuccess),
     tap(({ matchSession }) => {
-      return this.matchSessionStore.update((state) => {
-        const idx = state.matchSessions.findIndex(
+      return this.userStore.update((state) => {
+        const replaceIndex = state.currentUserMatches.findIndex(
           (item) => item.id === matchSession.id
         );
-
-        const matchSessions = [...state.matchSessions];
-        matchSessions[idx] = matchSession;
+        const currentUserMatches = [...state.currentUserMatches];
+        currentUserMatches[replaceIndex].status = matchSession.status;
         return {
           ...state,
-          matchSessionsLoading: false,
-          matchSessions,
+          currentUserMatches,
         };
       });
     })
   );
 
-  deleteMatchSession$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(deleteMatchSession),
-        switchMap(({ matchSessionId }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            matchSessionsLoading: true,
-          }));
-          return this.matchSessionService
-            .delete(matchSessionId)
-            .pipe(
-              map((matchSessionId) =>
-                deleteMatchSessionSuccess({ matchSessionId })
-              )
-            );
-        })
-      ),
-    { dispatch: true }
-  );
+  // @Effect()
+  // setCurrentMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(setCurrentMatchSessionSuccess),
+  //   tap(({ matchSession }) => {
+  //     return this.matchSessionStore.update((state) => {
+  //       const filmsSequence = matchSession.filmsSequenceJson.map((filmJson) =>
+  //         JSON.parse(filmJson)
+  //       );
 
-  @Effect()
-  deleteMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(deleteMatchSessionSuccess),
-    tap(({ matchSessionId }) => {
-      return this.matchSessionStore.update((state) => {
-        const idx = state.matchSessions.findIndex(
-          (item) => +item.id === +matchSessionId
-        );
+  //       return {
+  //         ...state,
+  //         matchSessionsLoading: false,
+  //         currentMatchSession: { ...matchSession, filmsSequence },
+  //       };
+  //     });
+  //   })
+  // );
 
-        const matchSessions = [...state.matchSessions];
-        matchSessions.splice(idx, 1);
-        return {
-          ...state,
-          matchSessionsLoading: false,
-          matchSessions,
-        };
-      });
-    })
-  );
+  // updateMatchSession$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(updateMatchSession),
+  //       switchMap(({ matchSession }) => {
+  //         this.matchSessionStore.update((state) => ({
+  //           ...state,
+  //           matchSessionsLoading: true,
+  //         }));
+  //         return this.matchSessionService
+  //           .update(matchSession)
+  //           .pipe(
+  //             map((matchSession) => updateMatchSessionSuccess({ matchSession }))
+  //           );
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
-  getMatchSessionsByUserId$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(getMatchSessionsByUserId),
-        switchMap(({ userId }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            matchSessionsLoading: true,
-          }));
+  // @Effect()
+  // updateMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(updateMatchSessionSuccess),
+  //   tap(({ matchSession }) => {
+  //     return this.matchSessionStore.update((state) => {
+  //       const idx = state.matchSessions.findIndex(
+  //         (item) => item.id === matchSession.id
+  //       );
 
-          return this.matchSessionService
-            .getMatchSessionsByUserId(userId)
-            .pipe(
-              map((matchSessions) =>
-                getMatchSessionsByUserIdSuccess({ matchSessions })
-              )
-            );
-        })
-      ),
-    { dispatch: true }
-  );
+  //       const matchSessions = [...state.matchSessions];
+  //       matchSessions[idx] = matchSession;
+  //       return {
+  //         ...state,
+  //         matchSessionsLoading: false,
+  //         matchSessions,
+  //       };
+  //     });
+  //   })
+  // );
 
-  @Effect()
-  getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
-    ofType(getMatchSessionsByUserIdSuccess),
-    tap(({ matchSessions }) => {
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessionsLoading: false,
-        matchSessions,
-      }));
-    })
-  );
+  // deleteMatchSession$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(deleteMatchSession),
+  //       switchMap(({ matchSessionId }) => {
+  //         this.matchSessionStore.update((state) => ({
+  //           ...state,
+  //           matchSessionsLoading: true,
+  //         }));
+  //         return this.matchSessionService
+  //           .delete(matchSessionId)
+  //           .pipe(
+  //             map((matchSessionId) =>
+  //               deleteMatchSessionSuccess({ matchSessionId })
+  //             )
+  //           );
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
-  getCurrentMatchSession$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(getCurrentMatchSession),
-        switchMap(({ matchSessionId }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            matchSessionsLoading: true,
-          }));
+  // @Effect()
+  // deleteMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(deleteMatchSessionSuccess),
+  //   tap(({ matchSessionId }) => {
+  //     return this.matchSessionStore.update((state) => {
+  //       const idx = state.matchSessions.findIndex(
+  //         (item) => +item.id === +matchSessionId
+  //       );
 
-          return this.matchSessionService
-            .getMatchSessionById(matchSessionId)
-            .pipe(
-              map((currentMatchSession) =>
-                getCurrentMatchSessionSuccess({ currentMatchSession })
-              )
-            );
-        })
-      ),
-    { dispatch: true }
-  );
+  //       const matchSessions = [...state.matchSessions];
+  //       matchSessions.splice(idx, 1);
+  //       return {
+  //         ...state,
+  //         matchSessionsLoading: false,
+  //         matchSessions,
+  //       };
+  //     });
+  //   })
+  // );
 
-  @Effect()
-  getCurrentMatchSessionSuccess$ = this.actions$.pipe(
-    ofType(getCurrentMatchSessionSuccess),
-    tap(({ currentMatchSession }) => {
-      const filmsSequence = currentMatchSession.filmsSequenceJson.map(
-        (filmJson) => JSON.parse(filmJson)
-      );
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessionsLoading: false,
-        currentMatchSession: { ...currentMatchSession, filmsSequence },
-      }));
-    }),
-    catchError(() => {
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        matchSessionsLoading: false,
-        currentMatchSession: null,
-      }));
-    })
-  );
+  // getMatchSessionsByUserId$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(getMatchSessionsByUserId),
+  //       switchMap(({ userId }) => {
+  //         this.matchSessionStore.update((state) => ({
+  //           ...state,
+  //           matchSessionsLoading: true,
+  //         }));
 
-  swipeRight$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(swipe),
-        switchMap(({ matchSessionId, filmJSON, swipeDirection }) => {
-          this.matchSessionStore.update((state) => ({
-            ...state,
-            currentMatchSessionLoading: true,
-          }));
+  //         return this.matchSessionService
+  //           .getMatchSessionsByUserId(userId)
+  //           .pipe(
+  //             map((matchSessions) =>
+  //               getMatchSessionsByUserIdSuccess({ matchSessions })
+  //             )
+  //           );
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
-          return this.matchSessionService
-            .swipe(matchSessionId, filmJSON, swipeDirection)
-            .pipe(
-              map((currentMatchSession) =>
-                swipeSuccess({ currentMatchSession })
-              )
-            );
-        })
-      ),
-    { dispatch: true }
-  );
+  // @Effect()
+  // getMatchSessionsByUserIdSuccess$ = this.actions$.pipe(
+  //   ofType(getMatchSessionsByUserIdSuccess),
+  //   tap(({ matchSessions }) => {
+  //     return this.matchSessionStore.update((state) => ({
+  //       ...state,
+  //       matchSessionsLoading: false,
+  //       matchSessions,
+  //     }));
+  //   })
+  // );
 
-  @Effect()
-  swipeRightSuccess$ = this.actions$.pipe(
-    ofType(swipeSuccess),
-    tap(({ currentMatchSession }) => {
-      const filmsSequence = currentMatchSession.filmsSequenceJson.map(
-        (filmJson) => JSON.parse(filmJson)
-      );
+  // getCurrentMatchSession$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(getCurrentMatchSession),
+  //       switchMap(({ matchSessionId }) => {
+  //         this.matchSessionStore.update((state) => ({
+  //           ...state,
+  //           matchSessionsLoading: true,
+  //         }));
 
-      return this.matchSessionStore.update((state) => ({
-        ...state,
-        currentMatchSessionLoading: false,
-        currentMatchSession: { ...currentMatchSession, filmsSequence },
-      }));
-    })
-  );
+  //         return this.matchSessionService
+  //           .getMatchSessionById(matchSessionId)
+  //           .pipe(
+  //             map((currentMatchSession) =>
+  //               getCurrentMatchSessionSuccess({ currentMatchSession })
+  //             )
+  //           );
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
 
-  @Effect()
-  resetStore$ = this.actions$.pipe(
-    ofType(resetStore),
-    tap(() => {
-      return this.matchSessionStore.update((state) => {
-        return {
-          ...state,
-          matchSessions: [],
-          currentMatchSession: null,
-        };
-      });
-    })
-  );
+  // @Effect()
+  // getCurrentMatchSessionSuccess$ = this.actions$.pipe(
+  //   ofType(getCurrentMatchSessionSuccess),
+  //   tap(({ currentMatchSession }) => {
+  //     const filmsSequence = currentMatchSession.filmsSequenceJson.map(
+  //       (filmJson) => JSON.parse(filmJson)
+  //     );
+  //     return this.matchSessionStore.update((state) => ({
+  //       ...state,
+  //       matchSessionsLoading: false,
+  //       currentMatchSession: { ...currentMatchSession, filmsSequence },
+  //     }));
+  //   }),
+  //   catchError(() => {
+  //     return this.matchSessionStore.update((state) => ({
+  //       ...state,
+  //       matchSessionsLoading: false,
+  //       currentMatchSession: null,
+  //     }));
+  //   })
+  // );
+
+  // swipeRight$ = createEffect(
+  //   () =>
+  //     this.actions$.pipe(
+  //       ofType(swipe),
+  //       switchMap(({ matchSessionId, filmJSON, swipeDirection }) => {
+  //         this.matchSessionStore.update((state) => ({
+  //           ...state,
+  //           currentMatchSessionLoading: true,
+  //         }));
+
+  //         return this.matchSessionService
+  //           .swipe(matchSessionId, filmJSON, swipeDirection)
+  //           .pipe(
+  //             map((currentMatchSession) =>
+  //               swipeSuccess({ currentMatchSession })
+  //             )
+  //           );
+  //       })
+  //     ),
+  //   { dispatch: true }
+  // );
+
+  // @Effect()
+  // swipeRightSuccess$ = this.actions$.pipe(
+  //   ofType(swipeSuccess),
+  //   tap(({ currentMatchSession }) => {
+  //     const filmsSequence = currentMatchSession.filmsSequenceJson.map(
+  //       (filmJson) => JSON.parse(filmJson)
+  //     );
+
+  //     return this.matchSessionStore.update((state) => ({
+  //       ...state,
+  //       currentMatchSessionLoading: false,
+  //       currentMatchSession: { ...currentMatchSession, filmsSequence },
+  //     }));
+  //   })
+  // );
+
+  // @Effect()
+  // resetStore$ = this.actions$.pipe(
+  //   ofType(resetStore),
+  //   tap(() => {
+  //     return this.matchSessionStore.update((state) => {
+  //       return {
+  //         ...state,
+  //         matchSessions: [],
+  //         currentMatchSession: null,
+  //       };
+  //     });
+  //   })
+  // );
 
   // sockets -----------------------------------------------------
 

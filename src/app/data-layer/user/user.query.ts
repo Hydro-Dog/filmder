@@ -19,7 +19,7 @@ export class UserQuery extends Query<UserState> {
     map(([items, currentUser]) =>
       items.filter(
         (item) =>
-          currentUser.id === item.guest.id &&
+          item.guest.id === currentUser.id &&
           item.status === MatchSessionStatus.Pending
       )
     )

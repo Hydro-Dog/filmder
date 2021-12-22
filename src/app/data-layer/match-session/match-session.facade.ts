@@ -2,38 +2,28 @@ import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { Film } from '../film/film.models';
-import {
-  deleteMatchSession,
-  getCurrentMatchSession,
-  getMatchSessionsByUserId,
-  resetStore,
-  // setCurrentMatchSessionSuccess,
-  // socketAddMatchSessionSuccess,
-  // socketChangeMatchSessionSuccess,
-  // socketFilmsMatchSuccess,
-  swipe,
-  updateMatchSession,
-} from './match-session.actions';
+import { updateMatchSessionStatus } from './match-session.actions';
 import { MatchSessionEffects } from './match-session.effects';
 import {
   MatchSession,
   MatchSessionChangesEvents,
   MatchSessionCO,
   MatchSessionSocketEvents,
+  UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 import { MatchSessionQuery } from './match-session.query';
 import { MatchSessionService } from './match-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionFacade {
-  readonly selectMatchSessionsLoading$: Observable<boolean> =
-    this.matchSessionQuery.selectMatchSessionsLoading$;
+  // readonly selectMatchSessionsLoading$: Observable<boolean> =
+  //   this.matchSessionQuery.selectMatchSessionsLoading$;
 
-  readonly selectCurrentMatchSession$: Observable<MatchSession> =
-    this.matchSessionQuery.selectCurrentMatchSession$;
+  // readonly selectCurrentMatchSession$: Observable<MatchSession> =
+  //   this.matchSessionQuery.selectCurrentMatchSession$;
 
-  readonly selectMatchSessions$: Observable<MatchSession[]> =
-    this.matchSessionQuery.selectMatchSessions$;
+  // readonly selectMatchSessions$: Observable<MatchSession[]> =
+  //   this.matchSessionQuery.selectMatchSessions$;
 
   // readonly selectInvitesMatchSessions$: Observable<MatchSession[]> =
   //   this.matchSessionQuery.selectInvitesMatchSessions$;
@@ -47,50 +37,54 @@ export class MatchSessionFacade {
   // readonly selectCompletedMatchSessions$: Observable<MatchSession[]> =
   //   this.matchSessionQuery.completedMatchSessions$;
 
-  readonly socketMatchSessionSub = new Subscription();
-  readonly filmsMatchHappened$ = new Subject<{
-    film: Film;
-    source: 'self' | 'opponent';
-  }>();
+  // readonly socketMatchSessionSub = new Subscription();
+  // readonly filmsMatchHappened$ = new Subject<{
+  //   film: Film;
+  //   source: 'self' | 'opponent';
+  // }>();
 
   constructor(
     private actions: Actions,
-    private matchSessionService: MatchSessionService,
-    private matchSessionQuery: MatchSessionQuery,
     private matchSessionEffects: MatchSessionEffects
   ) {}
 
-  resetStore() {
-    this.actions.dispatch(resetStore());
+  updateMatchSessionStatus(data: UpdateMatchSessionStatusDTO) {
+    this.actions.dispatch(updateMatchSessionStatus({ data }));
+
+    return this.matchSessionEffects.updateMatchSessionStatusSuccess$;
   }
 
-  createMatchSession(matchSession: MatchSessionCO) {
-    return this.matchSessionService.create(matchSession);
-  }
-
-  updateMatchSession(matchSession: MatchSession) {
-    this.actions.dispatch(updateMatchSession({ matchSession }));
-
-    return this.matchSessionEffects.updateMatchSessionSuccess$;
-  }
-
-  // setCurrentMatchSession(matchSession: MatchSession) {
-  //   this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
+  // resetStore() {
+  //   this.actions.dispatch(resetStore());
   // }
 
-  deleteMatchSession(matchSessionId: number) {
-    this.actions.dispatch(deleteMatchSession({ matchSessionId }));
-  }
+  // createMatchSession(matchSession: MatchSessionCO) {
+  //   return this.matchSessionService.create(matchSession);
+  // }
 
-  getMatchSessionsByUserId(userId: number) {
-    this.actions.dispatch(getMatchSessionsByUserId({ userId }));
+  // updateMatchSession(matchSession: MatchSession) {
+  //   this.actions.dispatch(updateMatchSession({ matchSession }));
 
-    return this.matchSessionEffects.getMatchSessionsByUserIdSuccess$;
-  }
+  //   return this.matchSessionEffects.updateMatchSessionSuccess$;
+  // }
 
-  getCurrentMatchSession(matchSessionId: string) {
-    this.actions.dispatch(getCurrentMatchSession({ matchSessionId }));
-  }
+  // // setCurrentMatchSession(matchSession: MatchSession) {
+  // //   this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
+  // // }
+
+  // deleteMatchSession(matchSessionId: number) {
+  //   this.actions.dispatch(deleteMatchSession({ matchSessionId }));
+  // }
+
+  // getMatchSessionsByUserId(userId: number) {
+  //   this.actions.dispatch(getMatchSessionsByUserId({ userId }));
+
+  //   return this.matchSessionEffects.getMatchSessionsByUserIdSuccess$;
+  // }
+
+  // getCurrentMatchSession(matchSessionId: string) {
+  //   this.actions.dispatch(getCurrentMatchSession({ matchSessionId }));
+  // }
 
   // registerNewListener(id: string) {
   //   this.matchSessionService.msgToServer(
@@ -139,15 +133,15 @@ export class MatchSessionFacade {
   //   );
   // }
 
-  stopListenForNewMatches() {
-    this.socketMatchSessionSub.unsubscribe();
-  }
+  // stopListenForNewMatches() {
+  //   this.socketMatchSessionSub.unsubscribe();
+  // }
 
-  swipe(
-    matchSessionId: number,
-    filmJSON: string,
-    swipeDirection: 'left' | 'right'
-  ) {
-    this.actions.dispatch(swipe({ matchSessionId, filmJSON, swipeDirection }));
-  }
+  // swipe(
+  //   matchSessionId: number,
+  //   filmJSON: string,
+  //   swipeDirection: 'left' | 'right'
+  // ) {
+  //   this.actions.dispatch(swipe({ matchSessionId, filmJSON, swipeDirection }));
+  // }
 }

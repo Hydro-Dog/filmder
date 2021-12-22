@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Film } from '@src/app/data-layer/film/film.models';
+import { MatchSessionStatus } from '@src/app/data-layer/match-session/match-session.models';
 import { MatchDetailsModalActions } from '@src/app/shared/components/match-details-modal/match-details-modal.component';
 
 @Component({
@@ -22,10 +23,10 @@ export class CompletedMatchesDetailsModal {
   }
 
   acceptClicked() {
-    this.modalController.dismiss(MatchDetailsModalActions.Accept);
+    this.modalController.dismiss(MatchSessionStatus.Accepted);
   }
 
   declineClicked() {
-    this.modalController.dismiss(MatchDetailsModalActions.Decline);
+    this.modalController.dismiss(MatchSessionStatus.Declined);
   }
 }

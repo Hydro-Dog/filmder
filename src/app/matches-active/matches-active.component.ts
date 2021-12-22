@@ -15,6 +15,7 @@ import { MatchSessionFacade } from '../data-layer/match-session/match-session.fa
 import {
   MatchSession,
   MatchSessionEntity,
+  MatchSessionStatus,
 } from '../data-layer/match-session/match-session.models';
 import { UserFacade } from '../data-layer/user/user.facade';
 import { PendingMatchDetailsModal } from '../matches-pending/pending-match-details/pending-match-details.component';
@@ -32,6 +33,7 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly destroy$ = new Subject();
 
   constructor(
+    private matchSessionFacade: MatchSessionFacade,
     private modalController: ModalController,
     private userFacade: UserFacade,
     private navController: NavController
@@ -58,7 +60,15 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
     });
     modal.present();
     modal.onDidDismiss().then((result) => {
-      if (result.data === MatchDetailsModalActions.Leave) {
+      if (result.data === MatchSessionStatus.Declined) {
+        this.matchSessionFacade.updateMatchSessionStatus({
+          matchSessionId: matchSession.id,
+          status: MatchSessionStatus.Declined,
+        });
+      }
+
+      if (result.data === MatchDetailsModalActions.Continue) {
+        // TODO: Implement
       }
     });
   }

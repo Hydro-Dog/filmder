@@ -3,134 +3,155 @@ import {
   MatchSession,
   MatchSessionChangesEvents,
   MatchSessionCO,
+  MatchSessionEntity,
+  UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 
-export const setCurrentMatchSessionSuccess = createAction(
-  '[Match Session] Set Current Match Session Success',
+export const updateMatchSessionStatus = createAction(
+  '[Match Session] Update Status',
+  props<{ data: UpdateMatchSessionStatusDTO }>()
+);
+
+export const updateMatchSessionStatusSuccess = createAction(
+  '[Match Session] Update Status Success',
   props<{
-    matchSession: MatchSession;
+    matchSession: MatchSessionEntity;
   }>()
 );
 
-export const createMatchSession = createAction(
-  '[Match Session] Create',
-  props<{ matchSession: MatchSessionCO }>()
-);
-
-export const createMatchSessionSuccess = createAction(
-  '[Match Session] Create Success',
-  props<{
-    matchSession: MatchSession;
-  }>()
-);
-
-export const createMatchSessionError = createAction(
-  '[Match Session] Create Error',
+export const updateMatchSessionStatusError = createAction(
+  '[Match Session] Update Status Error',
   props<{
     error: any;
   }>()
 );
 
-export const deleteMatchSession = createAction(
-  '[Match Session] Delete',
-  props<{ matchSessionId: number }>()
-);
+// export const setCurrentMatchSessionSuccess = createAction(
+//   '[Match Session] Set Current Match Session Success',
+//   props<{
+//     matchSession: MatchSession;
+//   }>()
+// );
 
-export const deleteMatchSessionSuccess = createAction(
-  '[Match Session] Delete Success',
-  props<{
-    matchSessionId: number;
-  }>()
-);
+// export const createMatchSession = createAction(
+//   '[Match Session] Create',
+//   props<{ matchSession: MatchSessionCO }>()
+// );
 
-export const deleteMatchSessionError = createAction(
-  '[Match Session] Delete Error',
-  props<{
-    error: any;
-  }>()
-);
+// export const createMatchSessionSuccess = createAction(
+//   '[Match Session] Create Success',
+//   props<{
+//     matchSession: MatchSession;
+//   }>()
+// );
 
-export const updateMatchSession = createAction(
-  '[Match Session] Update',
-  props<{ matchSession: MatchSession }>()
-);
+// export const createMatchSessionError = createAction(
+//   '[Match Session] Create Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
 
-export const updateMatchSessionSuccess = createAction(
-  '[Match Session] Update Success',
-  props<{
-    matchSession: MatchSession;
-  }>()
-);
+// export const deleteMatchSession = createAction(
+//   '[Match Session] Delete',
+//   props<{ matchSessionId: number }>()
+// );
 
-export const updateMatchSessionError = createAction(
-  '[Match Session] Update Error',
-  props<{
-    error: any;
-  }>()
-);
+// export const deleteMatchSessionSuccess = createAction(
+//   '[Match Session] Delete Success',
+//   props<{
+//     matchSessionId: number;
+//   }>()
+// );
 
-export const getCurrentMatchSession = createAction(
-  '[Match Session] Get Current Match Session',
-  props<{ matchSessionId: string }>()
-);
+// export const deleteMatchSessionError = createAction(
+//   '[Match Session] Delete Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
 
-export const getCurrentMatchSessionSuccess = createAction(
-  '[Match Session] Get Current Match Session Success',
-  props<{
-    currentMatchSession: MatchSession;
-  }>()
-);
+// export const updateMatchSession = createAction(
+//   '[Match Session] Update',
+//   props<{ matchSession: MatchSession }>()
+// );
 
-export const getCurrentMatchSessionError = createAction(
-  '[Match Session] Get Current Match Session Error',
-  props<{
-    error: any;
-  }>()
-);
+// export const updateMatchSessionSuccess = createAction(
+//   '[Match Session] Update Success',
+//   props<{
+//     matchSession: MatchSession;
+//   }>()
+// );
 
-export const getMatchSessionsByUserId = createAction(
-  '[Match Session] Get By User Id',
-  props<{ userId: number }>()
-);
+// export const updateMatchSessionError = createAction(
+//   '[Match Session] Update Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
 
-export const getMatchSessionsByUserIdSuccess = createAction(
-  '[Match Session] Get By User Id Success',
-  props<{
-    matchSessions: MatchSession[];
-  }>()
-);
+// export const getCurrentMatchSession = createAction(
+//   '[Match Session] Get Current Match Session',
+//   props<{ matchSessionId: string }>()
+// );
 
-export const getMatchSessionsByUserIdError = createAction(
-  '[Match Session] Get By User Id Error',
-  props<{
-    error: any;
-  }>()
-);
+// export const getCurrentMatchSessionSuccess = createAction(
+//   '[Match Session] Get Current Match Session Success',
+//   props<{
+//     currentMatchSession: MatchSession;
+//   }>()
+// );
 
-export const searchMatchSessionsInvitedSuccess = createAction(
-  '[Match Session] Search Invited Success',
-  props<{
-    matchSessions: MatchSession[];
-  }>()
-);
+// export const getCurrentMatchSessionError = createAction(
+//   '[Match Session] Get Current Match Session Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
 
-export const swipe = createAction(
-  '[Match Session] Swipe',
-  props<{
-    matchSessionId: number;
-    filmJSON: string;
-    swipeDirection: 'left' | 'right';
-  }>()
-);
+// export const getMatchSessionsByUserId = createAction(
+//   '[Match Session] Get By User Id',
+//   props<{ userId: number }>()
+// );
 
-export const swipeSuccess = createAction(
-  '[Match Session] Swipe Success',
-  props<{
-    currentMatchSession: MatchSession;
-  }>()
-);
+// export const getMatchSessionsByUserIdSuccess = createAction(
+//   '[Match Session] Get By User Id Success',
+//   props<{
+//     matchSessions: MatchSession[];
+//   }>()
+// );
 
-export const resetStore = createAction('[Match Session] Reset Store');
+// export const getMatchSessionsByUserIdError = createAction(
+//   '[Match Session] Get By User Id Error',
+//   props<{
+//     error: any;
+//   }>()
+// );
+
+// export const searchMatchSessionsInvitedSuccess = createAction(
+//   '[Match Session] Search Invited Success',
+//   props<{
+//     matchSessions: MatchSession[];
+//   }>()
+// );
+
+// export const swipe = createAction(
+//   '[Match Session] Swipe',
+//   props<{
+//     matchSessionId: number;
+//     filmJSON: string;
+//     swipeDirection: 'left' | 'right';
+//   }>()
+// );
+
+// export const swipeSuccess = createAction(
+//   '[Match Session] Swipe Success',
+//   props<{
+//     currentMatchSession: MatchSession;
+//   }>()
+// );
+
+// export const resetStore = createAction('[Match Session] Reset Store');
 
 // sockets---------------------------------------------------
 

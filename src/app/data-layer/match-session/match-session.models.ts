@@ -34,6 +34,11 @@ export class MatchSessionEntity {
   guestLikedFilmIndex: number;
 }
 
+export class UpdateMatchSessionStatusDTO {
+  matchSessionId: string;
+  status: MatchSessionStatus;
+}
+
 //=========================================================================
 
 //CO - create object
@@ -67,10 +72,10 @@ export interface MatchSession {
   completed: boolean;
 }
 
-export enum ScopeSearchMatchSession {
-  Hosted = 'hosted',
-  Invited = 'invites',
-}
+// export enum ScopeSearchMatchSession {
+//   Hosted = 'hosted',
+//   Invited = 'invites',
+// }
 
 export enum MatchSessionSocketEvents {
   ServerMessage = 'server_message',

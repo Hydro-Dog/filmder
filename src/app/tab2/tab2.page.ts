@@ -7,8 +7,8 @@ import { MatchSessionFacade } from '../data-layer/match-session/match-session.fa
   styleUrls: ['tab2.page.scss'],
 })
 export class Tab2Page {
-  readonly currentMatchSession$ =
-    this.matchSessionFacade.selectCurrentMatchSession$;
+  // readonly currentMatchSession$ =
+  //   this.matchSessionFacade.selectCurrentMatchSession$;
 
   constructor(private matchSessionFacade: MatchSessionFacade) {}
 }
