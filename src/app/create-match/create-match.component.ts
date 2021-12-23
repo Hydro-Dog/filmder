@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
 
 @Component({
   templateUrl: 'create-match.component.html',

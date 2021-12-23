@@ -14,6 +14,13 @@ export class GetMatchSessionDTO {
   userId?: string;
 }
 
+export class CreateMatchSessionDTO {
+  hostId: string;
+  guestId: string;
+  matchLimit: number;
+  category: FilmCategories;
+}
+
 export class MatchSessionEntity {
   id: string;
   created: Date;
@@ -37,6 +44,13 @@ export class MatchSessionEntity {
 export class UpdateMatchSessionStatusDTO {
   matchSessionId: string;
   status: MatchSessionStatus;
+}
+
+export enum FilmCategories {
+  Popular = 'popular',
+  // NowPlaying = 'now_playing',
+  TopRated = 'top_rated',
+  Upcoming = 'upcoming',
 }
 
 //=========================================================================

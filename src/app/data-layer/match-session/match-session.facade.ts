@@ -5,6 +5,7 @@ import { Film } from '../film/film.models';
 import { updateMatchSessionStatus } from './match-session.actions';
 import { MatchSessionEffects } from './match-session.effects';
 import {
+  CreateMatchSessionDTO,
   MatchSession,
   MatchSessionChangesEvents,
   MatchSessionCO,
@@ -16,36 +17,10 @@ import { MatchSessionService } from './match-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionFacade {
-  // readonly selectMatchSessionsLoading$: Observable<boolean> =
-  //   this.matchSessionQuery.selectMatchSessionsLoading$;
-
-  // readonly selectCurrentMatchSession$: Observable<MatchSession> =
-  //   this.matchSessionQuery.selectCurrentMatchSession$;
-
-  // readonly selectMatchSessions$: Observable<MatchSession[]> =
-  //   this.matchSessionQuery.selectMatchSessions$;
-
-  // readonly selectInvitesMatchSessions$: Observable<MatchSession[]> =
-  //   this.matchSessionQuery.selectInvitesMatchSessions$;
-
-  // readonly selectActiveMatchSessions$: Observable<MatchSession[]> =
-  //   this.matchSessionQuery.selectActiveMatchSessions$;
-
-  // readonly selectPendingMatchSessions$: Observable<MatchSession[]> =
-  //   this.matchSessionQuery.selectPendingMatchSessions$;
-
-  // readonly selectCompletedMatchSessions$: Observable<MatchSession[]> =
-  //   this.matchSessionQuery.completedMatchSessions$;
-
-  // readonly socketMatchSessionSub = new Subscription();
-  // readonly filmsMatchHappened$ = new Subject<{
-  //   film: Film;
-  //   source: 'self' | 'opponent';
-  // }>();
-
   constructor(
     private actions: Actions,
-    private matchSessionEffects: MatchSessionEffects
+    private matchSessionEffects: MatchSessionEffects,
+    private matchSessionService: MatchSessionService
   ) {}
 
   updateMatchSessionStatus(data: UpdateMatchSessionStatusDTO) {
@@ -54,37 +29,9 @@ export class MatchSessionFacade {
     return this.matchSessionEffects.updateMatchSessionStatusSuccess$;
   }
 
-  // resetStore() {
-  //   this.actions.dispatch(resetStore());
-  // }
-
-  // createMatchSession(matchSession: MatchSessionCO) {
-  //   return this.matchSessionService.create(matchSession);
-  // }
-
-  // updateMatchSession(matchSession: MatchSession) {
-  //   this.actions.dispatch(updateMatchSession({ matchSession }));
-
-  //   return this.matchSessionEffects.updateMatchSessionSuccess$;
-  // }
-
-  // // setCurrentMatchSession(matchSession: MatchSession) {
-  // //   this.actions.dispatch(setCurrentMatchSessionSuccess({ matchSession }));
-  // // }
-
-  // deleteMatchSession(matchSessionId: number) {
-  //   this.actions.dispatch(deleteMatchSession({ matchSessionId }));
-  // }
-
-  // getMatchSessionsByUserId(userId: number) {
-  //   this.actions.dispatch(getMatchSessionsByUserId({ userId }));
-
-  //   return this.matchSessionEffects.getMatchSessionsByUserIdSuccess$;
-  // }
-
-  // getCurrentMatchSession(matchSessionId: string) {
-  //   this.actions.dispatch(getCurrentMatchSession({ matchSessionId }));
-  // }
+  createMatchSession(matchSession: CreateMatchSessionDTO) {
+    return this.matchSessionService.create(matchSession);
+  }
 
   // registerNewListener(id: string) {
   //   this.matchSessionService.msgToServer(

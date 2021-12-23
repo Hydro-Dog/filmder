@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import {
+  CreateMatchSessionDTO,
   MatchSession,
   MatchSessionCO,
   MatchSessionEntity,
   MatchSessionSocketEvents,
   UpdateMatchSessionStatusDTO,
 } from './match-session.models';
+import { GameModes } from '../game-mode/game-mode.models';
 // import { Socket } from 'ngx-socket-io';
 
 @Injectable({ providedIn: 'root' })
@@ -25,7 +27,7 @@ export class MatchSessionService {
   //   this.socket.emit(event, message);
   // }
 
-  create(matchSession: MatchSessionCO): Observable<MatchSession> {
+  create(matchSession: CreateMatchSessionDTO): Observable<MatchSession> {
     return this.http.post<MatchSession>(
       `${environment.apiUrl}/api/matchsession`,
       matchSession
@@ -39,6 +41,10 @@ export class MatchSessionService {
       `${environment.apiUrl}/api/matchsession/status`,
       data
     );
+  }
+
+  getGameModes(): Observable<GameModes[]> {
+    return this.http.get<GameModes[]>(`${environment.apiUrl}/api/gamemode`);
   }
 
   // update(matchSession: MatchSession): Observable<MatchSession> {

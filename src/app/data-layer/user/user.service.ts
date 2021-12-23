@@ -48,7 +48,9 @@ export class UserService {
   getUser(query: Partial<UserEntity>) {
     let params = new HttpParams({ fromObject: query });
 
-    return this.http.get(`${environment.apiUrl}/api/user`, { params });
+    return this.http.get<UserEntity>(`${environment.apiUrl}/api/user`, {
+      params,
+    });
   }
 
   getCurrentUserMatchSessions(): Observable<MatchSessionEntity[]> {

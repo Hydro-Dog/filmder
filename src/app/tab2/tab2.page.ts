@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { MatchSessionFacade } from '../data-layer/match-session/match-session.facade';
+import { UserFacade } from '../data-layer/user/user.facade';
 
 @Component({
   selector: 'app-tab2',
@@ -7,8 +9,13 @@ import { MatchSessionFacade } from '../data-layer/match-session/match-session.fa
   styleUrls: ['tab2.page.scss'],
 })
 export class Tab2Page {
-  // readonly currentMatchSession$ =
-  //   this.matchSessionFacade.selectCurrentMatchSession$;
+  currentMatch$ = this.userFacade.selectCurrentUser$.pipe(
+    map((user) => !!user.currentMatchSession)
+  );
 
-  constructor(private matchSessionFacade: MatchSessionFacade) {}
+  constructor(private userFacade: UserFacade) {
+    this.currentMatch$.subscribe((currentMatch) =>
+      console.log('currentMatch: ', currentMatch)
+    );
+  }
 }

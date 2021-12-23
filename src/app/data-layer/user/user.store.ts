@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { MatchSessionEntity } from '../match-session/match-session.models';
+import { UserEntity } from './user.models';
 
 export interface UserState {
-  currentUser: any | null;
+  currentUser: UserEntity | null;
   error: any;
   currentUserLoading: boolean;
   currentUserMatches: MatchSessionEntity[];

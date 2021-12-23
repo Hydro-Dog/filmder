@@ -12,6 +12,7 @@ import {
   updateMatchSessionStatus,
   updateMatchSessionStatusSuccess,
 } from './match-session.actions';
+import { MatchSessionStatus } from './match-session.models';
 
 import { MatchSessionService } from './match-session.service';
 import { MatchSessionStore } from './match-session.store';
@@ -48,11 +49,19 @@ export class MatchSessionEffects {
     ofType(updateMatchSessionStatusSuccess),
     tap(({ matchSession }) => {
       return this.userStore.update((state) => {
-        const replaceIndex = state.currentUserMatches.findIndex(
+        const index = state.currentUserMatches.findIndex(
           (item) => item.id === matchSession.id
         );
-        const currentUserMatches = [...state.currentUserMatches];
-        currentUserMatches[replaceIndex].status = matchSession.status;
+        let currentUserMatches = [...state.currentUserMatches];
+
+        if (matchSession.status === MatchSessionStatus.Declined) {
+          currentUserMatches = currentUserMatches.filter(
+            ({ id }) => id !== matchSession.id
+          );
+        } else {
+          currentUserMatches[index].status = matchSession.status;
+        }
+
         return {
           ...state,
           currentUserMatches,

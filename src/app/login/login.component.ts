@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   navigateBack() {
-    this.navController.navigateBack('/auth');
+    this.navController.navigateBack('/start-screen');
   }
 
   isControlInvalid(controlName: string): boolean {

@@ -8,8 +8,9 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import {
+  catchError,
   delay,
   retry,
   switchMap,
@@ -66,6 +67,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameModesFacade.getGameModes();
+    this.userFacade.getCurrentUser();
 
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd && !e.url.includes('current-match')) {
@@ -83,6 +85,36 @@ export class FastMatchComponent implements OnInit, OnDestroy {
   }
 
   createGame() {
+    // this.matchSessionFacade.createMatchSession();
+
+    this.userFacade
+      .getUser({ username: this.fastMatchForm.value.guestUsername })
+      .pipe(
+        catchError(() => {
+          this.toastComponentShared.displayToast(`Sorry, no such user`);
+          return throwError(false);
+        }),
+        withLatestFrom(this.userFacade.selectCurrentUser$),
+        switchMap(([guest, currentUser]) => {
+          if (guest.id === currentUser.id) {
+            this.toastComponentShared.displayToast(
+              `Sorry, you can't invite yourself`
+            );
+          } else {
+            this.showSpinner$.next(true);
+            return this.matchSessionFacade.createMatchSession({
+              hostId: currentUser.id,
+              guestId: guest.id,
+              matchLimit: this.fastMatchForm.value.matchLimit,
+              category: this.fastMatchForm.value.gameMode,
+            });
+          }
+        })
+      )
+      .subscribe(() => {
+        this.showSpinner$.next(false);
+        this.currentScreen$.next('success');
+      });
     // this.userFacade
     //   .getByUsername(this.fastMatchForm.value.guestUsername)
     //   .pipe(
