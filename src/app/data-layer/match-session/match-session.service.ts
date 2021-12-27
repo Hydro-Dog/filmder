@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import {
@@ -45,6 +45,19 @@ export class MatchSessionService {
 
   getGameModes(): Observable<GameModes[]> {
     return this.http.get<GameModes[]>(`${environment.apiUrl}/api/gamemode`);
+  }
+
+  loadMatchSession(matchSessionId: string): Observable<MatchSessionEntity> {
+    const params = new HttpParams({
+      fromObject: {
+        matchSessionId,
+      },
+    });
+
+    return this.http.get<MatchSessionEntity>(
+      `${environment.apiUrl}/api/matchsession`,
+      { params }
+    );
   }
 
   // update(matchSession: MatchSession): Observable<MatchSession> {

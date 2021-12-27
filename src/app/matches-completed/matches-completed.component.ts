@@ -25,7 +25,7 @@ export class MatchesCompletedComponent {
   ) {}
 
   async ngOnInit() {
-    this.userFacade.getCurrentUserMatchSessions();
+    this.userFacade.loadCurrentUserMatchSessions();
   }
 
   navigateBack() {
@@ -33,7 +33,7 @@ export class MatchesCompletedComponent {
   }
 
   async doRefresh($event) {
-    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
+    this.userFacade.loadCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }

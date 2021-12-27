@@ -20,9 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private storageFacade: StorageFacade,
     private userFacade: UserFacade,
-    private userQuery: UserQuery
-  ) // private matchSessionFacade: MatchSessionFacade
-  {}
+    private userQuery: UserQuery // private matchSessionFacade: MatchSessionFacade
+  ) {}
 
   ngOnInit() {
     this.userFacade.selectCurrentUser$.subscribe((user) => {
@@ -42,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe(([user, userId]) => {
         if (!user && userId) {
-          this.userFacade.getCurrentUser();
+          this.userFacade.loadCurrentUser();
         }
 
         // this.matchSessionFacade.registerNewListener(userId);

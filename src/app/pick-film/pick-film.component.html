@@ -1,5 +1,5 @@
 <ion-content class="pick-film-container">
-  <ng-container
+  <!-- <ng-container
     *ngIf="(selectCurrentMatchSession$ | async)?.completed; else pickFilmScreen"
   >
     <div class="p-t-30 d-flex d-center">
@@ -16,18 +16,15 @@
         <ion-icon name="close" routerLink="/tabs/tab2"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-  </ng-container>
+  </ng-container> -->
 
-  <ng-template #pickFilmScreen>
-    <div class="pick-card" #pickCard style="height: 100wh">
-      <filmder-film-card
-        [showSpinner]="showSpinner$ | async"
-        [film]="currentFilm$ | async"
-      ></filmder-film-card>
-    </div>
-  </ng-template>
+  <!-- <ng-template #pickFilmScreen> -->
+  <div class="pick-card" #pickCard style="height: 100wh">
+    <filmder-film-card [film]="currentFilm$ | async"></filmder-film-card>
+  </div>
+  <!-- </ng-template> -->
 
-  <div
+  <!-- <div
     *ngIf="!(selectCurrentMatchSession$ | async)?.completed"
     class="matches-counter w100 d-flex d-center"
   >
@@ -52,7 +49,7 @@
         </ng-container>
       </ion-button>
     </div>
-  </div>
+  </div> -->
 
   <filmder-toast [duration]="4000"></filmder-toast>
 </ion-content>

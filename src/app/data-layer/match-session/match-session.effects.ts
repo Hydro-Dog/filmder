@@ -9,6 +9,8 @@ import { ActionType } from '@datorama/akita-ng-entity-service';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserStore } from '../user/user.store';
 import {
+  loadCurrentMatchSession,
+  loadCurrentMatchSessionSuccess,
   updateMatchSessionStatus,
   updateMatchSessionStatusSuccess,
 } from './match-session.actions';
@@ -26,6 +28,8 @@ export class MatchSessionEffects {
     private matchSessionStore: MatchSessionStore,
     private userStore: UserStore
   ) {}
+
+  //UPDATE MATCH SESSION ---------------------------------------------
 
   updateMatchSessionStatus$ = createEffect(
     () =>
@@ -67,6 +71,36 @@ export class MatchSessionEffects {
           currentUserMatches,
         };
       });
+    })
+  );
+
+  //LOAD CURRENT MATCH SESSION ---------------------------------------------
+
+  loadCurrentMatchSession$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loadCurrentMatchSession),
+        switchMap(({ id }) => {
+          return this.matchSessionService
+            .loadMatchSession(id)
+            .pipe(
+              map((matchSession) =>
+                loadCurrentMatchSessionSuccess({ matchSession })
+              )
+            );
+        })
+      ),
+    { dispatch: true }
+  );
+
+  @Effect()
+  loadCurrentMatchSessionSuccess$ = this.actions$.pipe(
+    ofType(loadCurrentMatchSessionSuccess),
+    tap(({ matchSession }) => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        currentMatchSession: matchSession,
+      }));
     })
   );
 

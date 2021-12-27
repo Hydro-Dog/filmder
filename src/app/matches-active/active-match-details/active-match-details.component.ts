@@ -21,7 +21,7 @@ export class ActiveMatchDetailsModal {
   }
 
   continue() {
-    // this.modalController.dismiss(MatchSessionStatus.);
+    this.modalController.dismiss('continue');
   }
 
   leaveSession() {

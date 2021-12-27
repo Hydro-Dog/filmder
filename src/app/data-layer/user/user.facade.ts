@@ -43,7 +43,7 @@ export class UserFacade {
     return this.userService.getUser(query);
   }
 
-  getCurrentUser() {
+  loadCurrentUser() {
     this.actions.dispatch(getCurrentUser());
 
     return this.userEffects.getCurrentUserSuccess$;
@@ -59,7 +59,7 @@ export class UserFacade {
     this.actions.dispatch(resetCurrentUser());
   }
 
-  getCurrentUserMatchSessions() {
+  loadCurrentUserMatchSessions() {
     this.actions.dispatch(getCurrentUserMatchSessions());
 
     return this.userEffects.getCurrentUserMatchSessionsSuccess$;

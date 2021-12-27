@@ -36,7 +36,7 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.userFacade.getCurrentUserMatchSessions();
+    this.userFacade.loadCurrentUserMatchSessions();
   }
 
   navigateBack() {
@@ -44,7 +44,7 @@ export class MatchesInvitesComponent implements OnInit, OnDestroy {
   }
 
   async doRefresh($event) {
-    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
+    this.userFacade.loadCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }

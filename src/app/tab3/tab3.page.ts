@@ -166,7 +166,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   }
 
   doRefresh($event) {
-    this.userFacade.getCurrentUser().subscribe(() => {
+    this.userFacade.loadCurrentUser().subscribe(() => {
       $event.target.complete();
     });
   }

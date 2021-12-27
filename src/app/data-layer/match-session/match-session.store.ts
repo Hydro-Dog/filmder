@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { MatchSession } from './match-session.models';
+import { MatchSession, MatchSessionEntity } from './match-session.models';
 
 export interface MatchSessionState {
-  matchSessions: MatchSession[];
-  matchSessionsLoading: boolean;
-  currentMatchSession: MatchSession;
+  // matchSessions: MatchSession[];
+  // matchSessionsLoading: boolean;
+  currentMatchSession: MatchSessionEntity;
   currentMatchSessionLoading: boolean;
-  error: any;
+  // error: any;
 }
 
 export function createInitialState(): MatchSessionState {
   return {
-    matchSessions: [],
-    matchSessionsLoading: false,
+    // matchSessions: [],
+    // matchSessionsLoading: false,
     currentMatchSession: null,
     currentMatchSessionLoading: false,
-    error: null,
+    // error: null,
   };
 }
 

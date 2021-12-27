@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import {
   delay,
   filter,
+  first,
   map,
   shareReplay,
   switchMap,
@@ -29,6 +30,7 @@ import { ActiveMatchDetailsModal } from './active-match-details/active-match-det
 })
 export class MatchesActiveComponent implements OnInit, OnDestroy {
   readonly activeMatchSessions$ = this.userFacade.selectActiveMatchSessions$;
+  readonly currentUser$ = this.userFacade.selectCurrentUser$;
 
   readonly destroy$ = new Subject();
 
@@ -40,7 +42,7 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.userFacade.getCurrentUserMatchSessions();
+    this.userFacade.loadCurrentUserMatchSessions();
   }
 
   navigateBack() {
@@ -67,14 +69,24 @@ export class MatchesActiveComponent implements OnInit, OnDestroy {
         });
       }
 
-      if (result.data === MatchDetailsModalActions.Continue) {
-        // TODO: Implement
+      if (result.data === 'continue') {
+        this.currentUser$
+          .pipe(
+            filter((x) => !!x),
+            first()
+          )
+          .subscribe((user) =>
+            this.userFacade.updateCurrentUser({
+              ...user,
+              currentMatchSession: matchSession.id,
+            })
+          );
       }
     });
   }
 
   async doRefresh($event) {
-    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
+    this.userFacade.loadCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }

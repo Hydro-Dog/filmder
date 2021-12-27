@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Actions } from '@datorama/akita-ng-effects';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { Film } from '../film/film.models';
-import { updateMatchSessionStatus } from './match-session.actions';
+import {
+  loadCurrentMatchSession,
+  updateMatchSessionStatus,
+} from './match-session.actions';
 import { MatchSessionEffects } from './match-session.effects';
 import {
   CreateMatchSessionDTO,
@@ -17,10 +20,14 @@ import { MatchSessionService } from './match-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class MatchSessionFacade {
+  selectCurrentMatchSession$ =
+    this.matchSessionQuery.selectCurrentMatchSession$;
+
   constructor(
     private actions: Actions,
     private matchSessionEffects: MatchSessionEffects,
-    private matchSessionService: MatchSessionService
+    private matchSessionService: MatchSessionService,
+    private matchSessionQuery: MatchSessionQuery
   ) {}
 
   updateMatchSessionStatus(data: UpdateMatchSessionStatusDTO) {
@@ -31,6 +38,12 @@ export class MatchSessionFacade {
 
   createMatchSession(matchSession: CreateMatchSessionDTO) {
     return this.matchSessionService.create(matchSession);
+  }
+
+  loadCurrentMatchSession(id: string) {
+    this.actions.dispatch(loadCurrentMatchSession({ id }));
+
+    return this.matchSessionEffects.loadCurrentMatchSessionSuccess$;
   }
 
   // registerNewListener(id: string) {
@@ -91,4 +104,9 @@ export class MatchSessionFacade {
   // ) {
   //   this.actions.dispatch(swipe({ matchSessionId, filmJSON, swipeDirection }));
   // }
+}
+function loadCurrentMatchSessionStatus(arg0: {
+  data: any;
+}): import('@datorama/akita-ng-effects/lib/types').Action {
+  throw new Error('Function not implemented.');
 }

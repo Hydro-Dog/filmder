@@ -67,7 +67,7 @@ export class FastMatchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameModesFacade.getGameModes();
-    this.userFacade.getCurrentUser();
+    this.userFacade.loadCurrentUser();
 
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd && !e.url.includes('current-match')) {

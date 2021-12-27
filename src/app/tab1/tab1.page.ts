@@ -30,11 +30,11 @@ export class Tab1Page implements OnInit, OnDestroy {
   constructor(private userFacade: UserFacade) {}
 
   ngOnInit() {
-    this.userFacade.getCurrentUserMatchSessions();
+    this.userFacade.loadCurrentUserMatchSessions();
   }
 
   async doRefresh($event) {
-    this.userFacade.getCurrentUserMatchSessions().subscribe(() => {
+    this.userFacade.loadCurrentUserMatchSessions().subscribe(() => {
       $event.target.complete();
     });
   }

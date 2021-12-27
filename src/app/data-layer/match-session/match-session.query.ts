@@ -13,7 +13,7 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Returns array of match sessions where the user is host or guest
    */
-  selectMatchSessions$ = this.select('matchSessions');
+  // selectMatchSessions$ = this.select('matchSessions');
 
   /**
    * Returns array of match sessions where the user is guest
@@ -33,11 +33,11 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   /**
    * Returns array of match sessions accepted by both participants
    */
-  selectActiveMatchSessions$ = this.selectMatchSessions$.pipe(
-    map((items) =>
-      items.filter((item) => item.accepted && !item.declined && !item.completed)
-    )
-  );
+  // selectActiveMatchSessions$ = this.selectMatchSessions$.pipe(
+  //   map((items) =>
+  //     items.filter((item) => item.accepted && !item.declined && !item.completed)
+  //   )
+  // );
 
   /**
    * Match session that were not accepted yet or declined
@@ -66,9 +66,11 @@ export class MatchSessionQuery extends Query<MatchSessionState> {
   //   })
   // );
 
-  selectMatchSessionsLoading$ = this.select('matchSessionsLoading');
+  // selectMatchSessionsLoading$ = this.select('matchSessionsLoading');
 
-  selectError$ = this.select('error');
+  // selectError$ = this.select('error');
+
+  selectCurrentMatchSessionLoading$ = this.select('currentMatchSessionLoading');
 
   constructor(
     protected store: MatchSessionStore,

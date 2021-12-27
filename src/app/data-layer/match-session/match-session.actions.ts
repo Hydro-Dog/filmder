@@ -26,6 +26,25 @@ export const updateMatchSessionStatusError = createAction(
   }>()
 );
 
+export const loadCurrentMatchSession = createAction(
+  '[Match Session] Load Current MatchSession',
+  props<{ id: string }>()
+);
+
+export const loadCurrentMatchSessionSuccess = createAction(
+  '[Match Session] Load Current MatchSession Success',
+  props<{
+    matchSession: MatchSessionEntity;
+  }>()
+);
+
+export const loadCurrentMatchSessionError = createAction(
+  '[Match Session] Load Current MatchSession Error',
+  props<{
+    error: any;
+  }>()
+);
+
 // export const setCurrentMatchSessionSuccess = createAction(
 //   '[Match Session] Set Current Match Session Success',
 //   props<{
