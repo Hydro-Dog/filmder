@@ -4,6 +4,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { Film } from '../film/film.models';
 import {
   loadCurrentMatchSession,
+  swipe,
   updateMatchSessionStatus,
 } from './match-session.actions';
 import { MatchSessionEffects } from './match-session.effects';
@@ -13,6 +14,7 @@ import {
   MatchSessionChangesEvents,
   MatchSessionCO,
   MatchSessionSocketEvents,
+  SwipeMatchSessionStatusDTO,
   UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 import { MatchSessionQuery } from './match-session.query';
@@ -44,6 +46,12 @@ export class MatchSessionFacade {
     this.actions.dispatch(loadCurrentMatchSession({ id }));
 
     return this.matchSessionEffects.loadCurrentMatchSessionSuccess$;
+  }
+
+  swipe(data: SwipeMatchSessionStatusDTO) {
+    this.actions.dispatch(swipe({ data }));
+
+    return this.matchSessionEffects.swipeSuccess$;
   }
 
   // registerNewListener(id: string) {

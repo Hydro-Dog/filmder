@@ -1,25 +1,11 @@
 <div class="d-flex modal-container">
   <div class="m-auto">
-    <div class="ta-center d-flex d-column d-middle" *ngIf="source === 'self'">
-      <h2>Hey!</h2>
-      <div>
-        <h3 class="ta-center">
-          <b>{{ film.title }}</b>
-        </h3>
-      </div>
-      <div>was a match</div>
-    </div>
-    <div
-      class="ta-center d-flex d-column d-middle"
-      *ngIf="source === 'opponent'"
-    >
-      <h2>Yay!</h2>
-      <div>Your partner also picked</div>
-      <div>
-        <h3>
-          <b>{{ film.title }}</b>
-        </h3>
-      </div>
+    <h2>Hey!</h2>
+    <div>Your partner also picked</div>
+    <div>
+      <h3>
+        <b>{{ film.title }}</b>
+      </h3>
     </div>
   </div>
 </div>

@@ -8,6 +8,7 @@ import {
   MatchSessionCO,
   MatchSessionEntity,
   MatchSessionSocketEvents,
+  SwipeMatchSessionStatusDTO,
   UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 import { GameModes } from '../game-mode/game-mode.models';
@@ -57,6 +58,13 @@ export class MatchSessionService {
     return this.http.get<MatchSessionEntity>(
       `${environment.apiUrl}/api/matchsession`,
       { params }
+    );
+  }
+
+  swipe(data: SwipeMatchSessionStatusDTO): Observable<MatchSessionEntity> {
+    return this.http.post<MatchSessionEntity>(
+      `${environment.apiUrl}/api/matchsession/swipe`,
+      data
     );
   }
 

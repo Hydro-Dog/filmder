@@ -11,6 +11,8 @@ import { UserStore } from '../user/user.store';
 import {
   loadCurrentMatchSession,
   loadCurrentMatchSessionSuccess,
+  swipe,
+  swipeSuccess,
   updateMatchSessionStatus,
   updateMatchSessionStatusSuccess,
 } from './match-session.actions';
@@ -96,6 +98,31 @@ export class MatchSessionEffects {
   @Effect()
   loadCurrentMatchSessionSuccess$ = this.actions$.pipe(
     ofType(loadCurrentMatchSessionSuccess),
+    tap(({ matchSession }) => {
+      return this.matchSessionStore.update((state) => ({
+        ...state,
+        currentMatchSession: matchSession,
+      }));
+    })
+  );
+
+  //SWIPE-------------------------------------------------------
+  swipe$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(swipe),
+        switchMap(({ data }) => {
+          return this.matchSessionService
+            .swipe(data)
+            .pipe(map((matchSession) => swipeSuccess({ matchSession })));
+        })
+      ),
+    { dispatch: true }
+  );
+
+  @Effect()
+  swipeSuccess$ = this.actions$.pipe(
+    ofType(swipeSuccess),
     tap(({ matchSession }) => {
       return this.matchSessionStore.update((state) => ({
         ...state,

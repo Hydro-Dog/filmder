@@ -39,11 +39,20 @@ export class MatchSessionEntity {
   guestLikedFilms?: string[];
   hostLikedFilmIndex: number;
   guestLikedFilmIndex: number;
+  matched?: boolean;
 }
 
 export class UpdateMatchSessionStatusDTO {
   matchSessionId: string;
   status: MatchSessionStatus;
+}
+
+export class SwipeMatchSessionStatusDTO {
+  matchSessionId: string;
+  swipe: 'left' | 'right';
+  film: string;
+  hostId: string;
+  guestId: string;
 }
 
 export enum FilmCategories {

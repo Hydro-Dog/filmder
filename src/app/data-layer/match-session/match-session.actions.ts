@@ -4,6 +4,7 @@ import {
   MatchSessionChangesEvents,
   MatchSessionCO,
   MatchSessionEntity,
+  SwipeMatchSessionStatusDTO,
   UpdateMatchSessionStatusDTO,
 } from './match-session.models';
 
@@ -40,6 +41,25 @@ export const loadCurrentMatchSessionSuccess = createAction(
 
 export const loadCurrentMatchSessionError = createAction(
   '[Match Session] Load Current MatchSession Error',
+  props<{
+    error: any;
+  }>()
+);
+
+export const swipe = createAction(
+  '[Match Session] Swipe',
+  props<{ data: SwipeMatchSessionStatusDTO }>()
+);
+
+export const swipeSuccess = createAction(
+  '[Match Session] Swipe Success',
+  props<{
+    matchSession: MatchSessionEntity;
+  }>()
+);
+
+export const swipeError = createAction(
+  '[Match Session] Swipe Error',
   props<{
     error: any;
   }>()

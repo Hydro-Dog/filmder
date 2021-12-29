@@ -6,6 +6,5 @@ import { Film } from '@src/app/data-layer/film/film.models';
   styleUrls: ['match-happend-modal.component.scss'],
 })
 export class MatchHappenedModal {
-  @Input() source: 'self' | 'opponent';
   @Input() film: Film;
 }
